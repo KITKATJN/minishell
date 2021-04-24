@@ -21,23 +21,21 @@ char *reading_str(struct termios term, t_history **history)
 	char *line;
 	char b[2];
 	t_history *tmp;
-	int pop = 0;
 
 	line = calloc(1, 1);
 	tmp = ft_lstnew(NULL);
 	ft_lstadd_back(history, tmp);
 	flag_vniz_vverh = 0;
+	line = NULL;
 	while (1)
 	{
 		l = read (0, buff, 1);
 		if (buff[0] == '\n')
 		{
 			write(1, "\n", 1);
-			// if (!(tmp->content))
-				// tmp->content = ft_strdup(line);
-			tmp->content = ft_strjoin_line(tmp->content, line);
+			if (line)
+				tmp->content = ft_strjoin_line(tmp->content, line);
 			free(line);
-			pop = 0;
 			break ;
 		}
 		else if (buff[0] == '\e')
@@ -75,18 +73,21 @@ char *reading_str(struct termios term, t_history **history)
 				tputs(delete_line, 1, ft_putchar);
 				write(1, "$> ", 3);
 				tputs(restore_cursor, 1, ft_putchar);
-				if (!pop){
-					tmp->content = ft_strjoin_line(tmp->content, line);
-					pop = 1;
+				// printf("%s!!\n", line);
+				if (ft_strlen(line) && line)
+				{
+					line = backspace(line);
 				}
-				tmp->content = backspace(tmp->content);
+				else
+					tmp->content = backspace(tmp->content);
 				write(1, tmp->content, ft_strlen(tmp->content));
+				write(1, line, ft_strlen(line));
 			}
 			else
 			{
+				tputs(restore_cursor, 1, ft_putchar);
 				tputs(delete_line, 1, ft_putchar);
 				write(1, "$> ", 3);
-				tputs(restore_cursor, 1, ft_putchar);
 				line = backspace(line);
 				write(1, line, ft_strlen(line));
 			}
