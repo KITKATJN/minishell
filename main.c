@@ -33,9 +33,16 @@ char *reading_str(struct termios term, t_history **history)
 		if (buff[0] == '\n')
 		{
 			write(1, "\n", 1);
+			// printf("!!!%s\n", line);
 			if (line)
+			{
 				tmp->content = ft_strjoin_line(tmp->content, line);
+			}
 			free(line);
+			// printf("%s\n", tmp->content);
+			// if (tmp->content == NULL)
+			// 	tmp->back->next = NULL;
+			// printf("%s\n", tmp->content);
 			break ;
 		}
 		else if (buff[0] == '\e')
@@ -73,7 +80,6 @@ char *reading_str(struct termios term, t_history **history)
 				tputs(delete_line, 1, ft_putchar);
 				write(1, "$> ", 3);
 				tputs(restore_cursor, 1, ft_putchar);
-				// printf("%s!!\n", line);
 				if (ft_strlen(line) && line)
 				{
 					line = backspace(line);
@@ -109,7 +115,9 @@ int main(int argc, char **argv, char **envp)
 	char *line;
 	char *term_name;
 	t_history *history;
+	t_history *tmp;
 
+	
 	history = NULL;
 	term_name = "xterm-256color";
 	tcgetattr(0, &term);
@@ -117,10 +125,13 @@ int main(int argc, char **argv, char **envp)
 	term.c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
+	
 	while (1)
 	{
 		write(1, "$> ", 3);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history);
+		//printf("size = %d\n", ft_lstsize(history));
+		clear_history(&history);
 	}
 }

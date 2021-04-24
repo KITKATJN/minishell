@@ -23,5 +23,7 @@ void		ft_lstadd_back(t_history **lst, t_history *new);
 char	*ft_strdup(const char *src);
 char *backspace(char *str);
 char		*ft_strjoin_line(char const *s1, char const *s2);
+void clear_history(t_history **history);
+int		ft_lstsize(t_history *lst);
 
 #endif
