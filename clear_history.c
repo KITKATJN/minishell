@@ -8,15 +8,21 @@ void clear_history(t_history **history)
 	tmp = *history;
 
 
-	while(tmp)
+	while(tmp && ft_lstsize(*history) >= 1)
 	{
-		printf("cont = !%s!\n", tmp->content);
+		//printf("cont = !%s!\n", tmp->content);
 		if (tmp->content == NULL)
 		{
 			tmp2 = tmp->back;
-			tmp->back->next = 0;
-			tmp->back = 0;
+			if (tmp->back)
+			{
+				tmp->back->next = 0;
+				tmp->back = 0;
+			}
+			free(tmp);
+			tmp = 0;
 			*history = tmp2;
+			break ;
 		}
 		tmp = tmp->back;
 	}

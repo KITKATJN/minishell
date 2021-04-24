@@ -21,6 +21,7 @@ char *reading_str(struct termios term, t_history **history)
 	char *line;
 	char b[2];
 	t_history *tmp;
+	
 
 	line = calloc(1, 1);
 	tmp = ft_lstnew(NULL);
@@ -56,6 +57,11 @@ char *reading_str(struct termios term, t_history **history)
 					tputs(delete_line, 1, ft_putchar);
 					write(1, "$> ", 3);
 					tputs(restore_cursor, 1, ft_putchar);
+					if (line)
+					{
+						tmp->content =ft_strjoin_line(tmp->content, line);
+						line = 0;
+					}
 					tmp = tmp->back;
 					write(1, tmp->content, ft_strlen(tmp->content));
 				}
@@ -68,6 +74,11 @@ char *reading_str(struct termios term, t_history **history)
 					tputs(delete_line, 1, ft_putchar);
 					write(1, "$> ", 3);
 					tputs(restore_cursor, 1, ft_putchar);
+					if (line)
+					{
+						tmp->content =ft_strjoin_line(tmp->content, line);
+						line = 0;
+					}
 					tmp = tmp->next;
 					write(1, tmp->content, ft_strlen(tmp->content));
 				}
@@ -131,7 +142,7 @@ int main(int argc, char **argv, char **envp)
 		write(1, "$> ", 3);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history);
-		//printf("size = %d\n", ft_lstsize(history));
 		clear_history(&history);
+		// parser(tmp->content);
 	}
 }

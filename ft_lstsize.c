@@ -8,7 +8,7 @@ int		ft_lstsize(t_history *lst)
 	while (lst)
 	{
 		i++;
-		lst = lst->next;
+		lst = lst->back;
 	}
 	return (i);
 }
