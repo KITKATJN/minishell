@@ -21,7 +21,6 @@ char *reading_str(struct termios term, t_history **history)
 	char *line;
 	char b[2];
 	t_history *tmp;
-	
 
 	line = calloc(1, 1);
 	tmp = ft_lstnew(NULL);
@@ -143,6 +142,6 @@ int main(int argc, char **argv, char **envp)
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history);
 		clear_history(&history);
-		// parser(tmp->content);
+		//parser(tmp->content)
 	}
 }

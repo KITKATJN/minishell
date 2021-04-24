@@ -11,6 +11,7 @@
 typedef struct s_history
 {
 	char *content;
+	char *line;
 	struct s_history *next;
 	struct s_history *back;
 }				t_history;

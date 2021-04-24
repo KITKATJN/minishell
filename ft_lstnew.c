@@ -10,6 +10,7 @@ t_history		*ft_lstnew(void *content)
 	if (new)
 	{
 		new->content = content;
+		new->line = 0;
 		new->next = 0;
 		new->back = 0;
 		return (new);
