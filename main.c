@@ -177,6 +177,6 @@ int main(int argc, char **argv, char **envp)
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, &cp_env);
 		clear_history(&history);
-		//parser(line);
+		//parser(line); //вызов парсера
 	}
 }
