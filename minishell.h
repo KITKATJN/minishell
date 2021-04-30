@@ -26,5 +26,11 @@ char *backspace(char *str);
 char		*ft_strjoin_line(char const *s1, char const *s2);
 void clear_history(t_history **history);
 int		ft_lstsize(t_history *lst);
+void get_pwd();
+int f_echo(char *str, int i);
+int f_cd(char *str);
+char **copy_envp(char **envp, char **cp_env);
+char **export_add(char **cp_env, char *str);
+char **f_unset_line(char **env, char *str);
 
 #endif
