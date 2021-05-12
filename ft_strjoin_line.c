@@ -16,7 +16,7 @@ char		*ft_strjoin_line(char const *s1, char const *s2)
 	while (s1 && s1[i] != '\0')
 		result[j++] = s1[i++];
 	i = 0;
-	while (s2[i] != '\0')
+	while (s2 && s2[i] != '\0')
 		result[j++] = s2[i++];
 	result[j] = '\0';
 	return (result);

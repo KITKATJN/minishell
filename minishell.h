@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "libft.h"
 
 typedef struct			s_history
 {
@@ -41,5 +42,17 @@ int						f_cd(char *str);
 char					**copy_envp(char **envp, char **cp_env);
 char					**export_add(char **cp_env, char *str);
 char					**f_unset_line(char **env, char *str);
+t_command				*check_double_semicolon(char *argv);
+t_command				*ft_lstnew_parser(void *command, void *flag);
+t_command				*parser_into_list(char *argv);
+void					ft_lstadd_back_parser(t_command **lst, t_command *new);
+char					*add_quotes(char *str);
+void					delete_tcommand(t_command *command);
+void					ft_perror(char *error);
+void					parse_add_semicolon_to_end(t_command *start);
+void					pars_to_command(t_command *start);
+int						delete_spaces(char **arr_of_command, char *argv, int i, char delimiter);
+char					*ft_check_command(char *command);
+void					main_parser(char *str);
 
 #endif
