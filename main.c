@@ -31,8 +31,10 @@ char *reading_str(struct termios term, t_history **history, char ***cp_env)
 	line = NULL;
 	while (tmp->back)
 	{
+		// printf("%s\n", tmp->line);
 		if (tmp->line == NULL)
 			tmp->line = ft_strdup_b(tmp->content);
+		// printf("%s\n", tmp->line);
 		tmp = tmp->back;
 	}
 	while (tmp->next)
@@ -200,6 +202,6 @@ int main(int argc, char **argv, char **envp)
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, &cp_env);
 		clear_history(&history);
-		// main_parser(line); //вызов парсера
+		main_parser(line); //вызов парсера
 	}
 }

@@ -11,7 +11,8 @@ LIST 	=	backspace.c \
 			add_quotes.c command_list.c check_double_semicolon.c \
 			delete_spaces.c delete_tcommand.c ft_check_command.c \
 			ft_perror.c main_parser.c pars_to_command.c \
-			parse_add_semicolon_to_end.c parser_into_list.c
+			parse_add_semicolon_to_end.c parser_into_list.c \
+			bsophia_func.c
 
 OBJDIR	=	objs/
 

@@ -1,9 +1,10 @@
 #include "minishell.h"
 
-int f_cd(char *str)
+int f_cd(t_command *list)
 {
 	int i;
 
-	i = chdir(str);
+	list = list->next;
+	i = chdir(list->command);
 	return (i);
 }

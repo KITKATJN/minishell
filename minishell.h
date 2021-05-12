@@ -38,7 +38,7 @@ void					clear_history(t_history **history);
 int						ft_lstsize(t_history *lst);
 void					get_pwd();
 int						f_echo(char *str, int i);
-int						f_cd(char *str);
+int						f_cd(t_command *list);
 char					**copy_envp(char **envp, char **cp_env);
 char					**export_add(char **cp_env, char *str);
 char					**f_unset_line(char **env, char *str);
@@ -54,5 +54,7 @@ void					pars_to_command(t_command *start);
 int						delete_spaces(char **arr_of_command, char *argv, int i, char delimiter);
 char					*ft_check_command(char *command);
 void					main_parser(char *str);
+void					bsophia_function(t_command *list);
+int						ft_lstsize_2(t_command *lst);
 
 #endif

@@ -38,3 +38,15 @@ char *ft_strjoin_b(char *s1, char *s2)
 	return (result); 
 }
 
+int		ft_lstsize_2(t_command *lst)
+{
+	int	i;
+
+	i = 0;
+	while (lst)
+	{
+		i++;
+		lst = lst->next;
+	}
+	return (i);
+}

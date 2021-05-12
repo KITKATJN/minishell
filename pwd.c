@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void get_pwd() //пока принимю строку, но скорее всего нужно принимать будет структуру и смотреть пайпы и редиректы тоже
+void get_pwd()
 {
 	char *line;
 	char *pwd;

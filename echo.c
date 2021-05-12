@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int f_echo(char *str, int i) //пока принимю строку, но скорее всего нужно принимать будет структуру и смотреть еще флаг -n (пайпы и редиректы тоже)
+int f_echo(char *str, int i)
 {
 	if (i == 1)
 	{
