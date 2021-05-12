@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*ft_strdup(const char *src)
+char	*ft_strdup_b(const char *src)
 {
 	int		i;
 	char	*b;

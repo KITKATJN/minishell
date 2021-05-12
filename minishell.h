@@ -26,12 +26,12 @@ typedef struct			s_command
 	struct s_command	*back;
 }						t_command;
 
-int						ft_strlen(char *str);
+int						ft_strlen_b(char *str);
 int						ft_putchar(int c);
-char					*ft_strjoin(char *s1, char *s2);
+char					*ft_strjoin_b(char *s1, char *s2);
 t_history				*ft_lstnew(void *content);
 void					ft_lstadd_back(t_history **lst, t_history *new);
-char					*ft_strdup(const char *src);
+char					*ft_strdup_b(const char *src);
 char					*backspace(char *str);
 char					*ft_strjoin_line(char const *s1, char const *s2);
 void					clear_history(t_history **history);

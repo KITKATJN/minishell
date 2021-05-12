@@ -6,7 +6,7 @@ int ft_putchar(int c)
 	return(0);
 }
 
-int ft_strlen(char *str)
+int ft_strlen_b(char *str)
 {
 	int i;
 
@@ -18,7 +18,7 @@ int ft_strlen(char *str)
 	return (i);
 }
 
-char *ft_strjoin(char *s1, char *s2)
+char *ft_strjoin_b(char *s1, char *s2)
 {
 	char *result;
 	int i;
@@ -26,7 +26,7 @@ char *ft_strjoin(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
-	if (!(result = malloc(ft_strlen(s1) + ft_strlen(s2) + 1)))
+	if (!(result = malloc(ft_strlen_b(s1) + ft_strlen_b(s2) + 1)))
 		return (NULL);
 	while (s1 && s1[i] != '\0')
 		result[j++] = s1[i++];

@@ -9,7 +9,7 @@ void print_env(char **cp_env)
 	i = 0;
 	while (cp_env[i] != NULL)
 	{
-		write(1, cp_env[i], ft_strlen(cp_env[i]));
+		write(1, cp_env[i], ft_strlen_b(cp_env[i]));
 		write(1, "\n", 1);
 		i++;
 	}
@@ -32,7 +32,7 @@ char *reading_str(struct termios term, t_history **history, char ***cp_env)
 	while (tmp->back)
 	{
 		if (tmp->line == NULL)
-			tmp->line = ft_strdup(tmp->content);
+			tmp->line = ft_strdup_b(tmp->content);
 		tmp = tmp->back;
 	}
 	while (tmp->next)
@@ -48,13 +48,13 @@ char *reading_str(struct termios term, t_history **history, char ***cp_env)
 				save = ft_strjoin_line(tmp->content, line);
 				while (tmp->next)
 					tmp = tmp->next;
-				tmp->content = ft_strdup(save);
+				tmp->content = ft_strdup_b(save);
 				free(save);
 				free(line);
 				while (tmp->back)
 				{
 					if (tmp->line)
-						tmp->content = ft_strdup(tmp->line);
+						tmp->content = ft_strdup_b(tmp->line);
 					tmp = tmp->back;
 				}
 				// tmp->content = ft_strdup(tmp->line);
@@ -119,7 +119,7 @@ char *reading_str(struct termios term, t_history **history, char ***cp_env)
 						line = 0;
 					}
 					tmp = tmp->back;
-					write(1, tmp->content, ft_strlen(tmp->content));
+					write(1, tmp->content, ft_strlen_b(tmp->content));
 				}
 			}
 			if (b[0] == '[' && b[1] == 'B')
@@ -137,7 +137,7 @@ char *reading_str(struct termios term, t_history **history, char ***cp_env)
 						line = 0;
 					}
 					tmp = tmp->next;
-					write(1, tmp->content, ft_strlen(tmp->content));
+					write(1, tmp->content, ft_strlen_b(tmp->content));
 				}
 			}
 		}
@@ -148,12 +148,12 @@ char *reading_str(struct termios term, t_history **history, char ***cp_env)
 				tputs(delete_line, 1, ft_putchar);
 				tputs("$S> ", 1, ft_putchar);
 				tputs(restore_cursor, 1, ft_putchar);
-				if (ft_strlen(line) && line)
+				if (ft_strlen_b(line) && line)
 					line = backspace(line);
 				else
 					tmp->content = backspace(tmp->content);
-				write(1, tmp->content, ft_strlen(tmp->content));
-				write(1, line, ft_strlen(line));
+				write(1, tmp->content, ft_strlen_b(tmp->content));
+				write(1, line, ft_strlen_b(line));
 			}
 			else
 			{
@@ -162,13 +162,13 @@ char *reading_str(struct termios term, t_history **history, char ***cp_env)
 				tputs("$S> ", 1, ft_putchar);
 				tputs(restore_cursor, 1, ft_putchar);
 				line = backspace(line);
-				write(1, line, ft_strlen(line));
+				write(1, line, ft_strlen_b(line));
 			}
 		}
 		if ((strcmp(buff, "\177") && buff[0] != '\e'))
 		{
 			write (1, &buff[0], 1);
-			line = ft_strjoin(line, buff);
+			line = ft_strjoin_b(line, buff);
 		}
 	}
 	return (tmp->content);
@@ -200,6 +200,6 @@ int main(int argc, char **argv, char **envp)
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, &cp_env);
 		clear_history(&history);
-		main_parser(line); //вызов парсера
+		// main_parser(line); //вызов парсера
 	}
 }

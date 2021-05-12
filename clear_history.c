@@ -11,7 +11,7 @@ void clear_history(t_history **history)
 	while(tmp && ft_lstsize(*history) >= 1)
 	{
 		//printf("cont = !%s!\n", tmp->content);
-		if (tmp->content == NULL)
+		if (tmp->content == NULL || !(ft_strlen_b(tmp->content)))
 		{
 			tmp2 = tmp->back;
 			if (tmp->back)
