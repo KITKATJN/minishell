@@ -34,7 +34,6 @@ char *reading_str(struct termios term, t_history **history, char ***cp_env)
 		// printf("%s\n", tmp->line);
 		if (tmp->line == NULL)
 			tmp->line = ft_strdup_b(tmp->content);
-		// printf("%s\n", tmp->line);
 		tmp = tmp->back;
 	}
 	while (tmp->next)
@@ -183,17 +182,20 @@ int main(int argc, char **argv, char **envp)
 	char *line;
 	char *term_name;
 	t_history *history;
+	t_untils *untils;
 	char **cp_env;
 
 	history = NULL;
 	line = NULL;
+	untils = malloc(sizeof(t_untils));
 	term_name = "xterm-256color";
 	tcgetattr(0, &term);
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
-	cp_env = copy_envp(envp, cp_env);
+	untils->env = copy_envp(envp, untils->env);
+	// print_env(untils->env);
 
 	while (1)
 	{
@@ -202,6 +204,6 @@ int main(int argc, char **argv, char **envp)
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, &cp_env);
 		clear_history(&history);
-		main_parser(line); //вызов парсера
+		main_parser(line, untils); //вызов парсера
 	}
 }

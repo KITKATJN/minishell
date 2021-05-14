@@ -9,6 +9,11 @@
 #include <unistd.h>
 #include "libft.h"
 
+typedef struct			s_untils
+{
+						char **env;
+}						t_untils;
+
 typedef struct			s_history
 {
 	char				*content;
@@ -53,8 +58,9 @@ void					parse_add_semicolon_to_end(t_command *start);
 void					pars_to_command(t_command *start);
 int						delete_spaces(char **arr_of_command, char *argv, int i, char delimiter);
 char					*ft_check_command(char *command);
-void					main_parser(char *str);
-void					bsophia_function(t_command *list);
+void					main_parser(char *str, t_untils *untils);
+void					bsophia_function(t_command *list, t_untils *untils);
 int						ft_lstsize_2(t_command *lst);
+void					print_env(char **cp_env);
 
 #endif

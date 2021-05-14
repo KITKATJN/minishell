@@ -76,19 +76,19 @@ void ft_paste_env(t_command *list_of_command)
 
 }
 
-void bsopia_func(t_command *com, int i)
+void bsopia_func(t_command *com, int i, t_untils *untils)
 {
 	ft_check_command(com->command);
 	ft_paste_env(com);
+	bsophia_function(com, untils);
 	while (com)
 	{
 		// printf("%s operation ---->%d\n", com->command, i);
 		com = com->next;
 	}
-
 }
 
-void main_parser(char *str)
+void main_parser(char *str, t_untils *untils)
 {
 	t_command	*start;
 	t_command	*current_command;
@@ -112,8 +112,7 @@ void main_parser(char *str)
 	{
 		if (current_command->command[0] == ';')
 		{
-			// bsopia_func(new_start, i++);
-			bsophia_function(new_start);
+			bsopia_func(new_start, i++, untils);
 			new_start = 0;
 			current_command = current_command->next;
 			if (current_command == 0)
@@ -129,8 +128,7 @@ void main_parser(char *str)
 	if (new_start)
 	{
 		//printf("OMG\n");
-		// bsopia_func(new_start, i++);
-		bsophia_function(new_start);
+		bsopia_func(new_start, i++, untils);
 		new_start = 0;
 	}
 }
