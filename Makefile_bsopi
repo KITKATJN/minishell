@@ -31,13 +31,13 @@ CC		= gcc
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) -ltermcap   -ltinfo -O3 $(OBJS) libft.a -o $(NAME) -lncurses #-fsanitize=address
+		$(CC) -ltermcap -O3 $(OBJS) libft.a -o $(NAME) #-fsanitize=address
 
 $(OBJDIR)%.o: %.c Makefile
 	mkdir -p $(OBJDIR)
 	gcc -c $< -o $@
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)
