@@ -28,10 +28,14 @@ void bsophia_function(t_command *list, t_untils *untils)
 	if (!(strcmp(list->command, "echo")))
 		echo_2(list);
 	if (!(strcmp(list->command, "pwd")))
-		get_pwd(); //сместить указатель после пайпа или редиректа(до следующей исполняющей команды)
+		get_pwd(); //сместить указатель и установить после пайпа или редиректа(до следующей исполняющей команды)
 	if (!(strcmp(list->command, "cd")))
 		printf(" cd = %d\n", f_cd(list));//при ошибках возвращает -1 и ставит errno в должное значение/ сделать менеджмент ошибок
 	if (!(strcmp(list->command, "env")))
 		print_env(untils->env);
-	
+	if (!(strcmp(list->command, "export")))
+	{
+		list = list->next;
+		export_add(untils->env, list->command, untils);
+	}
 }

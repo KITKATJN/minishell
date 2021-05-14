@@ -15,7 +15,7 @@ void print_env(char **cp_env)
 	}
 }
 
-char *reading_str(struct termios term, t_history **history, char ***cp_env)
+char *reading_str(struct termios term, t_history **history, t_untils *untils)
 {
 	int l;
 	char buff[5];
@@ -31,7 +31,6 @@ char *reading_str(struct termios term, t_history **history, char ***cp_env)
 	line = NULL;
 	while (tmp->back)
 	{
-		// printf("%s\n", tmp->line);
 		if (tmp->line == NULL)
 			tmp->line = ft_strdup_b(tmp->content);
 		tmp = tmp->back;
@@ -97,10 +96,15 @@ char *reading_str(struct termios term, t_history **history, char ***cp_env)
 			// 	// 	gg++;
 			// 	// }
 			// }
+			if (untils->flag == 1)
+			{
+				tmp->line = ft_strdup_b(tmp->content);
+				untils->flag = 0;
+				// printf("%d\n", untils->flag);
+			}
 			while (tmp->next)
 				tmp = tmp->next;
 			return (tmp->content);
-			// break ;
 		}
 		else if (buff[0] == '\e')
 		{
@@ -188,6 +192,7 @@ int main(int argc, char **argv, char **envp)
 	history = NULL;
 	line = NULL;
 	untils = malloc(sizeof(t_untils));
+	untils->flag = 1;
 	term_name = "xterm-256color";
 	tcgetattr(0, &term);
 	term.c_lflag &= ~(ECHO);
@@ -195,15 +200,14 @@ int main(int argc, char **argv, char **envp)
 	tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
 	untils->env = copy_envp(envp, untils->env);
-	// print_env(untils->env);
 
 	while (1)
 	{
 		// write(1, "$> ", 3);
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
-		line = reading_str(term, &history, &cp_env);
+		line = reading_str(term, &history, untils);
 		clear_history(&history);
-		main_parser(line, untils); //вызов парсера
+		// main_parser(line, untils);
 	}
 }

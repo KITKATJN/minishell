@@ -18,7 +18,23 @@ static int compare_to_equal(char *s1, char *s2)
 	return (0);
 }
 
-char **export_add(char **cp_env, char *str)
+// static int check_name(char *str)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	if (!(ft_isalpha(str[0])) && str[0] != '_')
+// 		return (1);
+// 	while (str[i] != '\0')
+// 	{
+// 		if (!(ft_isalpha(str[i])) && (!(ft_isdigit(str[i]))) || str[i] != '_')
+// 			return (1);
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+char **export_add(char **cp_env, char *str, t_untils *untils)
 {
 	int i;
 	char **new_env;
@@ -26,6 +42,8 @@ char **export_add(char **cp_env, char *str)
 
 	k = 0;
 	i = 0;
+	//проверка на имя
+	//проверка на =\0
 	while(cp_env[i] != NULL)
 	{
 		if (!strcmp(cp_env[i], str)) //если подают ключ со значением которое уже есть то не будет записываться ничего
@@ -53,5 +71,6 @@ char **export_add(char **cp_env, char *str)
 	while(cp_env[i] != NULL)
 		free(cp_env[i++]);
 	free(cp_env);
+	untils->env = new_env;
 	return(new_env);
 }

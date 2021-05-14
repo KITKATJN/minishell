@@ -11,7 +11,10 @@
 
 typedef struct			s_untils
 {
-						char **env;
+	char				**env;
+	int					flag;
+	char				*first;
+
 }						t_untils;
 
 typedef struct			s_history
@@ -45,7 +48,7 @@ void					get_pwd();
 int						f_echo(char *str, int i);
 int						f_cd(t_command *list);
 char					**copy_envp(char **envp, char **cp_env);
-char					**export_add(char **cp_env, char *str);
+char					**export_add(char **cp_env, char *str, t_untils *untils);
 char					**f_unset_line(char **env, char *str);
 t_command				*check_double_semicolon(char *argv);
 t_command				*ft_lstnew_parser(void *command, void *flag);
