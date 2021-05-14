@@ -58,7 +58,7 @@ void ft_paste_env(t_command *list_of_command)
 				free(value_env);
 				if (start->command[0] == '\"')
 					continue ;
-				// printf("----->%c\n", start->command[i]);
+				printf("----->%c\n", start->command[i]);
 				continue ;
 				//else
 				//	break ;
@@ -83,9 +83,10 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	bsophia_function(com, untils);
 	while (com)
 	{
-		// printf("%s operation ---->%d\n", com->command, i);
+		printf("%s operation ---->%d\n", com->command, i);
 		com = com->next;
 	}
+
 }
 
 void main_parser(char *str, t_untils *untils)

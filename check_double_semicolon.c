@@ -8,8 +8,11 @@ t_command *check_double_semicolon(char *argv)
 		if (argv[i] == '\'')
 		{
 			i++;
-			while(argv[i] != '\'')
+			while(argv[i] != '\'' && i < ft_strlen(argv) - 1)
+			{
+			//	printf("9------------------------%d\n",i);
 				i++;
+			}
 			i++;
 			continue ;
 		}
