@@ -2,6 +2,16 @@
 
 int flag_vniz_vverh;
 
+static int count_word(char **str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] != NULL)
+		i++;
+	return (i);
+}
+
 void print_env(char **cp_env)
 {
 	int i;
@@ -9,7 +19,69 @@ void print_env(char **cp_env)
 	i = 0;
 	while (cp_env[i] != NULL)
 	{
-		write(1, cp_env[i], ft_strlen_b(cp_env[i]));
+		if (ft_strchr(cp_env[i], '='))
+		{
+			write(1, cp_env[i], ft_strlen_b(cp_env[i]));
+			write(1, "\n", 1);
+			i++;
+		}
+		else
+			i++;
+	}
+}
+
+char **sort_mass(char **str)
+{
+	int i;
+	char *buf;
+	int k;
+
+	k = count_word(str);
+	while (k - 1)
+	{
+		i = 0;
+		while (str[i] != NULL)
+		{
+			if (str[i + 1] != NULL && (ft_strcmp(str[i],str[i + 1])) > 0)
+			{
+				buf = str[i];
+				str[i] = str[i + 1];
+				str[i + 1] = buf;
+			}
+			i++;
+		}
+		k--;
+	}
+	return (str);
+}
+
+void print_export(char **cp_env)
+{
+	int i;
+	int k;
+	int flag;
+
+	i = 0;
+	k = 0;
+	cp_env = sort_mass(cp_env);
+	while (cp_env[i] != NULL)
+	{
+		flag = 1;
+		write(1, "declare -x ", 11);
+		k = 0;
+		while (cp_env[i][k] != '\0')
+		{
+			if (cp_env[i][k] != '\0')
+				write(1, &cp_env[i][k], 1);
+			if (cp_env[i][k] == '=')
+			{
+				write(1, "\"", 1);
+				flag = 0;
+			}
+			k++;
+		}
+		if (flag == 0)
+			write(1, "\"", 1);
 		write(1, "\n", 1);
 		i++;
 	}
@@ -98,10 +170,12 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			// }
 			if (untils->flag == 1)
 			{
-				tmp->line = ft_strdup_b(tmp->content);
+				untils->first = ft_strdup(tmp->content);
 				untils->flag = 0;
-				// printf("%d\n", untils->flag);
 			}
+			while (tmp->back)
+				tmp = tmp->back;
+			tmp->content = untils->first;
 			while (tmp->next)
 				tmp = tmp->next;
 			return (tmp->content);
@@ -114,10 +188,12 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 				if (tmp->back)
 				{
 					flag_vniz_vverh = 1;
-					tputs(delete_line, 1, ft_putchar);
-					// write(1, "$> ", 3);
-					tputs("$S> ", 1, ft_putchar);
-					tputs(restore_cursor, 1, ft_putchar);
+					// tputs(delete_line, 1, ft_putchar);
+					// // write(1, "$> ", 3);
+					// tputs("$S> ", 1, ft_putchar);
+					// tputs(restore_cursor, 1, ft_putchar);
+					tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
+					tputs(tgetstr("ce", 0), 1, ft_putchar);
 					if (line)
 					{
 						tmp->content = ft_strjoin_line(tmp->content, line);
@@ -132,10 +208,12 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 				if (tmp->next)
 				{
 					flag_vniz_vverh = 1;
-					tputs(delete_line, 1, ft_putchar);
-					// write(1, "$> ", 3);
-					tputs("$S> ", 1, ft_putchar);
-					tputs(restore_cursor, 1, ft_putchar);
+					// tputs(delete_line, 1, ft_putchar);
+					// // write(1, "$> ", 3);
+					// tputs("$S> ", 1, ft_putchar);
+					// tputs(restore_cursor, 1, ft_putchar);
+					tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
+					tputs(tgetstr("ce", 0), 1, ft_putchar);
 					if (line)
 					{
 						tmp->content = ft_strjoin_line(tmp->content, line);
@@ -150,9 +228,11 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		{
 			if (flag_vniz_vverh == 1)
 			{
-				tputs(delete_line, 1, ft_putchar);
-				tputs("$S> ", 1, ft_putchar);
-				tputs(restore_cursor, 1, ft_putchar);
+				// tputs(restore_cursor, 1, ft_putchar);
+				// tputs(delete_line, 1, ft_putchar);
+				//tputs("$S> ", 1, ft_putchar);
+				tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
+				tputs(tgetstr("ce", 0), 1, ft_putchar); //чистит до конца строки
 				if (ft_strlen_b(line) && line)
 					line = backspace(line);
 				else
@@ -162,10 +242,12 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			}
 			else
 			{
-				tputs(delete_line, 1, ft_putchar);
-				// write(1, "$> ", 3);
-				tputs("$S> ", 1, ft_putchar);
-				tputs(restore_cursor, 1, ft_putchar);
+				// tputs(delete_line, 1, ft_putchar);
+				// // write(1, "$> ", 3);
+				// tputs("$S> ", 1, ft_putchar);
+				// tputs(restore_cursor, 1, ft_putchar);
+				tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
+				tputs(tgetstr("ce", 0), 1, ft_putchar);
 				line = backspace(line);
 				write(1, line, ft_strlen_b(line));
 			}
@@ -208,6 +290,6 @@ int main(int argc, char **argv, char **envp)
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
 		clear_history(&history);
-		// main_parser(line, untils);
+		main_parser(line, untils);
 	}
 }

@@ -5,15 +5,33 @@ static int compare_to_equal(char *s1, char *s2)
 	int i;
 	int flag;
 
-	s2 = ft_strjoin_line(s2, "=");
+	// s2 = ft_strjoin_line(s2, "=");
 	i = 0;
 	flag = 0;
 	while (s1[i] != '\0')
 	{
+		if (s1[i] == '=' && s2[i] == '\0')
+			return (1);
 		if (s1[i] != s2[i])
 			return (0);  //подали уникальный ключ
-		if (s1[i] == '=' && s2[i] == '=')
+		if (s1[i] == '=' && s2[i] == '\0')
 			return (1); //ключи одинаковые
+		i++;
+	}
+	if (s1[i] == '\0' && s2[i] == '\0')
+			return (1);
+	return (0);
+}
+
+static int  check_name1(char *str) //сделать проверку что бы начиналось только с букв или же с _(как в экспорте)
+{
+	int i;
+
+	i = 0; 
+	while (str[i] != '\0')
+	{
+		if (str[i] == '=')
+			return (1);
 		i++;
 	}
 	return (0);
@@ -31,6 +49,8 @@ char **f_unset_line(char **cp_env, char *str)
 	k = 0;
 	if (!str)
 		return (cp_env); //если пустой unset подают то возвращаем сразу наш входящий массив
+	if (check_name1(str))
+		return (cp_env);
 	while(cp_env[i] != NULL)
 	{
 		if (compare_to_equal(cp_env[i], str)) //если нашли ключ кладем туда значение 55, так как в переменных окружения нельзя что бы 1 символ был цифрой то наше значение будет уникальным и не будет пересекаться

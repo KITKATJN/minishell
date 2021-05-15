@@ -35,7 +35,43 @@ void bsophia_function(t_command *list, t_untils *untils)
 		print_env(untils->env);
 	if (!(strcmp(list->command, "export")))
 	{
+		if (!(list->next))
+		{
+			print_export(untils->env);
+			return ;
+		}
 		list = list->next;
-		export_add(untils->env, list->command, untils);
+		while (list->next)
+		{
+			if (check_name(list->command))
+			{
+				printf("export error\n");
+				return ;
+			}
+			list = list->next;
+		}
+		if (check_name(list->command))
+		{
+			printf("export error\n");
+			return ;
+		}
+		while (list->back)
+			list = list->back;
+		while (list->next)
+		{
+			if (list->next)
+			{
+				list = list->next;
+				export_add(untils->env, list->command, untils);
+			}
+		}
+	}
+	if (!(strcmp(list->command, "unset")))
+	{
+		if (list->next)
+		{
+			list = list->next;
+			untils->env = f_unset_line(untils->env, list->command);
+		}
 	}
 }

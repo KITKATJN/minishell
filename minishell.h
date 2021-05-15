@@ -65,5 +65,8 @@ void					main_parser(char *str, t_untils *untils);
 void					bsophia_function(t_command *list, t_untils *untils);
 int						ft_lstsize_2(t_command *lst);
 void					print_env(char **cp_env);
+void					print_export(char **cp_env);
+int						check_name(char *str);
+int						ft_strcmp(char *str, char *str1);
 
 #endif

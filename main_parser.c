@@ -83,7 +83,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	bsophia_function(com, untils);
 	while (com)
 	{
-		printf("%s operation ---->%d\n", com->command, i);
+		// printf("%s operation ---->%d\n", com->command, i);
 		com = com->next;
 	}
 

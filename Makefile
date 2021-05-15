@@ -12,7 +12,7 @@ LIST 	=	backspace.c \
 			delete_spaces.c delete_tcommand.c ft_check_command.c \
 			ft_perror.c main_parser.c pars_to_command.c \
 			parse_add_semicolon_to_end.c parser_into_list.c \
-			bsophia_func.c
+			bsophia_func.c ft_strcmp.c
 
 OBJDIR	=	objs/
 
@@ -31,7 +31,7 @@ CC		= gcc
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) -ltermcap   -ltinfo -O3 $(OBJS) libft.a -o $(NAME) -lncurses #-fsanitize=address
+		$(CC) -ltermcap -O3 $(OBJS) libft.a -o $(NAME) #-fsanitize=address
 
 $(OBJDIR)%.o: %.c Makefile
 	mkdir -p $(OBJDIR)
