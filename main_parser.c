@@ -80,7 +80,9 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 {
 	ft_check_command(com->command);
 	ft_paste_env(com);
+	// printf("command\n");
 	bsophia_function(com, untils);
+	
 	while (com)
 	{
 		// printf("%s operation ---->%d\n", com->command, i);

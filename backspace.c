@@ -16,6 +16,5 @@ char *backspace(char *str)
 	}
 	n_str[k] = '\0';
 	free(str);
-	// printf("%s\n", n_str);
 	return(n_str);
 }
