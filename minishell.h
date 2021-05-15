@@ -46,7 +46,7 @@ void					clear_history(t_history **history);
 int						ft_lstsize(t_history *lst);
 void					get_pwd();
 int						f_echo(char *str, int i);
-int						f_cd(t_command *list);
+int						f_cd(t_command *list, t_untils *untils);
 char					**copy_envp(char **envp, char **cp_env);
 char					**export_add(char **cp_env, char *str, t_untils *untils);
 char					**f_unset_line(char **env, char *str);

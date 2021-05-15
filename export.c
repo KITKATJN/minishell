@@ -25,7 +25,7 @@ int check_name(char *str)
 	i = 0;
 	if (!(ft_isalpha(str[0])) && str[0] != '_')
 		return (1);
-	while (str[i] != '\0')
+	while (str[i] != '\0' && str[i] != '=')
 	{
 		if (!(ft_isalpha(str[i])) && (!(ft_isdigit(str[i]))) && str[i] != '_' && str[i] != '=')
 			return (1);

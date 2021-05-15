@@ -188,10 +188,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 				if (tmp->back)
 				{
 					flag_vniz_vverh = 1;
-					// tputs(delete_line, 1, ft_putchar);
-					// // write(1, "$> ", 3);
-					// tputs("$S> ", 1, ft_putchar);
-					// tputs(restore_cursor, 1, ft_putchar);
 					tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
 					tputs(tgetstr("ce", 0), 1, ft_putchar);
 					if (line)
@@ -208,10 +204,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 				if (tmp->next)
 				{
 					flag_vniz_vverh = 1;
-					// tputs(delete_line, 1, ft_putchar);
-					// // write(1, "$> ", 3);
-					// tputs("$S> ", 1, ft_putchar);
-					// tputs(restore_cursor, 1, ft_putchar);
 					tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
 					tputs(tgetstr("ce", 0), 1, ft_putchar);
 					if (line)
@@ -228,9 +220,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		{
 			if (flag_vniz_vverh == 1)
 			{
-				// tputs(restore_cursor, 1, ft_putchar);
-				// tputs(delete_line, 1, ft_putchar);
-				//tputs("$S> ", 1, ft_putchar);
 				tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
 				tputs(tgetstr("ce", 0), 1, ft_putchar); //чистит до конца строки
 				if (ft_strlen_b(line) && line)
@@ -242,10 +231,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			}
 			else
 			{
-				// tputs(delete_line, 1, ft_putchar);
-				// // write(1, "$> ", 3);
-				// tputs("$S> ", 1, ft_putchar);
-				// tputs(restore_cursor, 1, ft_putchar);
 				tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
 				tputs(tgetstr("ce", 0), 1, ft_putchar);
 				line = backspace(line);
@@ -263,13 +248,12 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 
 int main(int argc, char **argv, char **envp)
 {
-	char *buff[2];
+	// char *buff[2];
 	struct termios term;
 	char *line;
 	char *term_name;
 	t_history *history;
 	t_untils *untils;
-	char **cp_env;
 
 	history = NULL;
 	line = NULL;
@@ -282,10 +266,8 @@ int main(int argc, char **argv, char **envp)
 	tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
 	untils->env = copy_envp(envp, untils->env);
-
 	while (1)
 	{
-		// write(1, "$> ", 3);
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
