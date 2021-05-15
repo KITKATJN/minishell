@@ -170,7 +170,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			// }
 			if (untils->flag == 1)
 			{
-				untils->first = ft_strdup(tmp->content);
+				untils->first = ft_strdup_b(tmp->content);
 				untils->flag = 0;
 			}
 			while (tmp->back)
