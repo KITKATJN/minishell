@@ -44,24 +44,24 @@ char	*ft_check_command(char *command)
 	//printf("1----------------tmp = %s\ncommand--->%s\n", tmp, command);
 	if (command[0] == 'e')
 	{
-		if (!ft_strncmp(command, "echo", ft_strlen("echo")))
+		if (!ft_strncmp(command, "echo", ft_strlen(command)))
 			return ("echo");
-		if (!ft_strncmp(command, "env", ft_strlen("env")))
+		if (!ft_strncmp(command, "env", ft_strlen(command)))
 			return ("env");
-		if (!ft_strncmp(command, "exit", ft_strlen("exit")))
+		if (!ft_strncmp(command, "exit", ft_strlen(command)))
 			return ("exit");
-		if (!ft_strncmp(command, "export", ft_strlen("export")))
+		if (!ft_strncmp(command, "export", ft_strlen(command)))
 			return ("export");
 		ft_putstr_fd("command \"", 2);
 		ft_putstr_fd(command, 2);
 		ft_putstr_fd("\" not found\n", 2);
 		return ("error");
 	}
-	if (!ft_strncmp(command, "cd", ft_strlen("cd")))
+	if (!ft_strncmp(command, "cd", ft_strlen(command)))
 		return ("cd");
-	if (!ft_strncmp(command, "pwd", ft_strlen("pwd")))
+	if (!ft_strncmp(command, "pwd", ft_strlen(command)))
 		return ("pwd");
-	if (!ft_strncmp(command, "unset", ft_strlen("unset")))
+	if (!ft_strncmp(command, "unset", ft_strlen(command)))
 		return ("unset");
 	ft_putstr_fd("command \"", 2);
 	ft_putstr_fd(command, 2);
