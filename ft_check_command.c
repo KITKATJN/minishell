@@ -54,7 +54,8 @@ char	*ft_check_command(char *command)
 			return ("export");
 		ft_putstr_fd("command \"", 2);
 		ft_putstr_fd(command, 2);
-		ft_putstr_fd("\" not found", 2);
+		ft_putstr_fd("\" not found\n", 2);
+		return ("error");
 	}
 	if (!ft_strncmp(command, "cd", ft_strlen("cd")))
 		return ("cd");
@@ -62,8 +63,8 @@ char	*ft_check_command(char *command)
 		return ("pwd");
 	if (!ft_strncmp(command, "unset", ft_strlen("unset")))
 		return ("unset");
-	// ft_putstr_fd("command \"", 2);
-	// ft_putstr_fd(command, 2);
-	// ft_putstr_fd("\" not found", 2);
-	return (0);
+	ft_putstr_fd("command \"", 2);
+	ft_putstr_fd(command, 2);
+	ft_putstr_fd("\" not found\n", 2);
+	return ("error");
 }

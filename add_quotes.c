@@ -34,6 +34,8 @@ char *add_quotes(char *str)
 	int		i;
 	char	*new_str;
 
+	if (!str)
+		return (0);
 	i = 0;
 	while(str[i])
 	{
