@@ -85,7 +85,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 
 	while (com)
 	{
-		// printf("%s operation ---->%d\n", com->command, i);
+		printf("%s operation ---->%d\n", com->command, i);
 		com = com->next;
 	}
 

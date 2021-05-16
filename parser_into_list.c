@@ -173,8 +173,8 @@ static	int		from_str_to_symb(char **arr_of_command, char *argv)
 			if (double_quotes % 2 == 0 && alone_quotes % 2 == 0)
 				flag = 1;
 		}
-		if (argv[i] == ' ')
-			flag = 0;
+		//if (argv[i] == ' ')
+		//	flag = 0;
 		if (argv[i] == '\'' && flag)
 		{
 			if (i + 1 < ft_strlen(argv) && argv[i + 1] == '\'')
@@ -194,6 +194,8 @@ static	int		from_str_to_symb(char **arr_of_command, char *argv)
 		arr_of_command[j][0] = argv[i];
 		//printf("arr_of_command[%d] = %c\n", j,arr_of_command[j][0]);
 		arr_of_command[j][1] = '\0';
+		if ((argv[i] == '\'' || argv[i] == '\"') && !flag)
+			flag = 1;
 		j++;
 		i++;
 	}
@@ -207,10 +209,11 @@ static	int		from_str_to_symb(char **arr_of_command, char *argv)
 	// j = 0;
 	// while (j < ft_strlen(argv))
 	// {
-	// 	printf("before !arr_of_command3[%d] = %c\n", j,arr_of_command[j][0]);
+	// 	printf("before !arr_of_command3[%d] = !%c!\n", j,arr_of_command[j][0]);
 	// 	j++;
 	// }
 
+	flag = 0;
 	i = 0;
 	while (i < ft_strlen(argv))
 	{
@@ -240,6 +243,8 @@ static	int		from_str_to_symb(char **arr_of_command, char *argv)
 	j = 0;
 	int iterator;
 	int number_of_quotes = 0;
+	if (!flag)
+		flag = ft_strlen(argv) - 1;
 	//flag = 0;
 	if (double_quotes > 0 || alone_quotes > 0)
 	{
@@ -288,7 +293,7 @@ static	int		from_str_to_symb(char **arr_of_command, char *argv)
 
 
 
-	// j = 0;
+	j = 0;
 	// while (j < ft_strlen(argv))
 	// {
 	// 	printf("!arr_of_command3[%d] = !%c!\n", j,arr_of_command[j][0]);
