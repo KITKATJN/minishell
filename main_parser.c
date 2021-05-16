@@ -99,45 +99,46 @@ void main_parser(char *str, t_untils *untils)
 	start = 0;
 	//start = parser_into_list("echo  -n     'y   sdf jghmj' \"f d!!!fs;ds\"  h    ff;vx sdf ft        mkk");
 	//start = parser_into_list("echo $PWD$PATH;echo  -n $t rgdfg HELLO$t $s1 'hgf $PATH' \"    ;$t$PATH\";export\" fsd; hjghj;;$PATH\"  ry rt $bf;   echo 'echo'\"hello\"");
-	if (str != 0)
-	{
-		start = parser_into_list(str);
-		if (start->flag != 0 && !ft_strncmp("error", start->flag, ft_strlen("error")))
-		{
-			ft_perror(start->command);
-		}
-		pars_to_command(start);
-		parse_add_semicolon_to_end(start);
-		current_command = start;
-	}
-	else
-		start = ft_lstnew_parser("", 0);
+	parser_into_list_2(str, untils);
+	// if (str != 0)
+	// {
+	// 	start = parser_into_list(str);
+	// 	if (start->flag != 0 && !ft_strncmp("error", start->flag, ft_strlen("error")))
+	// 	{
+	// 		ft_perror(start->command);
+	// 	}
+	// 	pars_to_command(start);
+	// 	parse_add_semicolon_to_end(start);
+	// 	current_command = start;
+	// }
+	// else
+	// 	start = ft_lstnew_parser("", 0);
 
-	current_command = start;
-	int i =1;
-	t_command *new_start = 0;
-	t_command *new_command;
-	while (current_command)
-	{
-		if (current_command->command[0] == ';')
-		{
-			bsopia_func(new_start, i++, untils);
-			new_start = 0;
-			current_command = current_command->next;
-			if (current_command == 0)
-				break ;
-		}
-		//printf("1---------------------------------------\n");
-		new_command = ft_lstnew_parser(ft_strdup(current_command->command), 0);
-		//printf("2---------------------------------------\n");
-		ft_lstadd_back_parser(&new_start, new_command);
-		//printf("3---------------------------------------\n");
-		current_command = current_command->next;
-	}
-	if (new_start)
-	{
-		//printf("OMG\n");
-		bsopia_func(new_start, i++, untils);
-		new_start = 0;
-	}
+	// current_command = start;
+	// int i =1;
+	// t_command *new_start = 0;
+	// t_command *new_command;
+	// while (current_command)
+	// {
+	// 	if (current_command->command[0] == ';')
+	// 	{
+	// 		bsopia_func(new_start, i++, untils);
+	// 		new_start = 0;
+	// 		current_command = current_command->next;
+	// 		if (current_command == 0)
+	// 			break ;
+	// 	}
+	// 	//printf("1---------------------------------------\n");
+	// 	new_command = ft_lstnew_parser(ft_strdup(current_command->command), 0);
+	// 	//printf("2---------------------------------------\n");
+	// 	ft_lstadd_back_parser(&new_start, new_command);
+	// 	//printf("3---------------------------------------\n");
+	// 	current_command = current_command->next;
+	// }
+	// if (new_start)
+	// {
+	// 	//printf("OMG\n");
+	// 	bsopia_func(new_start, i++, untils);
+	// 	new_start = 0;
+	// }
 }
