@@ -28,7 +28,7 @@ typedef struct			s_history
 typedef struct			s_parser
 {
 	char				*symbol;
-	int					special;//1-' 2-" 3-\ 4-? (-1)-незначащий пробел 0-обычный символ
+	int					special;//1-' 2-" 3-\ 4-? 5-$ (-1)-незначащий пробел 0-экранированный символ 7-обычный символ
 	struct s_parser	*next;
 	struct s_parser	*back;
 }						t_parser;
