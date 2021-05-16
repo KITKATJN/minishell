@@ -99,7 +99,7 @@ void main_parser(char *str, t_untils *untils)
 	start = 0;
 	//start = parser_into_list("echo  -n     'y   sdf jghmj' \"f d!!!fs;ds\"  h    ff;vx sdf ft        mkk");
 	//start = parser_into_list("echo $PWD$PATH;echo  -n $t rgdfg HELLO$t $s1 'hgf $PATH' \"    ;$t$PATH\";export\" fsd; hjghj;;$PATH\"  ry rt $bf;   echo 'echo'\"hello\"");
-	parser_into_list_2(str);
+	parser_into_list_2(str, untils);
 	// if (str != 0)
 	// {
 	// 	start = parser_into_list(str);
