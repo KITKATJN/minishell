@@ -47,6 +47,7 @@ void	delete_current_parser2(t_parser *current)
 			next->back = back;
 		if (back != 0)
 			back->next = next;
+		free(current->symbol);
 		free (current);
 	}
 }
@@ -62,16 +63,29 @@ void	printf_list(t_parser *current)
 	}
 }
 
+void	printf_command_list(t_command *current)
+{
+	printf("----------------------------------------------------------------------------\n");
+	while (current)
+	{
+		printf("command = !%s! \n", current->command);
+		current = current->next;
+		/* code */
+	}
+}
 
-t_parser	parser_into_list_2(char *str)
+t_parser	*parser_into_list_2(char *str)
 {
 	t_parser	*start;
 	t_parser	*current;
 	char		*c;
 	int			i;
+	int			count_1;
 
+	count_1 = 0;
 	i = 0;
 	start = 0;
+	char r = ' ';
 	while (i < ft_strlen(str))
 	{
 		c = malloc(sizeof(char) * 2);
@@ -80,18 +94,31 @@ t_parser	parser_into_list_2(char *str)
 		if (c[0] == '\\')
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 3));
 		else if (c[0] == '\"')
+		{
+			count_1++;
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 2));
+		}
 		else if (c[0] == '\'')
+		{
+			count_1++;
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 1));
+		}
 		else if (c[0] == '?')
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 4));
 		else if (c[0] == '$')
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 5));
 		else if (c[0] == ' ')
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, -1));
+		else if (c[0] == ';' && count_1 % 2 != 0)
+		{
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(&r, -1));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 9));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(&r, -1));
+		}
 		else
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 7));
 		i++;
+		//free(c);
 	}
 
 	current = start;
@@ -105,6 +132,7 @@ t_parser	parser_into_list_2(char *str)
 		}
 		current = current->next;
 	}
+	//printf_list(start);
 
 	current = start;
 	t_parser	*tmp;
@@ -153,24 +181,8 @@ t_parser	parser_into_list_2(char *str)
 		current = current->next;
 	}
 
-	//printf("1---------------\n");
 	//printf_list(start);
-	current = start;
-	while (current)
-	{
-		if (current->symbol[0] == '\'')//все что в обычных ковычках меняем на простые символы, которые ничего не значат
-		{
-			current = current->next;
-			while (current->symbol[0] != '\'')
-			{
-				current->special = 0;
-				current = current->next;
-			}
-		}
-		current = current->next;
-	}
-
-
+	printf("1---------------\n");
 	current = start;
 	t_parser *next;
 	while (current->next)
@@ -185,69 +197,171 @@ t_parser	parser_into_list_2(char *str)
 		}
 		current = current->next;
 	}
-	//printf("3---------------\n");
-	printf_list(start);
+	//printf_list(start);
+	printf("1.5----------------------\n");
 
 	current = start;
-	t_parser *env_command;
-	t_parser *head;
-	char	*str_env;
-	char	*tmp_env;
-	int		i_env;
-	int		iter;
-	while (current->next)
+	int		count = 0;
+	while (current)
 	{
-		printf("6--------\n");
-		if (current->symbol[0] == '$' && current->special != 0)
+		if (current->symbol[0] == '\'' && current->special != 0)//если ковычек не четное число то выходим с error
 		{
-			i_env = 1;
-			env_command = current;
-			current = current->next;
-			printf("5--------\n");
-			while (current && current->special != 0 && current->special != -1 && current->special != 5 && current->special != 2)
-			{
-				i_env++;
-				current = current->next;
-			}
-			printf("env %d\n", i_env);
-
-			tmp_env = malloc(sizeof(char*) * i_env + 1);
-			ft_bzero(tmp_env, i_env + 1);
-			current = env_command;
-			iter = 0;
-			while (iter < i_env)
-			{
-				tmp_env[iter] = current->symbol[0];
-				current = current->next;
-				iter++;
-			}
-			printf("tmp_env %s\n", tmp_env);
-
-			current = env_command;
-			free(current->symbol);
-			current->symbol = tmp_env;
-			current = current->next;
-			iter = 1;
-			printf("1--------\n");
-			while (iter < i_env)
-			{
-				head = current->back;
-				delete_current_parser2(current);
-				current = head;
-				printf("2--------\n");
-				current = current->next;
-				iter++;
-			}
-			printf("3--------\n");
-			current = env_command;
+			count++;
 		}
-		if (!current->next)
-			break ;
-		printf("7--------\n");
+		if (current->symbol[0] == '\"' && current->special != 0)//если ковычек не четное число то выходим с нулем
+		{
+			count++;
+		}
 		current = current->next;
-		printf("8--------\n");
 	}
+	if (count % 2 != 0)
+	{
+		printf("error with quotes %d\n", count);
+		return (ft_lstnew_parser2(ft_strdup("error with quotes"), 0));
+	}
+	printf("2---------------\n");
+	//printf_list(start);
+	current = start;
+	while (current)
+	{
+		if (current->symbol[0] == '\'' && current->special != 0)//все что в обычных ковычках меняем на простые символы, которые ничего не значат
+		{
+			current = current->next;
+			if (current == 0)
+				break ;
+			while (current->special != 1)
+			{
+				current->special = 0;
+				current = current->next;
+			}
+		}
+		current = current->next;
+	}
+	printf("3---------------\n");
+	//printf_list(start);
+
+	current = start;
+	while (current)
+	{
+		if (current->special == 2)//для замены пробелы на значащий в двойных ковычках
+		{
+			current = current->next;
+			if (current == 0)
+				break ;
+			while (current->special != 2)
+			{
+				if (current->special == -1)
+					current->special = 0;
+				current = current->next;
+			}
+		}
+		current = current->next;
+	}
+	printf("3.5---------------\n");
+	//printf_list(start);
+	// current = start;
+	// t_parser *env_command;
+	// t_parser *head;
+	// char	*str_env;
+	// char	*tmp_env;
+	// int		i_env;
+	// int		iter;
+	// while (current->next)
+	// {
+	// 	//printf("6--------\n");
+	// 	if (current->symbol[0] == '$' && current->special != 0)
+	// 	{
+	// 		i_env = 1;
+	// 		env_command = current;
+	// 		current = current->next;
+	// 		//printf("5--------\n");
+	// 		while (current && current->special != 0 && current->special != -1 && current->special != 5 && current->special != 2)
+	// 		{
+	// 			i_env++;
+	// 			current = current->next;
+	// 		}
+	// 		//printf("env %d\n", i_env);
+
+	// 		tmp_env = malloc(sizeof(char*) * i_env + 1);
+	// 		ft_bzero(tmp_env, i_env + 1);
+	// 		current = env_command;
+	// 		iter = 0;
+	// 		while (iter < i_env)
+	// 		{
+	// 			tmp_env[iter] = current->symbol[0];
+	// 			current = current->next;
+	// 			iter++;
+	// 		}
+	// 		//printf("tmp_env %s\n", tmp_env);
+
+	// 		current = env_command;
+	// 		free(current->symbol);
+	// 		current->symbol = tmp_env;
+	// 		current = current->next;
+	// 		iter = 1;
+	// 		//printf("1--------\n");
+	// 		while (iter < i_env)
+	// 		{
+	// 			head = current->back;
+	// 			delete_current_parser2(current);
+	// 			current = head;
+	// 			//printf("2--------\n");
+	// 			current = current->next;
+	// 			iter++;
+	// 		}
+	// 		//printf("3--------\n");
+	// 		current = env_command;
+	// 	}
+	// 	if (!current->next)
+	// 		break ;
+	// 	//printf("7--------\n");
+	// 	current = current->next;
+	// 	//printf("8--------\n");
+	// }
 
 	printf("4--------\n");
 	printf_list(start);
+
+	current = start;
+	t_parser	*new_start;
+	t_command	*command;
+	int		comm_iterator;
+	char	*str_command;
+	int		l;
+	//int		length_command;
+	command = 0;
+	comm_iterator = 0;
+	new_start = start;
+	while (current)
+	{
+		if (current->special == -1 || current->next == 0)
+		{
+			if (current->next == 0)
+				comm_iterator++;
+			printf(" new start = !%s! iter = %d\n", new_start->symbol, comm_iterator);
+			//printf("!%s! %d\n", current->symbol, current->special);
+			str_command = malloc(sizeof(char*) * comm_iterator + 1);
+			ft_bzero(str_command, comm_iterator + 1);
+			l = 0;
+			//length_command = 0;
+			while (l < comm_iterator)
+			{
+				//while (length_command < ft_strlen(new_start->symbol))
+			//	{
+					str_command[l] = new_start->symbol[0];
+				//	length_command++;
+					l++;
+				//}
+				new_start = new_start->next;
+			}
+			ft_lstadd_back_parser(&command,ft_lstnew_parser(str_command, 0));
+			//printf("str_command = !%s!\n", str_command);
+			comm_iterator = -1;
+			new_start = current->next;
+		}
+		comm_iterator += ft_strlen(current->symbol);
+		current = current->next;
+	}
+	printf_command_list(command);
+	//printf_list(start);
 }
