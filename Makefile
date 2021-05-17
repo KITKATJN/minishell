@@ -12,7 +12,7 @@ LIST 	=	backspace.c \
 			delete_spaces.c delete_tcommand.c ft_check_command.c \
 			ft_perror.c main_parser.c pars_to_command.c \
 			parse_add_semicolon_to_end.c parser_into_list.c \
-			bsophia_func.c ft_strcmp.c
+			bsophia_func.c ft_strcmp.c parser_into_list_2.c
 
 OBJDIR	=	objs/
 
@@ -46,3 +46,4 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re bonus
+.SILENT: fclean clean all $(NAME) $(OBJS) $(OBJDIR)

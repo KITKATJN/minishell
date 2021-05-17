@@ -3,8 +3,12 @@
 t_command *check_double_semicolon(char *argv)
 {
 	int i = 0;
+
+	if (!argv)
+		return (0);
 	while (i < ft_strlen(argv) - 1)
 	{
+		//printf("!!!!!!!!!!!!!!!!!%s\n", argv);
 		if (argv[i] == '\'')
 		{
 			i++;
