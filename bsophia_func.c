@@ -25,7 +25,7 @@ static void echo_2(t_command *list)
 
 void bsophia_function(t_command *list, t_untils *untils)
 {
-	printf("=====> %s\n", list->command);
+	printf("bsophia first command =====> %s\n", list->command);
 	if (!(strcmp(list->command, "echo")))
 		echo_2(list);
 	if (!(strcmp(list->command, "pwd")))

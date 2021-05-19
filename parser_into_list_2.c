@@ -100,14 +100,14 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	char 		*str;
 
 
-	printf("-------------->!%s!\n", str1);
+	//printf("-------------->!%s!\n", str1);
 	if (str1 == 0 || str1[0] == '\0')
 		return (0);
 
 	if (str1[0] == '\n')
 		return(0);
 	str = ft_strdup(str1);
-	printf("--2------------>!%s!\n", str1);
+	//printf("--2------------>!%s!\n", str1);
 	count_1 = 0;
 	i = 0;
 	start = 0;
@@ -266,7 +266,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		}
 		current = current->next;
 	}
-	printf("3---------------\n");
+	//printf("3---------------\n");
 	//printf_list(start);
 
 	current = start;
@@ -353,7 +353,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		}
 		current = current->next;
 	}
-	printf_list(list_of_command);
+	//printf_list(list_of_command);
 
 	t_command *commands;
 	commands = 0;
@@ -366,6 +366,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	char *end_command = malloc(1);
 	end_command[0] = '\0';
 	int i_for_str_before_dollar;
+	//printf_list(current);
 	while (current)
 	{
 		i_env = 0;
@@ -384,17 +385,20 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 				ft_bzero(env_tmp, ft_strlen(current->symbol) - i_env + 1);
 				j_env = i_env + 1;
 				i = 0;
-				printf("%d === %ld !%s!\n", j_env ,ft_strlen(current->symbol), string_before_doolar);
+				//printf("%d === %ld !%s!\n", j_env ,ft_strlen(current->symbol), string_before_doolar);
 				while (j_env < ft_strlen(current->symbol))
 				{
 					if (current->special_array[j_env] == 0 || current->special_array[j_env] == 5)
 						break;
 					env_tmp[j_env - i_env - 1] = current->symbol[j_env];
-					printf("*** %c  %d %c\n", env_tmp[j_env - i_env - 1],j_env - i_env - 1 , current->symbol[j_env]);
+					//printf("*** %c  %d %c\n", env_tmp[j_env - i_env - 1],j_env - i_env - 1 , current->symbol[j_env]);
 					j_env++;
 				}
 				//printf("env_tmp = %s\n", env_tmp);
-				command_tmp = ft_strdup(getenv(env_tmp));// ft_strjoin(getenv(env_tmp), current->symbol + j_env);
+				if (getenv(env_tmp) == 0)
+					command_tmp = 0;
+				else
+					command_tmp = ft_strdup(getenv(env_tmp));// ft_strjoin(getenv(env_tmp), current->symbol + j_env);
 				//printf("command_tmp1 = %s\n", command_tmp);
 				if (command_tmp == 0)
 				{
@@ -403,16 +407,16 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 				}
 				//if (i_env > 0)
 				//	command_tmp = ft_strjoin(ft_substr(current->symbol, 0 , i_env), command_tmp);
-				printf("command_tmp2 = %s\n", command_tmp);
+				//printf("command_tmp2 = %s\n", command_tmp);
 				end_command = ft_strjoin(end_command, string_before_doolar);
-				printf("end_command1 = %s\n", end_command);
+				//printf("end_command1 = %s\n", end_command);
 				end_command = ft_strjoin(end_command, command_tmp);
-				printf("end_command2 = %s\n", end_command);
-				printf("env_tmp = %s %s \n", env_tmp, command_tmp);
+				//printf("end_command2 = %s\n", end_command);
+				//printf("env_tmp = %s %s \n", env_tmp, command_tmp);
 				i_env = j_env;
 				ft_bzero(string_before_doolar, ft_strlen(current->symbol) + 1);
 				i_for_str_before_dollar = 0;
-				printf("cyter ====->%c %d\n", current->symbol[i_env], i_env);
+				//printf("cyter ====->%c %d\n", current->symbol[i_env], i_env);
 			}
 			if (i_env < ft_strlen(current->symbol))
 			{
@@ -422,14 +426,16 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 			i_for_str_before_dollar++;
 			i_env++;
 		}
-		printf("string_before_doolar = %s\n", string_before_doolar);
+		//printf("string_before_doolar = %s\n", string_before_doolar);
 		end_command = ft_strjoin(end_command, string_before_doolar);
 		//printf("34/*/*/*/*/*/*/*/*/*/**/**/*\n");
 		if (end_command[0] != '\0')
 			current->symbol = end_command;
 		//printf("35/*/*/*/*/*/*/*/*/*/**/**/*\n");
-		if (current->special == 9)
+		if (current->special_array[0] == 9)
 		{
+			//printf("1-----------------\n");
+			//printf_command_list(commands);
 			bsopia_func(commands, 0, untils);
 			if (current->next == 0)
 				break ;
@@ -442,6 +448,8 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		current = current->next;
 	}
 	bsopia_func(commands, 0, untils);
+	//printf("2-----------------\n");
+	//printf_command_list(commands);
 	//printf_command_list(commands);
 	// current = list_of_command;
 	// t_parser *temporary2;
