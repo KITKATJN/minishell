@@ -115,31 +115,31 @@ void main_parser(char *str, t_untils *untils)
 	// else
 	// 	start = ft_lstnew_parser("", 0);
 
-	current_command = start;
-	int i = 1;
-	t_command *new_start = 0;
-	t_command *new_command;
-	while (current_command)
-	{
-		if (current_command->command[0] == ';')
-		{
-			bsopia_func(new_start, i++, untils);
-			new_start = 0;
-			current_command = current_command->next;
-			if (current_command == 0)
-				break ;
-		}
-		//printf("1---------------------------------------\n");
-		new_command = ft_lstnew_parser(ft_strdup(current_command->command), 0);
-		//printf("2---------------------------------------\n");
-		ft_lstadd_back_parser(&new_start, new_command);
-		//printf("3---------------------------------------\n");
-		current_command = current_command->next;
-	}
-	if (new_start)
-	{
-		//printf("OMG\n");
-		bsopia_func(new_start, i++, untils);
-		new_start = 0;
-	}
+	// current_command = start;
+	// int i = 1;
+	// t_command *new_start = 0;
+	// t_command *new_command;
+	// while (current_command)
+	// {
+	// 	if (current_command->command[0] == ';')
+	// 	{
+	// 		bsopia_func(new_start, i++, untils);
+	// 		new_start = 0;
+	// 		current_command = current_command->next;
+	// 		if (current_command == 0)
+	// 			break ;
+	// 	}
+	// 	//printf("1---------------------------------------\n");
+	// 	new_command = ft_lstnew_parser(ft_strdup(current_command->command), 0);
+	// 	//printf("2---------------------------------------\n");
+	// 	ft_lstadd_back_parser(&new_start, new_command);
+	// 	//printf("3---------------------------------------\n");
+	// 	current_command = current_command->next;
+	// }
+	// if (new_start)
+	// {
+	// 	//printf("OMG\n");
+	// 	bsopia_func(new_start, i++, untils);
+	// 	new_start = 0;
+	// }
 }

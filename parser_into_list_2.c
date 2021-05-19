@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_parser	*ft_lstnew_parser2(char *symbol, int special)
+t_parser	*ft_lstnew_parser2(char *symbol, int special, int *special_array)
 {
 	t_parser	*lst;
 
@@ -11,6 +11,7 @@ t_parser	*ft_lstnew_parser2(char *symbol, int special)
 		lst->special = special;
 		lst->next = 0;
 		lst->back = 0;
+		lst->special_array = special_array;
 	}
 	return (lst);
 }
@@ -55,10 +56,24 @@ void	delete_current_parser2(t_parser *current)
 
 void	printf_list(t_parser *current)
 {
+	int i = 0;
+
 	printf("----------------------------------------------------------------------------\n");
 	while (current)
 	{
-		printf("!%s! %d\n", current->symbol, current->special);
+		if (current->special_array == 0)
+			printf("!%s! %d\n", current->symbol, current->special);
+		else
+		{
+			printf("!%s! %d ->array", current->symbol, current->special);
+			while (i < ft_strlen(current->symbol))
+			{
+				printf(" %d", current->special_array[i]);
+				i++;
+			}
+			printf("\n");
+			i = 0;
+		}
 		current = current->next;
 		/* code */
 	}
@@ -83,7 +98,7 @@ t_command	*parser_into_list_2(char *str, t_untils *untils)
 	int			i;
 	int			count_1;
 
-	//printf("-------------->!%s!\n", str);
+	printf("-------------->!%s!\n", str);
 	if (str == 0 || str[0] == '\0')
 		return (0);
 	if (str[0] == '\n')
@@ -101,31 +116,31 @@ t_command	*parser_into_list_2(char *str, t_untils *untils)
 		ft_bzero(c, 2);
 		c[0] = str[i];
 		if (c[0] == '\\')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 3));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 3, 0));
 		else if (c[0] == '\"')
 		{
 			count_1++;
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 2));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 2, 0));
 		}
 		else if (c[0] == '\'')
 		{
 			count_1++;
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 1));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 1, 0));
 		}
 		else if (c[0] == '?')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 4));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 4, 0));
 		else if (c[0] == '$')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 5));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 5, 0));
 		else if (c[0] == ' ')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, -1));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, -1, 0));
 		else if (c[0] == ';' && count_1 % 2 == 0)
 		{
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1));
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 9));
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 9, 0));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
 		}
 		else
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 7));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 7, 0));
 		i++;
 		//free(c);
 	}
@@ -137,7 +152,7 @@ t_command	*parser_into_list_2(char *str, t_untils *untils)
 		if (current->symbol[0] == '\\' && current->next == 0)
 		{
 			u = ' ';
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(ft_strdup(&u), -1));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(ft_strdup(&u), -1, 0));
 		}
 		current = current->next;
 	}
@@ -273,6 +288,7 @@ t_command	*parser_into_list_2(char *str, t_untils *untils)
 	t_parser *new_start;
 	t_parser *list_of_command;
 	new_start = start;
+	int		*special_array;
 	*str = 0;
 	i = 0;
 	int j = 0;
@@ -285,25 +301,31 @@ t_command	*parser_into_list_2(char *str, t_untils *untils)
 		{
 			str = malloc(sizeof(char*) * i + 1);
 			ft_bzero(str, i + 1);
+			special_array = malloc(sizeof(int*) * i + 1);
+			ft_bzero(special_array, i + 1);
 			i = 0;
 			while (new_start != current)
 			{
 				//printf("1------------------------\n");
 				str[i] = new_start->symbol[0];
+				special_array[i] = new_start->special;
 				new_start = new_start->next;
 				i++;
 			}
 			if (current->next == 0 && current->special != -1)
+			{
 				str[i] = new_start->symbol[0];
-			ft_lstadd_back_parser2(&list_of_command, ft_lstnew_parser2(str, 0));
+				special_array[i] = new_start->special;
+			}
+			ft_lstadd_back_parser2(&list_of_command, ft_lstnew_parser2(str, 0, special_array));
 			i = 0;
-			//printf("2------------------------\n");
+			printf("2------------------------%d\n", special_array[0]);
 			if (new_start != 0)
 				new_start = new_start->next;
 		}
 		current = current->next;
 	}
-//	printf_list(list_of_command);
+	//printf_list(list_of_command);
 
  //надо удалять первоначчальный список
 	while (start)
@@ -326,18 +348,93 @@ t_command	*parser_into_list_2(char *str, t_untils *untils)
 		}
 		current = current->next;
 	}
-//	printf_list(list_of_command);
+	printf_list(list_of_command);
 
 	t_command *commands;
 	commands = 0;
 	current = list_of_command;
+	int i_env;
+	int j_env;
+	char *env_tmp;
+	char *string_before_doolar;
+	char *command_tmp;
+	char *end_command = malloc(1);
+	end_command[0] = '\0';
+	int i_for_str_before_dollar;
 	while (current)
 	{
+		i_env = 0;
+		end_command = malloc(1);
+		end_command[0] = '\0';
+		printf("2-=========================== %d %s\n", current->special_array[i_env], current->symbol);
+		string_before_doolar = malloc(sizeof(char*) * ft_strlen(current->symbol) + 1);
+		ft_bzero(string_before_doolar, ft_strlen(current->symbol) + 1);
+		i_for_str_before_dollar = 0;
+		while (i_env < ft_strlen(current->symbol))
+		{
+			//printf("1/*/*/*/*/*/*/*/*/*/**/**/*\n");
+			if (current->special_array[i_env] == 5)
+			{
+				env_tmp = malloc(sizeof(char*) * (ft_strlen(current->symbol) - i_env) + 1);
+				ft_bzero(env_tmp, ft_strlen(current->symbol) - i_env + 1);
+				j_env = i_env + 1;
+				i = 0;
+				printf("%d === %ld !%s!\n", j_env ,ft_strlen(current->symbol), string_before_doolar);
+				while (j_env < ft_strlen(current->symbol))
+				{
+					if (current->special_array[j_env] == 0 || current->special_array[j_env] == 5)
+						break;
+					env_tmp[j_env - i_env - 1] = current->symbol[j_env];
+					printf("*** %c  %d %c\n", env_tmp[j_env - i_env - 1],j_env - i_env - 1 , current->symbol[j_env]);
+					j_env++;
+				}
+				printf("env_tmp = %s\n", env_tmp);
+				command_tmp = ft_strjoin(getenv(env_tmp), current->symbol + j_env);
+				printf("command_tmp1 = %s\n", command_tmp);
+				if (command_tmp == 0)
+				{
+					command_tmp = malloc(1);
+					command_tmp[0] = '\0';
+				}
+				//if (i_env > 0)
+				//	command_tmp = ft_strjoin(ft_substr(current->symbol, 0 , i_env), command_tmp);
+				printf("command_tmp2 = %s\n", command_tmp);
+				end_command = ft_strjoin(end_command, string_before_doolar);
+				printf("end_command1 = %s\n", end_command);
+				end_command = ft_strjoin(end_command, command_tmp);
+				printf("end_command2 = %s\n", end_command);
+				//printf("env_tmp = %s %s \n", env_tmp, command_tmp);
+				i_env = j_env;
+				ft_bzero(string_before_doolar, ft_strlen(current->symbol) + 1);
+				printf("cyter ====->%c %d\n", current->symbol[i_env], i_env);
+			}
+			if (i_env < ft_strlen(current->symbol))
+				string_before_doolar[i_for_str_before_dollar] = current->symbol[i_env];
+			//printf("2/*/*/*/*/*/*/*/*/*/**/**/*\n");
+			i_for_str_before_dollar++;
+			i_env++;
+		}
+		printf("string_before_doolar = %s\n", string_before_doolar);
+		end_command = ft_strjoin(end_command, string_before_doolar);
+		//printf("34/*/*/*/*/*/*/*/*/*/**/**/*\n");
+		if (end_command[0] != '\0')
+			current->symbol = end_command;
+		//printf("35/*/*/*/*/*/*/*/*/*/**/**/*\n");
+		if (current->special == 9)
+		{
+			//bsophia_function(commands, untils);
+			if (current->next == 0)
+				break ;
+			current = current->next;
+			commands = 0;
+		}
+		//printf("3/*/*/*/*/*/*/*/*/*/**/**/*\n");
 		ft_lstadd_back_parser(&commands, ft_lstnew_parser(ft_strdup(current->symbol), 0));
+		//printf("4/*/*/*/*/*/*/*/*/*/**/**/*\n");
 		current = current->next;
 	}
 
-	//printf_command_list(commands);
+	printf_command_list(commands);
 	// current = list_of_command;
 	// t_parser *temporary2;
 	// while (current)

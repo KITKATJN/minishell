@@ -29,8 +29,9 @@ typedef struct			s_parser
 {
 	char				*symbol;
 	int					special;//1-' 2-" 3-\ 4-? 5-$ (-1)-незначащий пробел 0-экранированный символ 7-обычный символ
-	struct s_parser	*next;
-	struct s_parser	*back;
+	struct s_parser		*next;
+	struct s_parser		*back;
+	int					*special_array;
 }						t_parser;
 
 typedef struct			s_command
@@ -79,7 +80,7 @@ int						ft_strcmp(char *str, char *str1);
 
 t_command	*parser_into_list_2(char *str, t_untils *untils);
 void	ft_lstadd_back_parser2(t_parser **lst, t_parser *new);
-t_parser	*ft_lstnew_parser2(char	*symbol, int special);
+t_parser	*ft_lstnew_parser2(char	*symbol, int special, int *special_array);
 void bsopia_func(t_command *com, int i, t_untils *untils);
 
 #endif
