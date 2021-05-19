@@ -271,6 +271,7 @@ int main(int argc, char **argv, char **envp)
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
+		printf("line==!%s!\n", line);
 		clear_history(&history);
 		main_parser(line, untils);
 	}
