@@ -100,7 +100,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	char 		*str;
 
 
-	//printf("-------------->!%s!\n", str1);
+	printf("-------------->!%s!\n", str1);
 	if (str1 == 0 || str1[0] == '\0')
 		return (0);
 
@@ -112,11 +112,17 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	i = 0;
 	start = 0;
 	char *r;
+	int flag_delete_probel = 0;
 	r = malloc(sizeof(char) * 2);
 	ft_bzero(r, 2);
 	r[0] = ' ';
 	while (i < ft_strlen(str))
 	{
+		if (str[i] == ' ' && !flag_delete_probel)
+		{
+			i++;
+			continue ;
+		}
 		c = malloc(sizeof(char) * 2);
 		ft_bzero(c, 2);
 		c[0] = str[i];
@@ -146,6 +152,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		}
 		else
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 7, 0));
+		flag_delete_probel = 1;
 		i++;
 		//free(c);
 	}
@@ -171,15 +178,21 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	while (current->next)
 	{
 		num_quotes = 0;
+
+	//printf("1---456789------------\n");
+	//printf("1---------------%s\n", current->symbol);
 		if (current->symbol[0] == '\'' && current->next->symbol[0] == '\'')//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
 		{
 			tmp3 = current;
+			//printf("1+---------------\n");
 			while (tmp3)
 			{
 				if(tmp3->symbol[0] == '\"') //здесь и ниже я удаляю кавычки стоящие ввместе, но не удаляю ковычки стоящие вместе в других ковычках
 					num_quotes++;
 				tmp3 = tmp3->back;
 			}
+
+	//printf("1&---------------\n");
 			if (num_quotes % 2 == 0)
 			{
 				tmp = current->next;
@@ -188,6 +201,8 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 				delete_current_parser2(tmp);
 				current = tmp2;
 			}
+
+	//printf("1*---------------\n");
 		}
 		if (current->symbol[0] == '\"' && current->next->symbol[0] == '\"')//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
 		{
@@ -207,15 +222,26 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 				current = tmp2;
 			}
 		}
+
+	//printf("1---dfghj------------\n");
+
 		current = current->next;
+		if (current == 0)
+			break ;
 	}
 
-	//printf_list(start);
-	//printf("1---------------\n");
+	printf("134---------------\n");
+	printf_list(start);
+	printf("1---------------\n");
 	current = start;
 	t_parser *next;
 	while (current->next)
 	{
+		if (current->special == 5)
+		{
+			if (current->next != 0 && current->next->symbol[0] == '\\')
+				current->special = 0;
+		}
 		if (current->symbol[0] == '\\' && current->special != 0)
 		{
 			if (current->back == 0)
@@ -231,19 +257,20 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 
 	current = start;
 	int		count = 0;
+	int		count_double = 0;
 	while (current)
 	{
-		if (current->symbol[0] == '\'' && current->special != 0)//если ковычек не четное число то выходим с error
+		if (current->symbol[0] == '\'' && current->special != 0 && count_double % 2 == 0)//если ковычек не четное число то выходим с error
 		{
 			count++;
 		}
-		if (current->symbol[0] == '\"' && current->special != 0)//если ковычек не четное число то выходим с нулем
+		if (current->symbol[0] == '\"' && current->special != 0 && count % 2 == 0)//если ковычек не четное число то выходим с нулем
 		{
-			count++;
+			count_double++;
 		}
 		current = current->next;
 	}
-	if (count % 2 != 0)
+	if (count % 2 != 0 || count_double % 2 != 0)
 	{
 		printf("error with quotes %d\n", count);
 		return (ft_lstnew_parser(ft_strdup("error with quotes"), 0));
@@ -253,6 +280,12 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	current = start;
 	while (current)
 	{
+		if (current->special == 2)
+		{
+			current = current->next;
+			while(current->special != 2)
+				current = current->next;
+		}
 		if (current->symbol[0] == '\'' && current->special != 0)//все что в обычных ковычках меняем на простые символы, которые ничего не значат
 		{
 			current = current->next;
@@ -355,6 +388,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	}
 	//printf_list(list_of_command);
 
+	printf("4------------------\n");
 	t_command *commands;
 	commands = 0;
 	current = list_of_command;
@@ -366,7 +400,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	char *end_command = malloc(1);
 	end_command[0] = '\0';
 	int i_for_str_before_dollar;
-	//printf_list(current);
+	printf_list(current);
 	while (current)
 	{
 		i_env = 0;
@@ -394,7 +428,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 					//printf("*** %c  %d %c\n", env_tmp[j_env - i_env - 1],j_env - i_env - 1 , current->symbol[j_env]);
 					j_env++;
 				}
-				//printf("env_tmp = %s\n", env_tmp);
+				printf("env_tmp = %s\n", env_tmp);
 				if (getenv(env_tmp) == 0)
 					command_tmp = 0;
 				else
@@ -417,6 +451,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 				ft_bzero(string_before_doolar, ft_strlen(current->symbol) + 1);
 				i_for_str_before_dollar = 0;
 				//printf("cyter ====->%c %d\n", current->symbol[i_env], i_env);
+				continue ;
 			}
 			if (i_env < ft_strlen(current->symbol))
 			{
