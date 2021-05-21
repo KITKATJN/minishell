@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_parser	*ft_lstnew_parser2(char *symbol, int special)
+t_parser	*ft_lstnew_parser2(char *symbol, int special, int *special_array)
 {
 	t_parser	*lst;
 
@@ -11,6 +11,7 @@ t_parser	*ft_lstnew_parser2(char *symbol, int special)
 		lst->special = special;
 		lst->next = 0;
 		lst->back = 0;
+		lst->special_array = special_array;
 	}
 	return (lst);
 }
@@ -47,17 +48,32 @@ void	delete_current_parser2(t_parser *current)
 			next->back = back;
 		if (back != 0)
 			back->next = next;
-		free(current->symbol);
+	//	if (current->symbol != 0)
+		//	free(current->symbol);
 		free (current);
 	}
 }
 
 void	printf_list(t_parser *current)
 {
+	int i = 0;
+
 	printf("----------------------------------------------------------------------------\n");
 	while (current)
 	{
-		printf("!%s! %d\n", current->symbol, current->special);
+		if (current->special_array == 0)
+			printf("!%s! %d\n", current->symbol, current->special);
+		else
+		{
+			printf("!%s! %d ->array", current->symbol, current->special);
+			while (i < ft_strlen(current->symbol))
+			{
+				printf(" %d", current->special_array[i]);
+				i++;
+			}
+			printf("\n");
+			i = 0;
+		}
 		current = current->next;
 		/* code */
 	}
@@ -74,49 +90,69 @@ void	printf_command_list(t_command *current)
 	}
 }
 
-t_parser	*parser_into_list_2(char *str, t_untils *untils)
+t_command	*parser_into_list_2(char *str1, t_untils *untils)
 {
 	t_parser	*start;
 	t_parser	*current;
 	char		*c;
 	int			i;
 	int			count_1;
+	char 		*str;
 
+
+	printf("-------------->!%s!\n", str1);
+	if (str1 == 0 || str1[0] == '\0')
+		return (0);
+
+	if (str1[0] == '\n')
+		return(0);
+	str = ft_strdup(str1);
+	//printf("--2------------>!%s!\n", str1);
 	count_1 = 0;
 	i = 0;
 	start = 0;
-	char r = ' ';
+	char *r;
+	int flag_delete_probel = 0;
+	r = malloc(sizeof(char) * 2);
+	ft_bzero(r, 2);
+	r[0] = ' ';
 	while (i < ft_strlen(str))
 	{
+		if (str[i] == ' ' && !flag_delete_probel)
+		{
+			i++;
+			continue ;
+		}
 		c = malloc(sizeof(char) * 2);
 		ft_bzero(c, 2);
 		c[0] = str[i];
 		if (c[0] == '\\')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 3));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 3, 0));
 		else if (c[0] == '\"')
 		{
 			count_1++;
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 2));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 2, 0));
 		}
 		else if (c[0] == '\'')
 		{
 			count_1++;
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 1));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 1, 0));
 		}
 		else if (c[0] == '?')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 4));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 4, 0));
 		else if (c[0] == '$')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 5));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 5, 0));
 		else if (c[0] == ' ')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, -1));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, -1, 0));
 		else if (c[0] == ';' && count_1 % 2 == 0)
 		{
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(&r, -1));
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 9));
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(&r, -1));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 9, 0));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
 		}
 		else
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 7));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 7, 0));
+		flag_delete_probel = 1;
 		i++;
 		//free(c);
 	}
@@ -128,7 +164,7 @@ t_parser	*parser_into_list_2(char *str, t_untils *untils)
 		if (current->symbol[0] == '\\' && current->next == 0)
 		{
 			u = ' ';
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(ft_strdup(&u), -1));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(ft_strdup(&u), -1, 0));
 		}
 		current = current->next;
 	}
@@ -142,15 +178,21 @@ t_parser	*parser_into_list_2(char *str, t_untils *untils)
 	while (current->next)
 	{
 		num_quotes = 0;
+
+	//printf("1---456789------------\n");
+	//printf("1---------------%s\n", current->symbol);
 		if (current->symbol[0] == '\'' && current->next->symbol[0] == '\'')//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
 		{
 			tmp3 = current;
+			//printf("1+---------------\n");
 			while (tmp3)
 			{
 				if(tmp3->symbol[0] == '\"') //здесь и ниже я удаляю кавычки стоящие ввместе, но не удаляю ковычки стоящие вместе в других ковычках
 					num_quotes++;
 				tmp3 = tmp3->back;
 			}
+
+	//printf("1&---------------\n");
 			if (num_quotes % 2 == 0)
 			{
 				tmp = current->next;
@@ -159,6 +201,8 @@ t_parser	*parser_into_list_2(char *str, t_untils *untils)
 				delete_current_parser2(tmp);
 				current = tmp2;
 			}
+
+	//printf("1*---------------\n");
 		}
 		if (current->symbol[0] == '\"' && current->next->symbol[0] == '\"')//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
 		{
@@ -178,15 +222,26 @@ t_parser	*parser_into_list_2(char *str, t_untils *untils)
 				current = tmp2;
 			}
 		}
+
+	//printf("1---dfghj------------\n");
+
 		current = current->next;
+		if (current == 0)
+			break ;
 	}
 
-	//printf_list(start);
-	//printf("1---------------\n");
+	printf("134---------------\n");
+	printf_list(start);
+	printf("1---------------\n");
 	current = start;
 	t_parser *next;
 	while (current->next)
 	{
+		if (current->special == 5)
+		{
+			if (current->next != 0 && current->next->symbol[0] == '\\')
+				current->special = 0;
+		}
 		if (current->symbol[0] == '\\' && current->special != 0)
 		{
 			if (current->back == 0)
@@ -202,28 +257,35 @@ t_parser	*parser_into_list_2(char *str, t_untils *untils)
 
 	current = start;
 	int		count = 0;
+	int		count_double = 0;
 	while (current)
 	{
-		if (current->symbol[0] == '\'' && current->special != 0)//если ковычек не четное число то выходим с error
+		if (current->symbol[0] == '\'' && current->special != 0 && count_double % 2 == 0)//если ковычек не четное число то выходим с error
 		{
 			count++;
 		}
-		if (current->symbol[0] == '\"' && current->special != 0)//если ковычек не четное число то выходим с нулем
+		if (current->symbol[0] == '\"' && current->special != 0 && count % 2 == 0)//если ковычек не четное число то выходим с нулем
 		{
-			count++;
+			count_double++;
 		}
 		current = current->next;
 	}
-	if (count % 2 != 0)
+	if (count % 2 != 0 || count_double % 2 != 0)
 	{
 		printf("error with quotes %d\n", count);
-		return (ft_lstnew_parser2(ft_strdup("error with quotes"), 0));
+		return (ft_lstnew_parser(ft_strdup("error with quotes"), 0));
 	}
 	//printf("2---------------\n");
 	//printf_list(start);
 	current = start;
 	while (current)
 	{
+		if (current->special == 2)
+		{
+			current = current->next;
+			while(current->special != 2)
+				current = current->next;
+		}
 		if (current->symbol[0] == '\'' && current->special != 0)//все что в обычных ковычках меняем на простые символы, которые ничего не значат
 		{
 			current = current->next;
@@ -257,175 +319,181 @@ t_parser	*parser_into_list_2(char *str, t_untils *untils)
 		}
 		current = current->next;
 	}
-	//printf("3.5---------------\n");
-	//printf_list(start);
-	// current = start;
-	// t_parser *env_command;
-	// t_parser *head;
-	// char	*str_env;
-	// char	*tmp_env;
-	// int		i_env;
-	// int		iter;
-	// while (current->next)
-	// {
-	// 	//printf("6--------\n");
-	// 	if (current->symbol[0] == '$' && current->special != 0)
-	// 	{
-	// 		i_env = 1;
-	// 		env_command = current;
-	// 		current = current->next;
-	// 		//printf("5--------\n");
-	// 		while (current && current->special != 0 && current->special != -1 && current->special != 5 && current->special != 2)
-	// 		{
-	// 			i_env++;
-	// 			current = current->next;
-	// 		}
-	// 		//printf("env %d\n", i_env);
 
-	// 		tmp_env = malloc(sizeof(char*) * i_env + 1);
-	// 		ft_bzero(tmp_env, i_env + 1);
-	// 		current = env_command;
-	// 		iter = 0;
-	// 		while (iter < i_env)
-	// 		{
-	// 			tmp_env[iter] = current->symbol[0];
-	// 			current = current->next;
-	// 			iter++;
-	// 		}
-	// 		//printf("tmp_env %s\n", tmp_env);
-
-	// 		current = env_command;
-	// 		free(current->symbol);
-	// 		current->symbol = tmp_env;
-	// 		current = current->next;
-	// 		iter = 1;
-	// 		//printf("1--------\n");
-	// 		while (iter < i_env)
-	// 		{
-	// 			head = current->back;
-	// 			delete_current_parser2(current);
-	// 			current = head;
-	// 			//printf("2--------\n");
-	// 			current = current->next;
-	// 			iter++;
-	// 		}
-	// 		//printf("3--------\n");
-	// 		current = env_command;
-	// 	}
-	// 	if (!current->next)
-	// 		break ;
-	// 	//printf("7--------\n");
-	// 	current = current->next;
-	// 	//printf("8--------\n");
-	// }
-
-	//printf("4--------\n");
 	//printf_list(start);
 
 	current = start;
-	t_parser	*new_start;
-	t_parser	*new_start2;
-	t_parser	*new_head;
-	t_command	*command;
-	int		comm_iterator;
-	char	*str_command;
-	char	*final_command;
-	int		l;
-	char	*env;
-	int	l_env;
-	//int		length_command;
-	command = 0;
-	comm_iterator = 0;
+	t_parser *new_start;
+	t_parser *list_of_command;
 	new_start = start;
+	int		*special_array;
+	*str = 0;
+	i = 0;
+	int j = 0;
+	list_of_command = 0;
 	while (current)
 	{
-		if (current->special == 9)
+		if (current->special != -1)
+			i++;
+		if ((current->special == -1 || current->next == 0))
 		{
-			if (command->command[0] == '\0')
-				command = command->next;
-			bsopia_func(command,1, untils);
-			command = 0;
-			current = current->next;
-		}
-		//printf("1------------------\n");
-		if (current->special == 5)
-		{
-			new_start2 = current;
-			l_env = 1;
-			new_start2 = new_start2->next;
-			//printf("56------------------\n");
-			while(new_start2 != 0 && new_start2->special != 5 && new_start2->special != 0 && new_start2->special != -1)
+			str = malloc(sizeof(char*) * i + 1);
+			ft_bzero(str, i + 1);
+			special_array = malloc(sizeof(int*) * i + 1);
+			ft_bzero(special_array, i + 1);
+			i = 0;
+			while (new_start != current)
 			{
-				l_env++;
-				new_start2 = new_start2->next;
-			}
-			//printf("23------------------\n");
-			env = malloc(sizeof(char*) * l_env + 1);
-			ft_bzero(env, l_env + 1);
-			new_start2 = current;
-			l_env = 0;
-			new_start2 = new_start2->next;
-			while(new_start2 != 0 && new_start2->special != 5 && new_start2->special != 0 && new_start2->special != -1)
-			{
-				env[l_env] = new_start2->symbol[0];
-				l_env++;
-				new_start2 = new_start2->next;
-			}
-			//printf("873------------------\n");
-			str_command = env;
-			if (!getenv(env))
-				env = ft_strdup(" ");
-			else
-				env = ft_strdup(getenv(env));
-			free(str_command);
-			//printf("env = %s !%s!\n", getenv(env), env);
-			new_start2 = current;
-			new_start2->symbol = env;
-			while(new_start2->next != 0 && new_start2->next->special != 5 && new_start2->next->special != 0 && new_start2->next->special != -1)
-			{
-				delete_current_parser2(new_start2->next);
-			}
-			//printf("env = %s !%s!\n", getenv(env), env);
-			//printf_list(start);
-		}
-		//printf("2------------------ %p\n", current);
-		if (current->special == -1 || current->next == 0)
-		{
-			//printf("3------------------ \n");
-			if (current->next == 0)
-				comm_iterator++;
-			//printf(" new start = !%s! iter = %d\n", new_start->symbol, comm_iterator);
-			//printf("!%s! %d\n", current->symbol, current->special);
-			str_command = malloc(sizeof(char*) * comm_iterator + 1);
-			ft_bzero(str_command, comm_iterator + 1);
-			l = 0;
-			//length_command = 0;
-			//printf("4------------------\n");
-			while (l < comm_iterator)
-			{
-				//printf("5.5------------------%s\n", str_command);
-				if (new_start == 0 || new_start->special == -1)
-					break;
-				str_command = ft_strjoin(str_command,new_start->symbol);
-				l++;
-				//printf("5------------------\n");
+				//printf("1------------------------\n");
+				str[i] = new_start->symbol[0];
+				special_array[i] = new_start->special;
 				new_start = new_start->next;
+				i++;
 			}
-			//printf("6------------------\n");
-			ft_lstadd_back_parser(&command,ft_lstnew_parser(str_command, 0));
-			//printf("str_command = !%s!\n", str_command);
-			comm_iterator = -1;
-			new_start = current->next;
+			if (current->next == 0 && current->special != -1)
+			{
+				str[i] = new_start->symbol[0];
+				special_array[i] = new_start->special;
+			}
+			ft_lstadd_back_parser2(&list_of_command, ft_lstnew_parser2(str, 0, special_array));
+			i = 0;
+			//printf("2------------------------%d\n", special_array[0]);
+			if (new_start != 0)
+				new_start = new_start->next;
 		}
-		comm_iterator += ft_strlen(current->symbol);
 		current = current->next;
 	}
-	if (command)
+	//printf_list(list_of_command);
+
+ //надо удалять первоначчальный список
+	while (start)
 	{
-		if (command->command[0] == '\0')
-			command = command->next;
-		bsopia_func(command,2, untils);
+		current = start->next;
+		delete_current_parser2(start);
+		start = current;
 	}
-	//printf_command_list(command);
-	//printf_list(start);
+
+	current = list_of_command;
+	t_parser *temporary;
+	while (current)
+	{
+		if (current->symbol[0] == '\0')
+		{
+			temporary = current;
+			current = current->next;
+			delete_current_parser2(temporary);
+			continue ;
+		}
+		current = current->next;
+	}
+	//printf_list(list_of_command);
+
+	printf("4------------------\n");
+	t_command *commands;
+	commands = 0;
+	current = list_of_command;
+	int i_env;
+	int j_env;
+	char *env_tmp;
+	char *string_before_doolar;
+	char *command_tmp;
+	char *end_command = malloc(1);
+	end_command[0] = '\0';
+	int i_for_str_before_dollar;
+	printf_list(current);
+	while (current)
+	{
+		i_env = 0;
+		end_command = malloc(1);
+		end_command[0] = '\0';
+		//printf("2-=========================== %d %s\n", current->special_array[i_env], current->symbol);
+		string_before_doolar = malloc(sizeof(char*) * ft_strlen(current->symbol) + 1);
+		ft_bzero(string_before_doolar, ft_strlen(current->symbol) + 1);
+		i_for_str_before_dollar = 0;
+		while (i_env < ft_strlen(current->symbol))
+		{
+			//printf("1/*/*/*/*/*/*/*/*/*/**/**/*\n");
+			if (current->special_array[i_env] == 5)
+			{
+				env_tmp = malloc(sizeof(char*) * (ft_strlen(current->symbol) - i_env) + 1);
+				ft_bzero(env_tmp, ft_strlen(current->symbol) - i_env + 1);
+				j_env = i_env + 1;
+				i = 0;
+				//printf("%d === %ld !%s!\n", j_env ,ft_strlen(current->symbol), string_before_doolar);
+				while (j_env < ft_strlen(current->symbol))
+				{
+					if (current->special_array[j_env] == 0 || current->special_array[j_env] == 5)
+						break;
+					env_tmp[j_env - i_env - 1] = current->symbol[j_env];
+					//printf("*** %c  %d %c\n", env_tmp[j_env - i_env - 1],j_env - i_env - 1 , current->symbol[j_env]);
+					j_env++;
+				}
+				printf("env_tmp = %s\n", env_tmp);
+				if (getenv(env_tmp) == 0)
+					command_tmp = 0;
+				else
+					command_tmp = ft_strdup(getenv(env_tmp));// ft_strjoin(getenv(env_tmp), current->symbol + j_env);
+				//printf("command_tmp1 = %s\n", command_tmp);
+				if (command_tmp == 0)
+				{
+					command_tmp = malloc(1);
+					command_tmp[0] = '\0';
+				}
+				//if (i_env > 0)
+				//	command_tmp = ft_strjoin(ft_substr(current->symbol, 0 , i_env), command_tmp);
+				//printf("command_tmp2 = %s\n", command_tmp);
+				end_command = ft_strjoin(end_command, string_before_doolar);
+				//printf("end_command1 = %s\n", end_command);
+				end_command = ft_strjoin(end_command, command_tmp);
+				//printf("end_command2 = %s\n", end_command);
+				//printf("env_tmp = %s %s \n", env_tmp, command_tmp);
+				i_env = j_env;
+				ft_bzero(string_before_doolar, ft_strlen(current->symbol) + 1);
+				i_for_str_before_dollar = 0;
+				//printf("cyter ====->%c %d\n", current->symbol[i_env], i_env);
+				continue ;
+			}
+			if (i_env < ft_strlen(current->symbol))
+			{
+				string_before_doolar[i_for_str_before_dollar] = current->symbol[i_env];
+			}
+			//printf("2/*/*/*/*/*/*/*/*/*/**/**/*\n");
+			i_for_str_before_dollar++;
+			i_env++;
+		}
+		//printf("string_before_doolar = %s\n", string_before_doolar);
+		end_command = ft_strjoin(end_command, string_before_doolar);
+		//printf("34/*/*/*/*/*/*/*/*/*/**/**/*\n");
+		if (end_command[0] != '\0')
+			current->symbol = end_command;
+		//printf("35/*/*/*/*/*/*/*/*/*/**/**/*\n");
+		if (current->special_array[0] == 9)
+		{
+			//printf("1-----------------\n");
+			//printf_command_list(commands);
+			bsopia_func(commands, 0, untils);
+			if (current->next == 0)
+				break ;
+			current = current->next;
+			commands = 0;
+		}
+		//printf("3/*/*/*/*/*/*/*/*/*/**/**/*\n");
+		ft_lstadd_back_parser(&commands, ft_lstnew_parser(ft_strdup(current->symbol), 0));
+		//printf("4/*/*/*/*/*/*/*/*/*/**/**/*\n");
+		current = current->next;
+	}
+	bsopia_func(commands, 0, untils);
+	//printf("2-----------------\n");
+	//printf_command_list(commands);
+	//printf_command_list(commands);
+	// current = list_of_command;
+	// t_parser *temporary2;
+	// while (current)
+	// {
+	// 	temporary2 = current;
+	// 	current = current->next;
+	// 	delete_current_parser2(temporary2);
+	// 	current = current->next;
+	// }
+	return (commands);
 }
