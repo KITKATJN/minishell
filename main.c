@@ -99,7 +99,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 	line = calloc(1, 1);
 	tmp = ft_lstnew(NULL);
 	ft_lstadd_back(history, tmp);
-	flag_vniz_vverh = 0;
+	untils->flag_up_down = 0;
 	line = NULL;
 	while (tmp->back)
 	{
@@ -188,7 +188,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			{
 				if (tmp->back)
 				{
-					flag_vniz_vverh = 1;
+					untils->flag_up_down = 1;
 					tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
 					tputs(tgetstr("ce", 0), 1, ft_putchar);
 					if (line)
@@ -204,7 +204,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			{
 				if (tmp->next)
 				{
-					flag_vniz_vverh = 1;
+					untils->flag_up_down = 1;
 					tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
 					tputs(tgetstr("ce", 0), 1, ft_putchar);
 					if (line)

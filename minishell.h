@@ -14,6 +14,7 @@ typedef struct			s_untils
 	char				**env;
 	int					flag;
 	char				*first;
+	int					flag_up_down;
 
 }						t_untils;
 
@@ -78,9 +79,9 @@ void					print_export(char **cp_env);
 int						check_name(char *str);
 int						ft_strcmp(char *str, char *str1);
 
-t_command	*parser_into_list_2(char *str, t_untils *untils);
-void	ft_lstadd_back_parser2(t_parser **lst, t_parser *new);
-t_parser	*ft_lstnew_parser2(char	*symbol, int special, int *special_array);
-void bsopia_func(t_command *com, int i, t_untils *untils);
+t_command				*parser_into_list_2(char *str, t_untils *untils);
+void					ft_lstadd_back_parser2(t_parser **lst, t_parser *new);
+t_parser				*ft_lstnew_parser2(char	*symbol, int special, int *special_array);
+void					bsopia_func(t_command *com, int i, t_untils *untils);
 
 #endif

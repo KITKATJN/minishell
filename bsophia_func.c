@@ -30,6 +30,12 @@ static void echo_2(t_command *list)
 
 void bsophia_function(t_command *list, t_untils *untils)
 {
+	int i = 0;
+	while (list->command[i])
+	{
+		list->command[i] = ft_tolower(list->command[i]);
+		i++;
+	}
 	printf("bsophia first command =====> %s\n", list->command);
 	if (!(ft_strcmp(list->command, "echo")))
 		echo_2(list);
@@ -80,7 +86,7 @@ void bsophia_function(t_command *list, t_untils *untils)
 	}
 	if (!(ft_strcmp(list->command, "unset")))
 	{
-		if (list->next)
+		while (list->next)
 		{
 			list = list->next;
 			untils->env = f_unset_line(untils->env, list->command);
