@@ -168,14 +168,15 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			// 	// 	gg++;
 			// 	// }
 			// }
-			if (untils->flag == 1)
+			if (line && untils->flag == 1)
 			{
 				untils->first = ft_strdup_b(tmp->content);
 				untils->flag = 0;
 			}
 			while (tmp->back)
 				tmp = tmp->back;
-			tmp->content = untils->first;
+			if (tmp->content)
+				tmp->content = untils->first;
 			while (tmp->next)
 				tmp = tmp->next;
 			return (tmp->content);
@@ -268,12 +269,13 @@ int main(int argc, char **argv, char **envp)
 	untils->env = copy_envp(envp, untils->env);
 	while (1)
 	{
-		printf("Привет, САНЯ!\nесли ты это прочитал, то напиши мне\"я люблю мороженое без ванили\")))\nловлю сегу если ввести 'echo' без каких-либо параматеров \nесли ввести команду с пробелами перед ней, например : \"   env\" она выполнится, но в список команд не сохранится\n");
+		//printf("Привет, САНЯ!\nесли ты это прочитал, то напиши мне\"я люблю мороженое без ванили\")))\nловлю сегу если ввести 'echo' без каких-либо параматеров \nесли ввести команду с пробелами перед ней, например : \"   env\" она выполнится, но в список команд не сохранится\n");
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
-		//printf("line==!%s!\n", line);
-		clear_history(&history);
+		printf("line = %s\n", line);
+		if (!line)
+			clear_history(&history);
 		main_parser(line, untils);
 	}
 }
