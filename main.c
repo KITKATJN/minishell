@@ -99,7 +99,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 	line = calloc(1, 1);
 	tmp = ft_lstnew(NULL);
 	ft_lstadd_back(history, tmp);
-	flag_vniz_vverh = 0;
+	untils->flag_up_down = 0;
 	line = NULL;
 	while (tmp->back)
 	{
@@ -168,14 +168,15 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			// 	// 	gg++;
 			// 	// }
 			// }
-			if (untils->flag == 1)
+			if (line && untils->flag == 1)
 			{
 				untils->first = ft_strdup_b(tmp->content);
 				untils->flag = 0;
 			}
 			while (tmp->back)
 				tmp = tmp->back;
-			tmp->content = untils->first;
+			if (tmp->content)
+				tmp->content = untils->first;
 			while (tmp->next)
 				tmp = tmp->next;
 			return (tmp->content);
@@ -187,7 +188,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			{
 				if (tmp->back)
 				{
-					flag_vniz_vverh = 1;
+					untils->flag_up_down = 1;
 					tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
 					tputs(tgetstr("ce", 0), 1, ft_putchar);
 					if (line)
@@ -203,7 +204,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			{
 				if (tmp->next)
 				{
-					flag_vniz_vverh = 1;
+					untils->flag_up_down = 1;
 					tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
 					tputs(tgetstr("ce", 0), 1, ft_putchar);
 					if (line)
@@ -268,10 +269,13 @@ int main(int argc, char **argv, char **envp)
 	untils->env = copy_envp(envp, untils->env);
 	while (1)
 	{
+		//printf("Привет, САНЯ!\nесли ты это прочитал, то напиши мне\"я люблю мороженое без ванили\")))\nловлю сегу если ввести 'echo' без каких-либо параматеров \nесли ввести команду с пробелами перед ней, например : \"   env\" она выполнится, но в список команд не сохранится\n");
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
-		clear_history(&history);
+		printf("line = %s\n", line);
+		if (!line)
+			clear_history(&history);
 		main_parser(line, untils);
 	}
 }

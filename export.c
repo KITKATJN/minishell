@@ -49,7 +49,7 @@ char **export_add(char **cp_env, char *str, t_untils *untils)
 	}
 	while(cp_env[i] != NULL)
 	{
-		if (!strcmp(cp_env[i], str)) //если подают ключ со значением которое уже есть то не будет записываться ничего
+		if (!ft_strcmp(cp_env[i], str)) //если подают ключ со значением которое уже есть то не будет записываться ничего
 			return(cp_env);
 		if (compare_to_equal(cp_env[i], str)) //если ключ существует то значение в нем заменится на новое;
 		{

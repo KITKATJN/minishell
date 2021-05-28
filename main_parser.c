@@ -78,16 +78,17 @@ void ft_paste_env(t_command *list_of_command)
 
 void bsopia_func(t_command *com, int i, t_untils *untils)
 {
+	//printf("command\n");
 	ft_check_command(com->command);
-	ft_paste_env(com);
+	//ft_paste_env(com);
 	// printf("command\n");
 	bsophia_function(com, untils);
 
-	while (com)
-	{
-		printf("%s operation ---->%d\n", com->command, i);
-		com = com->next;
-	}
+	// while (com)
+	// {
+	// 	printf("%s operation ---->%d\n", com->command, i);
+	// 	com = com->next;
+	// }
 
 }
 
@@ -99,7 +100,9 @@ void main_parser(char *str, t_untils *untils)
 	start = 0;
 	//start = parser_into_list("echo  -n     'y   sdf jghmj' \"f d!!!fs;ds\"  h    ff;vx sdf ft        mkk");
 	//start = parser_into_list("echo $PWD$PATH;echo  -n $t rgdfg HELLO$t $s1 'hgf $PATH' \"    ;$t$PATH\";export\" fsd; hjghj;;$PATH\"  ry rt $bf;   echo 'echo'\"hello\"");
-	parser_into_list_2(str, untils);
+	//printf("-------------->main parser !%s!\n", str);
+	start = parser_into_list_2(str, untils);
+	//bsophia_function(start, untils);
 	// if (str != 0)
 	// {
 	// 	start = parser_into_list(str);
@@ -115,7 +118,7 @@ void main_parser(char *str, t_untils *untils)
 	// 	start = ft_lstnew_parser("", 0);
 
 	// current_command = start;
-	// int i =1;
+	// int i = 1;
 	// t_command *new_start = 0;
 	// t_command *new_command;
 	// while (current_command)

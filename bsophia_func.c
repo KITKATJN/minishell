@@ -7,13 +7,18 @@ static void echo_2(t_command *list)
 
 	i = 1;
 	line = NULL;
+	if (!list->next)
+	{
+		write(1, "\n", 1);
+		return ;
+	}
 	list = list->next;
-	if ((!(strcmp(list->command, "-n"))))
+	if ((!(ft_strcmp(list->command, "-n"))))
 	{
 			i = 0;
 			list = list->next;
 	}
-	while (list && strcmp(list->command, "|") && strcmp(list->command, ";"))
+	while (list && ft_strcmp(list->command, "|") && ft_strcmp(list->command, ";"))
 	{
 		line = ft_strjoin_line(line, list->command);
 		if (ft_lstsize_2(list) != 1)
@@ -25,17 +30,24 @@ static void echo_2(t_command *list)
 
 void bsophia_function(t_command *list, t_untils *untils)
 {
-	if (!(strcmp(list->command, "echo")))
+	int i = 0;
+	while (list->command[i])
+	{
+		list->command[i] = ft_tolower(list->command[i]);
+		i++;
+	}
+	printf("bsophia first command =====> %s\n", list->command);
+	if (!(ft_strcmp(list->command, "echo")))
 		echo_2(list);
-	if (!(strcmp(list->command, "pwd")))
+	if (!(ft_strcmp(list->command, "pwd")))
 		get_pwd(); //сместить указатель и установить после пайпа или редиректа(до следующей исполняющей команды)
-	if (!(strcmp(list->command, "cd")))
+	if (!(ft_strcmp(list->command, "cd")))
 	{
 		printf(" cd = %d\n", f_cd(list, untils));//при ошибках возвращает -1 и ставит errno в должное значение/ сделать менеджмент ошибок
 	}
-	if (!(strcmp(list->command, "env")))
+	if (!(ft_strcmp(list->command, "env")))
 		print_env(untils->env);
-	if (!(strcmp(list->command, "export")))
+	if (!(ft_strcmp(list->command, "export")))
 	{
 		if (!(list->next))
 		{
@@ -59,7 +71,7 @@ void bsophia_function(t_command *list, t_untils *untils)
 		}
 		while (list->back)
 		{
-			if (!(strcmp(list->command, "export")))
+			if (!(ft_strcmp(list->command, "export")))
 				break ;
 			list = list->back;
 		}
@@ -72,9 +84,9 @@ void bsophia_function(t_command *list, t_untils *untils)
 			}
 		}
 	}
-	if (!(strcmp(list->command, "unset")))
+	if (!(ft_strcmp(list->command, "unset")))
 	{
-		if (list->next)
+		while (list->next)
 		{
 			list = list->next;
 			untils->env = f_unset_line(untils->env, list->command);
