@@ -16,7 +16,10 @@ typedef struct			s_untils
 	int					flag;
 	char				*first;
 	int					flag_up_down;
-
+	int					fd_out;
+	int					fd_in;
+	int					std_in;
+	int					std_out;
 }						t_untils;
 
 typedef struct			s_history

@@ -116,7 +116,12 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 			_flag++;
 		if (str1[i] == ';' && _flag % 2 == 0)
 		{
-			if (i + 1 < ft_strlen(str1) && str1[i + 1] == ';')
+			i++;
+			if (i >= ft_strlen(str1))
+				break ;
+			while (str1[i] == ' ')
+				i++;
+			if (i < ft_strlen(str1) && str1[i] == ';')
 				return (ft_lstnew_parser("syntax error near unexpected token `;;'", 0));
 		}
 		if (str1[i] == '	')
