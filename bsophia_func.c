@@ -31,6 +31,19 @@ static void echo_2(t_command *list)
 void bsophia_function(t_command *list, t_untils *untils)
 {
 	int i = 0;
+	//ПРОВЕРКА ФЛАГА НА РЕДИРЕКТ
+	// для append O_CREAT | O_WRONLY | O_APPEND, S_IRWXU , для truncate O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU
+	// int oo = fork();
+	// if (oo == 0)
+	// {
+		int fd = open("test", O_RDWR | O_CREAT | O_APPEND | O_RDONLY, 0777);
+		printf("fd = ------------------- %d\n", fd);
+		int		std_out = dup(1);
+		dup2(fd, 1);
+	// 	int fd2 = dup2(fd, STDOUT_FILENO);
+	// 	printf("fd2 = ------------------- %d\n", fd2);
+	// 	close(fd);
+
 	while (list->command[i])
 	{
 		list->command[i] = ft_tolower(list->command[i]);
@@ -52,6 +65,8 @@ void bsophia_function(t_command *list, t_untils *untils)
 		if (!(list->next))
 		{
 			print_export(untils->env);
+			close(fd);
+			dup2(std_out, 1);
 			return ;
 		}
 		list = list->next;
@@ -92,4 +107,6 @@ void bsophia_function(t_command *list, t_untils *untils)
 			untils->env = f_unset_line(untils->env, list->command);
 		}
 	}
+	close(fd);
+	dup2(std_out, 1);
 }

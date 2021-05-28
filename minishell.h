@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include "libft.h"
 
 typedef struct			s_untils
@@ -42,6 +43,9 @@ typedef struct			s_command
 	char				*flag; //только для echo
 	struct s_command	*next;
 	struct s_command	*back;
+	char				*redir_right;
+	char				*redir_double_right;
+	char				*redir_left;
 }						t_command;
 
 int						ft_strlen_b(char *str);

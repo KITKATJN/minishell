@@ -58,7 +58,7 @@ void ft_paste_env(t_command *list_of_command)
 				free(value_env);
 				if (start->command[0] == '\"')
 					continue ;
-				printf("----->%c\n", start->command[i]);
+				// printf("----->%c\n", start->command[i]);
 				continue ;
 				//else
 				//	break ;

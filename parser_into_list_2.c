@@ -107,7 +107,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	if (str1[0] == '\n')
 		return(0);
 	str = ft_strdup(str1);
-	//printf("--2------------>!%s!\n", str1);	
+	//printf("--2------------>!%s!\n", str1);
 	count_1 = 0;
 	i = 0;
 	start = 0;

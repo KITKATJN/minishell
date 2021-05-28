@@ -11,6 +11,9 @@ t_command	*ft_lstnew_parser(void *command, void *flag)
 		lst->flag = flag;
 		lst->next = 0;
 		lst->argument = 0;
+		lst->redir_double_right = NULL;
+		lst->redir_left = NULL;
+		lst->redir_right = NULL;
 	}
 	return (lst);
 }
