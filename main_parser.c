@@ -78,10 +78,16 @@ void ft_paste_env(t_command *list_of_command)
 
 void bsopia_func(t_command *com, int i, t_untils *untils)
 {
-	//printf("command\n");
+	// t_command *start;
+
+	// start = com;
+	// while (start)
+	// {
+
+	// }
 	ft_check_command(com->command);
-	//ft_paste_env(com);
 	// printf("command\n");
+
 	bsophia_function(com, untils);
 
 	// while (com)
