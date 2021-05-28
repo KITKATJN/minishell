@@ -100,7 +100,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	char 		*str;
 
 
-	printf("-------------->!%s!\n", str1);
+	//printf("-------------->!%s!\n", str1);
 	if (str1 == 0 || str1[0] == '\0')
 		return (0);
 
@@ -108,18 +108,20 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		return(0);
 	i = 0;
 	int _flag = 0;
+	if (str1[ft_strlen(str1) - 1] == '>' || str1[ft_strlen(str1) - 1] == '<')
+		return (ft_lstnew_parser("syntax error near unexpected token `\\n'", 0));
 	while (i < ft_strlen(str1))
 	{
 		if (str1[i] == '\"' || str1[i] == '\'')
 			_flag++;
 		if (str1[i] == ';' && _flag % 2 == 0)
 		{
-			if (i + 1 < ft_strlen(str1) && str1[i] == ';')
-				return (ft_lstnew_parser("syntax error near unexpected token `;;'", -1));
+			if (i + 1 < ft_strlen(str1) && str1[i + 1] == ';')
+				return (ft_lstnew_parser("syntax error near unexpected token `;;'", 0));
 		}
 		if (str1[i] == '	')
 		{
-			return (ft_lstnew_parser("syntax error near unexpected token `	'", -1));
+			return (ft_lstnew_parser("syntax error near unexpected token `	'", 0));
 		}
 		i++;
 	}
@@ -166,6 +168,29 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 9, 0));
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
+		}
+		else if (c[0] == '>' && count_1 % 2 == 0)
+		{
+			if (i + 1 < ft_strlen(str1) && str[i + 1] == '>')
+			{
+				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
+				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 29, 0));
+				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 29, 0));
+				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
+				i++;
+			}
+			else
+			{
+				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
+				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 19, 0));
+				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
+			}
+		}
+		else if (c[0] == '<' && count_1 % 2 == 0)
+		{
+				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
+				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 18, 0));
+				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
 		}
 		else
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 7, 0));
@@ -247,9 +272,9 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 			break ;
 	}
 
-	printf("134---------------\n");
-	printf_list(start);
-	printf("1---------------\n");
+	//printf("134---------------\n");
+	//printf_list(start);
+	//printf("1---------------\n");
 	current = start;
 	t_parser *next;
 	while (current->next)
@@ -403,6 +428,18 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		}
 		current = current->next;
 	}
+
+	current = list_of_command;
+	while (current)
+	{
+		if (current->symbol[0] == '>' || current->symbol[0] == '<') //  проверяю, чтобы после каждого редиректа что-то было
+		{
+			//printf("gfdshkjbgfjkdsjkfgsf------------->%c\n",current->next->symbol[0] );
+			if (current->next && (current->next->symbol[0] == '>' || current->next->symbol[0] == '<' || current->next->symbol[0] == ' ' || current->next->symbol[0] == ';'))
+				return (ft_lstnew_parser("syntax error near unexpected token `>' or '<' or '>>'", 0));
+		}
+		current = current->next;
+	}
 	//printf_list(list_of_command);
 
 	//printf("4------------------\n");
@@ -417,7 +454,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	char *end_command = malloc(1);
 	end_command[0] = '\0';
 	int i_for_str_before_dollar;
-	printf_list(current);
+	//printf_list(current);
 	while (current)
 	{
 		i_env = 0;
@@ -445,7 +482,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 					//printf("*** %c  %d %c\n", env_tmp[j_env - i_env - 1],j_env - i_env - 1 , current->symbol[j_env]);
 					j_env++;
 				}
-				printf("env_tmp = %s\n", env_tmp);
+				//printf("env_tmp = %s\n", env_tmp);
 				if (getenv(env_tmp) == 0)
 					command_tmp = 0;
 				else

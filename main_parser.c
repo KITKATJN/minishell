@@ -78,17 +78,83 @@ void ft_paste_env(t_command *list_of_command)
 
 void bsopia_func(t_command *com, int i, t_untils *untils)
 {
-	//printf("command\n");
+	t_command *start;
+
+	start = com;
+	while (start)
+	{
+		if (start->command[0] == '>' && start->command[1] == '>')
+		{
+			com->redir_double_right = start->next->command;
+			open(com->redir_double_right, O_CREAT | O_WRONLY | O_APPEND, 0777);
+			delete_current_parser(start->next);
+			if (start->back != 0)
+			{
+				start = start->back;
+				delete_current_parser(start->next);
+			}
+			else
+			{
+				start = start->next;
+				if (start)
+				{
+					delete_current_parser(start->back);
+					start->back = 0;
+				}
+			}
+		}
+		else if (start->command[0] == '>')
+		{
+			com->redir_right = start->next->command;
+			open(com->redir_right, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+			delete_current_parser(start->next);
+			if (start->back != 0)
+			{
+				start = start->back;
+				delete_current_parser(start->next);
+			}
+			else
+			{
+				start = start->next;
+				if (start)
+				{
+					delete_current_parser(start->back);
+					start->back = 0;
+				}
+			}
+		}
+		else if (start->command[0] == '<')
+		{
+			com->redir_left = start->next->command;
+			open(com->redir_left, O_WRONLY | 0777);
+			delete_current_parser(start->next);
+			if (start->back != 0)
+			{
+				start = start->back;
+				delete_current_parser(start->next);
+			}
+			else
+			{
+				start = start->next;
+				if (start)
+				{
+					delete_current_parser(start->back);
+					start->back = 0;
+				}
+			}
+		}
+		start = start->next;
+	}
 	ft_check_command(com->command);
-	//ft_paste_env(com);
 	// printf("command\n");
+
 	bsophia_function(com, untils);
 
-	// while (com)
-	// {
-	// 	printf("%s operation ---->%d\n", com->command, i);
-	// 	com = com->next;
-	// }
+	while (com)
+	{
+		printf("%s  dr = %s  right = %s left = %s ->%d\n", com->command, com->redir_double_right, com->redir_right, com->redir_left, i);
+		com = com->next;
+	}
 
 }
 
@@ -102,6 +168,7 @@ void main_parser(char *str, t_untils *untils)
 	//start = parser_into_list("echo $PWD$PATH;echo  -n $t rgdfg HELLO$t $s1 'hgf $PATH' \"    ;$t$PATH\";export\" fsd; hjghj;;$PATH\"  ry rt $bf;   echo 'echo'\"hello\"");
 	//printf("-------------->main parser !%s!\n", str);
 	start = parser_into_list_2(str, untils);
+	printf("%s\n", start->command);
 	//bsophia_function(start, untils);
 	// if (str != 0)
 	// {
