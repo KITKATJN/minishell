@@ -106,6 +106,23 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 
 	if (str1[0] == '\n')
 		return(0);
+	i = 0;
+	int _flag = 0;
+	while (i < ft_strlen(str1))
+	{
+		if (str1[i] == '\"' || str1[i] == '\'')
+			_flag++;
+		if (str1[i] == ';' && _flag % 2 == 0)
+		{
+			if (i + 1 < ft_strlen(str1) && str1[i] == ';')
+				return (ft_lstnew_parser("syntax error near unexpected token `;;'", -1));
+		}
+		if (str1[i] == '	')
+		{
+			return (ft_lstnew_parser("syntax error near unexpected token `	'", -1));
+		}
+		i++;
+	}
 	str = ft_strdup(str1);
 	//printf("--2------------>!%s!\n", str1);	
 	count_1 = 0;
@@ -388,7 +405,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	}
 	//printf_list(list_of_command);
 
-	printf("4------------------\n");
+	//printf("4------------------\n");
 	t_command *commands;
 	commands = 0;
 	current = list_of_command;
