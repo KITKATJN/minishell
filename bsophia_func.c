@@ -28,15 +28,59 @@ static void echo_2(t_command *list)
 	f_echo(line, i);
 }
 
+int check_redir(t_command *list, int i, t_untils *untils)
+{
+	if (list->redir_right != NULL && i == 2)
+	{
+		untils->fd_out = open(list->redir_right, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+		if (untils->fd_out < 0)
+			return (0);
+		untils->std_out = dup(1);
+		dup2(untils->fd_out, 1);
+	}
+	if (list->redir_double_right != NULL && i == 2)
+	{
+		untils->fd_out = open(list->redir_double_right, O_CREAT | O_WRONLY | O_APPEND, 0777);
+		if (untils->fd_out < 0)
+			return (0);
+		untils->std_out = dup(1);
+		dup2(untils->fd_out, 1);
+	}
+	if (list->redir_left != NULL && i == 2)
+	{
+		untils->fd_in = open(list->redir_left, O_WRONLY | 0777);
+		if (untils->fd_in < 0)
+			return (0);
+		untils->std_in = dup(0);
+		dup2(untils->fd_in, 1);
+	}
+	if (i == 1)
+	{
+		if (untils->fd_out != 99)
+		{
+			close(untils->fd_out);
+			dup2(untils->std_out, 1);
+		}
+		if (untils->fd_in != 99)
+		{
+			close(untils->fd_in);
+			dup2(untils->std_in, 0);
+		}
+	}
+	return (1);
+}
+
 void bsophia_function(t_command *list, t_untils *untils)
 {
 	int i = 0;
+
+	check_redir(list, 2, untils);
 	while (list->command[i])
 	{
 		list->command[i] = ft_tolower(list->command[i]);
 		i++;
 	}
-	printf("bsophia first command =====> %s\n", list->command);
+	// printf("bsophia first command =====> %s\n", list->command);
 	if (!(ft_strcmp(list->command, "echo")))
 		echo_2(list);
 	if (!(ft_strcmp(list->command, "pwd")))
@@ -52,6 +96,7 @@ void bsophia_function(t_command *list, t_untils *untils)
 		if (!(list->next))
 		{
 			print_export(untils->env);
+			check_redir(list, 1, untils);
 			return ;
 		}
 		list = list->next;
@@ -92,4 +137,5 @@ void bsophia_function(t_command *list, t_untils *untils)
 			untils->env = f_unset_line(untils->env, list->command);
 		}
 	}
+	check_redir(list, 1, untils);
 }

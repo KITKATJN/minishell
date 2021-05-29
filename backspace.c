@@ -7,6 +7,7 @@ char *backspace(char *str)
 	int k;
 
 	k = 0;
+	i = 0;
 	i = ft_strlen(str);
 	n_str = malloc(i);
 	while (k < i - 1)

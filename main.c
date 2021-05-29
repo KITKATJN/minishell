@@ -115,8 +115,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		if (buff[0] == '\n')
 		{
 			write(1, "\n", 1);
-			// if (line2)
-			// {
 				save = ft_strjoin_line(tmp->content, line);
 				while (tmp->next)
 					tmp = tmp->next;
@@ -129,45 +127,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 						tmp->content = ft_strdup_b(tmp->line);
 					tmp = tmp->back;
 				}
-				// tmp->content = ft_strdup(tmp->line);
-			// }
-			// while (tmp->next)
-			// 	tmp = tmp->next;
-			// if (!strcmp(tmp->content, "pwd")) //отдельный файл будет где я буду смотреть команды и исполнять их || в strcmp не подавать NULL иначе сега, нужно написать свою функцию с защитой
-			// 	get_pwd();
-			// // if (!strncmp(tmp->content, "echo -n", 7)) //отдельный файл будет где я буду смотреть команды и исполнять их
-			// // 	f_echo("hello", 0);
-			// // else 									//отдельный файл будет где я буду смотреть команды и исполнять их
-			// // 	f_echo("hello", 1);
-			// if (!strcmp(tmp->content, "cd")) ////отдельный файл будет где я буду смотреть команды и исполнять их
-			// 	f_cd("..");
-			// if (!strcmp(tmp->content, "env"))
-			// 	print_env(*cp_env);
-			// if (!strcmp(tmp->content, "export"))
-			// {
-			// 	// *cp_env = export_add(*cp_env, "lol=1");
-			// 	// *cp_env = export_add(*cp_env, "lol=2");
-			// 	// *cp_env = export_add(*cp_env, "lol=3");
-			// 	// *cp_env = export_add(*cp_env, "lol=4");
-			// 	// *cp_env = export_add(*cp_env, "lol=5");
-			// 	// *cp_env = export_add(*cp_env, "lol=6");
-			// 	// *cp_env = export_add(*cp_env, "lol1=5");
-			// 	*cp_env = export_add(*cp_env, "lol1=7");
-			// 	*cp_env = export_add(*cp_env, "lol1=8");
-			// 	*cp_env = export_add(*cp_env, "lol2= ");
-			// }
-			// if (!strcmp(tmp->content, "unset"))
-			// {
-			// 	*cp_env = f_unset_line(*cp_env, "lol");
-			// 	*cp_env = f_unset_line(*cp_env, "lol1");
-			// 	*cp_env = f_unset_line(*cp_env, "lol");
-			// 	// int gg = 0;
-			// 	// while(*cp_env[gg] != NULL)
-			// 	// {
-			// 	// 	printf("posle = | %s |", *cp_env[gg]);
-			// 	// 	gg++;
-			// 	// }
-			// }
 			if (line && untils->flag == 1)
 			{
 				untils->first = ft_strdup_b(tmp->content);
@@ -219,9 +178,9 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		}
 		if (!(strcmp(buff, "\177")))
 		{
-			if (flag_vniz_vverh == 1)
+			if (untils->flag_up_down == 1)
 			{
-				tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor
+				tputs(tgetstr("rc", 0), 1, ft_putchar); //restore cursor  возмо
 				tputs(tgetstr("ce", 0), 1, ft_putchar); //чистит до конца строки
 				if (ft_strlen_b(line) && line)
 					line = backspace(line);
@@ -269,13 +228,13 @@ int main(int argc, char **argv, char **envp)
 	untils->env = copy_envp(envp, untils->env);
 	while (1)
 	{
-		//printf("Привет, САНЯ!\nесли ты это прочитал, то напиши мне\"я люблю мороженое без ванили\")))\nловлю сегу если ввести 'echo' без каких-либо параматеров \nесли ввести команду с пробелами перед ней, например : \"   env\" она выполнится, но в список команд не сохранится\n");
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
-		printf("line = %s\n", line);
 		if (!line)
 			clear_history(&history);
+		untils->fd_in = 99;
+		untils->fd_out = 99;
 		main_parser(line, untils);
 	}
 }

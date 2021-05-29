@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include "libft.h"
 
 typedef struct			s_untils
@@ -15,7 +16,10 @@ typedef struct			s_untils
 	int					flag;
 	char				*first;
 	int					flag_up_down;
-
+	int					fd_out;
+	int					fd_in;
+	int					std_in;
+	int					std_out;
 }						t_untils;
 
 typedef struct			s_history
@@ -42,6 +46,10 @@ typedef struct			s_command
 	char				*flag; //только для echo
 	struct s_command	*next;
 	struct s_command	*back;
+	int					error;
+	char				*redir_right;
+	char				*redir_double_right;
+	char				*redir_left;
 }						t_command;
 
 int						ft_strlen_b(char *str);
@@ -80,6 +88,7 @@ int						check_name(char *str);
 int						ft_strcmp(char *str, char *str1);
 
 t_command				*parser_into_list_2(char *str, t_untils *untils);
+void					delete_current_parser(t_command *current);
 void					ft_lstadd_back_parser2(t_parser **lst, t_parser *new);
 t_parser				*ft_lstnew_parser2(char	*symbol, int special, int *special_array);
 void					bsopia_func(t_command *com, int i, t_untils *untils);
