@@ -130,6 +130,39 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		}
 		i++;
 	}
+
+	// if (_flag % 2 != 0)
+	// {
+	// 	return (ft_lstnew_parser(ft_strdup("error with quotes _==--_"), 0));
+	// }
+
+	i = 0;
+	_flag = 0;
+	while (i < ft_strlen(str1))
+	{
+		if (str1[i] == '\"' || str1[i] == '\'')
+			_flag++;
+		if (str1[i] == '|' && _flag % 2 == 0)
+		{
+			i++;
+			if (i >= ft_strlen(str1))
+				break ;
+			while (str1[i] == ' ')
+				i++;
+			if (i < ft_strlen(str1) && str1[i] == '|')
+			{
+				i++;
+				if (i >= ft_strlen(str1))
+					break ;
+				while (str1[i] == ' ')
+					i++;
+				if (i < ft_strlen(str1) && str1[i] == '|')
+					return (ft_lstnew_parser("syntax error near unexpected token `|'", 0));
+			}
+		}
+		i++;
+	}
+
 	str = ft_strdup(str1);
 	//printf("--2------------>!%s!\n", str1);
 	count_1 = 0;
@@ -172,6 +205,12 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		{
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 9, 0));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
+		}
+		else if (c[0] == '|' && count_1 % 2 == 0)
+		{
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 20, 0));
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
 		}
 		else if (c[0] == '>' && count_1 % 2 == 0)
@@ -319,7 +358,6 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	}
 	if (count % 2 != 0 || count_double % 2 != 0)
 	{
-		printf("error with quotes %d\n", count);
 		return (ft_lstnew_parser(ft_strdup("error with quotes"), 0));
 	}
 	//printf("2---------------\n");
