@@ -9,6 +9,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "libft.h"
+#include <sys/types.h>
+#include <sys/wait.h>
 
 typedef struct			s_untils
 {

@@ -76,7 +76,7 @@ void ft_paste_env(t_command *list_of_command)
 
 }
 
-void bsopia_func(t_command *com, int i, t_untils *untils)
+void redirect_check(t_command *com)
 {
 	t_command *start;
 
@@ -145,16 +145,71 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		}
 		start = start->next;
 	}
-	ft_check_command(com->command);
-	// printf("command\n");
+}
 
-	bsophia_function(com, untils);
+void bsopia_func(t_command *com, int i, t_untils *untils)
+{
+	t_command *start;
+	int tmpin = dup(0);
+    int tmpout = dup(1);
 
-	while (com)
+	redirect_check(com);
+
+	t_command *start_pipes = 0;
+	start = com;
+	while (start)
 	{
-		printf("%s  dr = %s  right = %s left = %s ->%d\n", com->command, com->redir_double_right, com->redir_right, com->redir_left, i);
-		com = com->next;
+		ft_lstadd_back_parser(&start_pipes, ft_lstnew_parser(start->command, 0));
+		if (start->command[0] == '|')
+		{
+			int pid = fork();
+			int fd[2];
+
+			pipe(fd);
+			if (start_pipes != 0 && pid == 0)
+			{
+				//printf("hello from docha1\n");
+				dup2(fd[1], 1);
+				close(fd[0]);
+				//printf("hello from docha2\n");
+				bsophia_function(start_pipes, untils);
+				close(fd[1]);
+			}
+			else
+			{
+				dup2(fd[0], 0);
+				close(fd[1]);
+				//printf("hello from parent\n");
+				wait(0);
+				close(fd[0]);
+			}
+			start_pipes = 0;
+		}
+		start = start->next;
 	}
+	ft_check_command(com->command);
+	//printf("hello before change fd\n");
+	dup2(tmpin, 0);
+	dup2(tmpout, 1);
+	//printf("hello after change fd\n");
+	// printf("command\n");
+	if (start_pipes != 0)
+	{
+		t_command *tmp_command;
+		tmp_command = start_pipes;
+		// while (start_pipes)
+		// {
+		// 	printf("%s  dr = %s  right = %s left = %s ->%d\n", start_pipes->command, start_pipes->redir_double_right, start_pipes->redir_right, start_pipes->redir_left, i);
+		// 	start_pipes = start_pipes->next;
+		// }
+		bsophia_function(tmp_command, untils);
+	}
+
+	// while (com)
+	// {
+	// 	printf("%s  dr = %s  right = %s left = %s ->%d\n", com->command, com->redir_double_right, com->redir_right, com->redir_left, i);
+	// 	com = com->next;
+	// }
 
 }
 
@@ -168,7 +223,7 @@ void main_parser(char *str, t_untils *untils)
 	//start = parser_into_list("echo $PWD$PATH;echo  -n $t rgdfg HELLO$t $s1 'hgf $PATH' \"    ;$t$PATH\";export\" fsd; hjghj;;$PATH\"  ry rt $bf;   echo 'echo'\"hello\"");
 	//printf("-------------->main parser !%s!\n", str);
 	start = parser_into_list_2(str, untils);
-	printf("%s\n", start->command);
+	//printf("%s\n", start->command);
 	//bsophia_function(start, untils);
 	// if (str != 0)
 	// {
