@@ -126,7 +126,8 @@ void redirect_check(t_command *com)
 		else if (start->command[0] == '<')
 		{
 			com->redir_left = start->next->command;
-			open(com->redir_left, O_WRONLY | 0777);
+			int gg = open(com->redir_left, O_WRONLY | 0777);
+			close(gg);
 			delete_current_parser(start->next);
 			if (start->back != 0)
 			{
@@ -161,11 +162,60 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			count_pipes++;
 		start = start->next;
 	}
-
+	start = com;
 	if (count_pipes == 0)
 	{
 		redirect_check(com);
-		bsophia_function(com, untils);
+		if (check_buildin(start->command))
+		{
+			untils->command_ex = ft_strdup_b(start->command);
+			start = start->next;
+			untils->path = find_path(untils);
+			char **bin = ft_split(untils->path, ':');
+			char **arguments;
+			int i = 0;
+			while (start)
+			{
+				start = start->next;
+				i++;
+			}
+			arguments = (char**)malloc(i * sizeof(char*) + 1);
+			start = com;
+			// start = start->next;
+			i = 0;
+			while (start)
+			{
+				arguments[i] = ft_strdup_b(start->command);
+				start = start->next;
+				i++;
+			}
+			arguments[i] = NULL;
+			i = 0;
+			int id;
+			id = fork();
+			char *command;
+			command = NULL;
+			start = com;
+			if (id == 0)
+			{
+				//дочка
+				char *commd;
+				commd = ft_strjoin_line("/", untils->command_ex);
+				check_redir(start, 2, untils);
+				while(bin[i] != NULL)
+				{
+					command = ft_strjoin_line(bin[i], commd);
+					if (execve(command, arguments, untils->env) == 0)
+						break ;
+					i++;
+				}
+				exit(0);
+			}
+			else
+				wait(0);
+		}
+		else
+			bsophia_function(com, untils);
 	}
 	else
 	{

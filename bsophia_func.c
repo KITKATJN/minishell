@@ -48,11 +48,11 @@ int check_redir(t_command *list, int i, t_untils *untils)
 	}
 	if (list->redir_left != NULL && i == 2)
 	{
-		untils->fd_in = open(list->redir_left, O_WRONLY | 0777);
+		untils->fd_in = open(list->redir_left, O_RDWR);
 		if (untils->fd_in < 0)
 			return (0);
 		untils->std_in = dup(0);
-		dup2(untils->fd_in, 1);
+		dup2(untils->fd_in, 0);
 	}
 	if (i == 1)
 	{

@@ -22,6 +22,8 @@ typedef struct			s_untils
 	int					fd_in;
 	int					std_in;
 	int					std_out;
+	char				*command_ex;
+	char				*path;
 }						t_untils;
 
 typedef struct			s_history
@@ -94,5 +96,8 @@ void					delete_current_parser(t_command *current);
 void					ft_lstadd_back_parser2(t_parser **lst, t_parser *new);
 t_parser				*ft_lstnew_parser2(char	*symbol, int special, int *special_array);
 void					bsopia_func(t_command *com, int i, t_untils *untils);
+int						check_buildin(char *str);
+char					*find_path(t_untils *untils);
+int						check_redir(t_command *list, int i, t_untils *untils);
 
 #endif

@@ -210,6 +210,7 @@ int main(int argc, char **argv, char **envp)
 {
 	// char *buff[2];
 	struct termios term;
+	struct termios term2;
 	char *line;
 	char *term_name;
 	t_history *history;
@@ -221,13 +222,15 @@ int main(int argc, char **argv, char **envp)
 	untils->flag = 1;
 	term_name = "xterm-256color";
 	tcgetattr(0, &term);
+	tcgetattr(0, &term2);
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
-	tcsetattr(0, TCSANOW, &term);
+	// tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
 	untils->env = copy_envp(envp, untils->env);
 	while (1)
 	{
+		tcsetattr(0, TCSANOW, &term);
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
@@ -235,6 +238,7 @@ int main(int argc, char **argv, char **envp)
 			clear_history(&history);
 		untils->fd_in = 99;
 		untils->fd_out = 99;
+		tcsetattr(0, TCSANOW, &term2);
 		main_parser(line, untils);
 	}
 }

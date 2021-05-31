@@ -12,7 +12,8 @@ LIST 	=	backspace.c \
 			delete_spaces.c delete_tcommand.c ft_check_command.c \
 			ft_perror.c main_parser.c pars_to_command.c \
 			parse_add_semicolon_to_end.c parser_into_list.c \
-			bsophia_func.c ft_strcmp.c parser_into_list_2.c
+			bsophia_func.c ft_strcmp.c parser_into_list_2.c \
+			check_buildin.c
 
 OBJDIR	=	objs/
 
