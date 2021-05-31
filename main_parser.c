@@ -150,61 +150,98 @@ void redirect_check(t_command *com)
 void bsopia_func(t_command *com, int i, t_untils *untils)
 {
 	t_command *start;
-	int tmpin = dup(0);
-    int tmpout = dup(1);
 
-	redirect_check(com);
-
-	t_command *start_pipes = 0;
 	start = com;
+	int count_pipes = 0;
 	while (start)
 	{
-		ft_lstadd_back_parser(&start_pipes, ft_lstnew_parser(start->command, 0));
 		if (start->command[0] == '|')
-		{
-			int pid = fork();
-			int fd[2];
-
-			pipe(fd);
-			if (start_pipes != 0 && pid == 0)
-			{
-				//printf("hello from docha1\n");
-				dup2(fd[1], 1);
-				close(fd[0]);
-				//printf("hello from docha2\n");
-				bsophia_function(start_pipes, untils);
-				close(fd[1]);
-			}
-			else
-			{
-				dup2(fd[0], 0);
-				close(fd[1]);
-				//printf("hello from parent\n");
-				wait(0);
-				close(fd[0]);
-			}
-			start_pipes = 0;
-		}
+			count_pipes++;
 		start = start->next;
 	}
-	ft_check_command(com->command);
-	//printf("hello before change fd\n");
-	dup2(tmpin, 0);
-	dup2(tmpout, 1);
-	//printf("hello after change fd\n");
-	// printf("command\n");
-	if (start_pipes != 0)
-	{
-		t_command *tmp_command;
-		tmp_command = start_pipes;
-		// while (start_pipes)
-		// {
-		// 	printf("%s  dr = %s  right = %s left = %s ->%d\n", start_pipes->command, start_pipes->redir_double_right, start_pipes->redir_right, start_pipes->redir_left, i);
-		// 	start_pipes = start_pipes->next;
-		// }
-		bsophia_function(tmp_command, untils);
-	}
 
+	if (count_pipes == 0)
+	{
+		redirect_check(com);
+		bsophia_function(com, untils);
+	}
+	else
+	{
+		int tmpin = dup(0);
+		int tmpout = dup(1);
+
+		t_command *start_pipes = 0;
+		start = com;
+		int ret;
+		int fdout;
+		while (start)
+		{
+			ft_lstadd_back_parser(&start_pipes, ft_lstnew_parser(start->command, 0));
+			if (start->command[0] == '|')
+			{
+				redirect_check(start_pipes);
+				int fdin;
+				if (start_pipes->redir_left != 0)
+					fdin = open(start_pipes->redir_left, O_WRONLY | 0777);
+				else
+					fdin = dup(tmpin);
+				dup2(fdin, 0);
+				close(fdin);
+
+				int fd[2];
+				pipe(fd);
+				fdout = fd[1];
+				fdin = fd[0];
+
+				dup2(fdout, 1);
+				close(fdout);
+				ret = fork();
+				if (start_pipes != 0 && ret == 0)
+				{
+					//printf("hello from docha1\n");
+					dup2(fd[1], 1);
+					close(fd[0]);
+					//printf("hello from docha2\n");
+					bsophia_function(start_pipes, untils);
+					close(fd[1]);
+				}
+				else
+				{
+					dup2(fd[0], 0);
+					close(fd[1]);
+					wait(0);
+					close(fd[0]);
+				}
+				dup2(tmpin, 0);
+				dup2(tmpout, 1);
+				close(tmpout);
+				close(tmpin);
+				start_pipes = 0;
+			}
+				start = start->next;
+		}
+		//ft_check_command(com->command);
+		//printf("hello before change fd\n");
+		//dup2(tmpin, 0);
+		//dup2(tmpout, 1);
+		// printf("command\n");
+		if (start_pipes != 0)
+		{
+			redirect_check(start_pipes);
+			//start_pipes->redir_right = com->redir_right;
+			if (start_pipes->redir_right)
+				fdout = open(start_pipes->redir_right, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+			else
+				fdout = dup(tmpout);
+			com = start_pipes;
+			while (com)
+			{
+				printf("%s  dr = %s  right = %s left = %s ->%d\n", com->command, com->redir_double_right, com->redir_right, com->redir_left, i);
+				com = com->next;
+			}
+			bsophia_function(start_pipes, untils);
+		}
+	}
 	// while (com)
 	// {
 	// 	printf("%s  dr = %s  right = %s left = %s ->%d\n", com->command, com->redir_double_right, com->redir_right, com->redir_left, i);
