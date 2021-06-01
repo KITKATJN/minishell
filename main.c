@@ -220,12 +220,11 @@ int main(int argc, char **argv, char **envp)
 	line = NULL;
 	untils = malloc(sizeof(t_untils));
 	untils->flag = 1;
-	term_name = "xterm-256color";
+	term_name = "xterm-256color"; //костыль достать из envp, если нет то выходим из программы (везде где пользуемся переменными окружения проверяем есть ли она там)
 	tcgetattr(0, &term);
 	tcgetattr(0, &term2);
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
-	// tcsetattr(0, TCSANOW, &term);
 	tgetent(0, term_name);
 	untils->env = copy_envp(envp, untils->env);
 	while (1)

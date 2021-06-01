@@ -1,80 +1,6 @@
 #include "minishell.h"
 
-void ft_paste_env(t_command *list_of_command)
-{
-	t_command	*start;
-	char		*start_command;
-	char		*env;
-	char		*back_env;
-	char		*value_env;
-	char		*tmp;
-	int			i;
-	int			j;
 
-	start = list_of_command;
-	while (start)
-	{
-		i = 0;
-		while (start->command[i] != '\0')
-		{
-			if (start->command[i] == '\'' && start->command[0] != '\"')
-				break ;
-			if (start->command[i] == '$')
-			{
-				start_command = ft_substr(start->command, 0, i);
-				j = i;
-				i++;
-				while (start->command[i] != '\0' && start->command[i] != ' ' && start->command[i] != '$' && start->command[i] != '\"')
-					i++;
-				env = ft_substr(start->command, j + 1, i - j - 1);
-				back_env = ft_substr(start->command, j + 1 + i - j - 1, ft_strlen(start->command));
-				//printf("!!!!!!!!!!!env = !%s! back = %s   %s %d\n", env, back_env, start->command, i-j-2);
-				if (getenv(env) == 0)
-				{
-					free(env);
-					env = ft_substr(start->command, 0 , j);
-					free(start->command);
-					start->command = ft_strjoin(env, back_env);
-					free(env);
-					i = 0;
-					continue ;
-				}
-				value_env = ft_strdup(getenv(env));
-				free(env);
-				free(start->command);
-				if (start_command[0] == '\"')
-				{
-					env = ft_strjoin(start_command, value_env);
-					start->command = ft_strjoin(env, back_env);
-					free(env);
-				}
-				else
-				{
-					tmp = ft_strjoin(start_command, value_env);
-					start->command = ft_strjoin(tmp, back_env);
-					free(tmp);
-				}
-				free(start_command);
-				free(value_env);
-				if (start->command[0] == '\"')
-					continue ;
-				// printf("----->%c\n", start->command[i]);
-				continue ;
-				//else
-				//	break ;
-			}
-			i++;
-		}
-		if (start->command[0] == '\"' && start->command[ft_strlen(start->command) - 1] != '\"')
-		{
-			tmp = ft_strjoin(start->command, "\"");
-			free(start->command);
-			start->command = tmp;
-		}
-		start = start->next;
-	}
-
-}
 
 void redirect_check(t_command *com)
 {
@@ -106,7 +32,8 @@ void redirect_check(t_command *com)
 		else if (start->command[0] == '>')
 		{
 			com->redir_right = start->next->command;
-			open(com->redir_right, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+			int ff = open(com->redir_right, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+			close (ff);
 			delete_current_parser(start->next);
 			if (start->back != 0)
 			{
@@ -152,8 +79,6 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 {
 	t_command *start;
 
-	int tmpin2 = dup(0);
-	int tmpout2 = dup(1);
 	start = com;
 	int count_pipes = 0;
 	while (start)
@@ -166,10 +91,15 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	if (count_pipes == 0)
 	{
 		redirect_check(com);
+		// while (start) // echo pl | echo hgfda123 | echo 456
+		// 	{
+		// 		printf("%s  dr = %s  right = %s left = %s ->%d\n", start->command, start->redir_double_right, start->redir_right, start->redir_left, i);
+		// 		start = start->next;
+		// 	}
 		if (check_buildin(start->command))
 		{
 			untils->command_ex = ft_strdup_b(start->command);
-			start = start->next;
+			// start = start->next;
 			untils->path = find_path(untils);
 			char **bin = ft_split(untils->path, ':');
 			char **arguments;
@@ -181,7 +111,6 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			}
 			arguments = (char**)malloc(i * sizeof(char*) + 1);
 			start = com;
-			// start = start->next;
 			i = 0;
 			while (start)
 			{
@@ -209,7 +138,6 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 						break ;
 					i++;
 				}
-				exit(0);
 			}
 			else
 				wait(0);
@@ -221,97 +149,95 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	{
 		int tmpin = dup(0);
 		int tmpout = dup(1);
+		int **pipes;
+		int *process;
+		int j = 0;
+		t_command **command_pipes;
+		t_command *current_pipe = 0;
 
-		t_command *start_pipes = 0;
-		start = com;
-		int ret;
-		int fdout;
+		command_pipes =  (t_command **)malloc(sizeof(t_command*) * (count_pipes + 1));
+		j =0;
 		while (start)
 		{
 			if (start->command[0] == '|')
 			{
-				redirect_check(start_pipes);
-				int fdin;
-				if (start_pipes->redir_left != 0)
-					fdin = open(start_pipes->redir_left, O_WRONLY | 0777);
-				else
-					fdin = dup(tmpin);
-				dup2(fdin, 0);
-				close(fdin);
-
-				int fd[2];
-				pipe(fd);
-				fdout = fd[1];
-				fdin = fd[0];
-				//printf("1--------------\n");
-				dup2(fdout, 1);
-				close(fdout);
-				ret = fork();
-				//printf("33--------------\n");
-				if (start_pipes != 0 && ret == 0)
-				{
-					//printf("2--------------\n");
-					//printf("hello from docha1\n");
-					dup2(fd[1], 1);
-					close(fd[0]);
-					//printf("hello from docha2\n");
-					bsophia_function(start_pipes, untils);
-					close(fd[1]);
-				}
-				else
-				{
-					//printf("3--------------\n");
-					dup2(fd[0], 0);
-					close(fd[1]);
-					wait(0);
-					close(fd[0]);
-				}
-				//printf("4--------------\n");
-				dup2(tmpin, 0);
-				dup2(tmpout, 1);
-				//printf("4--------------\n");
-				close(tmpout);
-				close(tmpin);
-				start_pipes = 0;
-				start = start->next;
+				command_pipes[j] = current_pipe;
+				current_pipe = 0;
+				j++;
 			}
-			//printf("fsddf-->com = %s\n", start->command);
-			ft_lstadd_back_parser(&start_pipes, ft_lstnew_parser(start->command, 0));
+			else
+			{
+				ft_lstadd_back_parser(&current_pipe, ft_lstnew_parser(start->command, 0));
+			}
 			start = start->next;
 		}
-		//ft_check_command(com->command);
-		//printf("hello before change fd\n");
-		dup2(tmpin2, 0);
-		dup2(tmpout2, 1);
-		//printf("command\n");
-
-		if (start_pipes != 0)
+		if (current_pipe != 0)
 		{
-			redirect_check(start_pipes);
-			//start_pipes->redir_right = com->redir_right;
-			// if (start_pipes->redir_right)
-			// 	fdout = open(start_pipes->redir_right, O_CREAT | O_WRONLY | O_TRUNC, 0777);
-			// else
-			// 	fdout = dup(tmpout);
-			// // com = start_pipes;
-			// while (com) // echo pl | echo hgfda123 | echo 456
-			// {
-			// 	printf("%s  dr = %s  right = %s left = %s ->%d\n", com->command, com->redir_double_right, com->redir_right, com->redir_left, i);
-			// 	com = com->next;
-			// }
-			bsophia_function(start_pipes, untils);
+			command_pipes[j] = current_pipe;
 		}
-		dup2(tmpin, 0);
-		dup2(tmpout, 1);
+		pipes = (int **)malloc(sizeof(int*) * (count_pipes + 1));
+		j = 0;
+		while (j < count_pipes)
+		{
+			pipes[j] = malloc(sizeof(int) * 2);
+			j++;
+		}
+		j = 0;
+		process = malloc(sizeof(int) * count_pipes + 1);
+		while (j < count_pipes + 1)
+		{
+			if (j < count_pipes)
+				pipe(pipes[j]);
+			process[j] = fork();
+			if (process[j] == 0)
+			{
+				if (j == 0)
+				{
+					dup2(pipes[0][1], STDOUT_FILENO);
+					close(pipes[0][1]);
+					work_pipes(untils, command_pipes[j]);
+					exit(0);
+				}
+				else if (j != count_pipes)
+					{
+						dup2(pipes[j - 1][0], STDIN_FILENO);
+						dup2(pipes[j][1], STDOUT_FILENO);
+						close(pipes[j-1][0]);
+						close(pipes[j][1]);//что мыы закрываем?
+						work_pipes(untils, command_pipes[j]);
+						//вывзываем нашу функцию
+						exit(0);
+					}
+				else
+				{
+					dup2(pipes[j - 1][0], STDIN_FILENO);
+					close(pipes[j-1][0]);
+					work_pipes(untils, command_pipes[j]);
+				}
+					//last
+			}
+			else
+				wait(0);
+			j++;
+		//просто дописать пацпы в самом конце]/ перед сдачей
+		}
+	j = 0;
+	while (j < count_pipes)
+	{
+		close(pipes[j][0]);
+		close(pipes[j][1]);
+		j++;
 	}
-	dup2(tmpin2, 0);
-	dup2(tmpout2, 1);
+	dup2(tmpout, 1);
+	dup2(tmpin, 0);
+	close(tmpout);
+	close(tmpin);
 	// while (com)
 	// {
 	// 	printf("%s  dr = %s  right = %s left = %s ->%d\n", com->command, com->redir_double_right, com->redir_right, com->redir_left, i);
 	// 	com = com->next;
 	// }
-
+	}
 }
 
 void main_parser(char *str, t_untils *untils)
