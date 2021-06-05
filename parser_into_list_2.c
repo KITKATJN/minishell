@@ -316,6 +316,28 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 			break ;
 	}
 
+	current = start;
+	while (current)
+	{
+		if (current->special == 2)
+		{
+			current = current->next;
+			while(current->special != 2)
+				current = current->next;
+		}
+		if (current->symbol[0] == '\'' && current->special != 0)//все что в обычных ковычках меняем на простые символы, которые ничего не значат
+		{
+			current = current->next;
+			if (current == 0)
+				break ;
+			while (current->special != 1)
+			{
+				current->special = 0;
+				current = current->next;
+			}
+		}
+		current = current->next;
+	}
 	//printf("134---------------\n");
 	//printf_list(start);
 	//printf("1---------------\n");
@@ -333,7 +355,8 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		}
 		if (current->symbol[0] == '\\' && current->special != 0)
 		{
-			if (!(double_quotes % 2 != 0 && current->next != 0 && (current->next->symbol[0] == '\\' || current->next->symbol[0] == '\"' || current->next->symbol[0] == '$')))
+			// printf("^^^^^^^^^%c\n", current->next->symbol[0]);
+			if (double_quotes % 2 != 0 && current->next != 0 && (current->next->symbol[0] != '\\' && current->next->symbol[0] != '\"' && current->next->symbol[0] != '$'))
 			{
 				current->special = 0;
 				continue ;
@@ -343,7 +366,6 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 			next = current->next;
 			delete_current_parser2(current);
 			next->special = 0;
-			
 		}
 		current = current->next;
 	}
@@ -371,28 +393,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	}
 	//printf("2---------------\n");
 	//printf_list(start);
-	current = start;
-	while (current)
-	{
-		if (current->special == 2)
-		{
-			current = current->next;
-			while(current->special != 2)
-				current = current->next;
-		}
-		if (current->symbol[0] == '\'' && current->special != 0)//все что в обычных ковычках меняем на простые символы, которые ничего не значат
-		{
-			current = current->next;
-			if (current == 0)
-				break ;
-			while (current->special != 1)
-			{
-				current->special = 0;
-				current = current->next;
-			}
-		}
-		current = current->next;
-	}
+
 	//printf("3---------------\n");
 	//printf_list(start);
 
@@ -550,17 +551,19 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 					j_env++;
 				}
 				//printf("env_tmp = %s\n", env_tmp);
-				if (getenv(env_tmp) == 0)
-					command_tmp = 0;
-				else
-					command_tmp = ft_strdup(getenv(env_tmp));// ft_strjoin(getenv(env_tmp), current->symbol + j_env);
-				free(env_tmp);
-				//printf("command_tmp1 = %s\n", command_tmp);
-				if (command_tmp == 0)
+				// if (getenv(env_tmp) == 0)
+				// 	command_tmp = 0;
+				if (my_get_env(env_tmp, untils->env) == 0)
 				{
 					command_tmp = malloc(1);
 					command_tmp[0] = '\0';
 				}
+				else
+				{
+					command_tmp = ft_strdup(my_get_env(env_tmp, untils->env));// ft_strjoin(getenv(env_tmp), current->symbol + j_env);
+				}
+				free(env_tmp);
+				//printf("command_tmp1 = %s\n", command_tmp);
 				//if (i_env > 0)
 				//	command_tmp = ft_strjoin(ft_substr(current->symbol, 0 , i_env), command_tmp);
 				//printf("command_tmp2 = %s\n", command_tmp);
@@ -584,17 +587,18 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 			i_for_str_before_dollar++;
 			i_env++;
 		}
-		//printf("string_before_doolar = %s\n", string_before_doolar);
+		//printf("string_before_doolar = %s | %s\n", string_before_doolar, end_command);
 		end_command = ft_strjoin(end_command, string_before_doolar);
 		//printf("34/*/*/*/*/*/*/*/*/*/**/**/*\n");
-		if (end_command[0] != '\0')
+		if (end_command[0] != '\0' || current->symbol[0] == '$')
 			current->symbol = end_command;
+		//printf("current->symb = %s\n", current->symbol);
 		//printf("35/*/*/*/*/*/*/*/*/*/**/**/*\n");
 		if (current->special_array[0] == 9)
 		{
 			//printf("1-----------------\n");
 			//printf_command_list(commands);
-			bsopia_func(commands, 0, untils);
+			bsopia_func(commands, 2, untils);
 			if (current->next == 0)
 				break ;
 			current = current->next;

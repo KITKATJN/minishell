@@ -101,5 +101,6 @@ char					*find_path(t_untils *untils);
 int						check_redir(t_command *list, int i, t_untils *untils);
 void					redirect_check(t_command *com);
 int						work_pipes(t_untils *untils, t_command *start);
+char					*my_get_env(char *str, char **env);
 
 #endif

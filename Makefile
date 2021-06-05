@@ -13,7 +13,7 @@ LIST 	=	backspace.c \
 			ft_perror.c main_parser.c pars_to_command.c \
 			parse_add_semicolon_to_end.c parser_into_list.c \
 			bsophia_func.c ft_strcmp.c parser_into_list_2.c \
-			check_buildin.c work_pipes.c
+			check_buildin.c work_pipes.c my_getenv.c
 
 OBJDIR	=	objs/
 

@@ -124,6 +124,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		// 		printf("%s  dr = %s  right = %s left = %s ->%d\n", start->command, start->redir_double_right, start->redir_right, start->redir_left, i);
 		// 		start = start->next;
 		// 	}
+		// start = com;
 		if (check_buildin(start->command))
 		{
 			untils->command_ex = ft_strdup_b(start->command);
@@ -166,6 +167,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 						break ;
 					i++;
 				}
+				exit(0);
 			}
 			else
 				wait(0);
@@ -175,6 +177,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	}
 	else
 	{
+
 		int status;
 		int j = 0;
 		t_command **command_pipes;
