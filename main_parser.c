@@ -175,10 +175,6 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	}
 	else
 	{
-		// int tmpin = dup(0);
-		// int tmpout = dup(1);
-		// int **pipes;
-		// int *process;
 		int status;
 		int j = 0;
 		t_command **command_pipes;
@@ -205,14 +201,6 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			command_pipes[j] = current_pipe;
 		}
 		int pipes[count_pipes][2];
-		
-		// pipes = (int **)malloc(sizeof(int*) * (count_pipes + 1));
-		// j = 0;
-		// while (j < count_pipes)
-		// {
-		// 	pipes[j] = malloc(sizeof(int) * 2);
-		// 	j++;
-		// }
 		j = 0;
 		int process[count_pipes + 1];
 		int prev_pipe_fds[2];
@@ -234,11 +222,8 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			}
 			if (fork() == 0)
 			{
-				// printf("%s\n", command_pipes[i]->command);
 				connect_stdio_to_pipes(prev_pipe_fds, next_pipe_fds);
 				work_pipes(untils, command_pipes[i]);
-				// char **cmd = cmds[i];
-				// execve(cmd[0], cmd, NULL);
 			}
 			close(prev_pipe_fds[0]);
 			close(prev_pipe_fds[1]);
@@ -250,88 +235,6 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			waitpid(-1, &(status), 0);
 			j++;
 		}
-		// wait(NULL);
-		// wait(NULL);
-		// wait(NULL);
-		// wait(NULL);
-		// return (0);
-		// process = malloc(sizeof(int) * (count_pipes + 1));
-		// while (j < count_pipes + 1)
-		// {
-		// 	// printf("j %d\n", j);
-		// 	if (j < count_pipes)
-		// 	{
-		// 		pipe(pipes[j]);
-		// 	}
-		// 	process[j] = fork();
-		// 	if (process[j] == 0)
-		// 	{
-				
-		// 		if (j == 0)
-		// 		{
-					
-		// 			dup2(pipes[j][1], STDOUT_FILENO);
-		// 			close(pipes[j][1]);
-		// 			close(pipes[0][0]);
-		// 			work_pipes(untils, command_pipes[j]);
-		// 			// exit(0);
-		// 		}
-		// 		else if (j != count_pipes)
-		// 		{
-					
-		// 			dup2(pipes[j - 1][0], STDIN_FILENO);
-		// 			dup2(pipes[j][1], STDOUT_FILENO);
-		// 			close(pipes[j-1][0]);
-		// 			close(pipes[j - 1][1]);
-		// 			close(pipes[j][1]);//что мыы закрываем?
-		// 			close(pipes[j][0]);
-		// 			work_pipes(untils, command_pipes[j]);
-		// 			//вывзываем нашу функцию
-		// 			// exit(0);
-		// 		}
-		// 		else
-		// 		{
-		// 			dup2(pipes[j - 1][0], STDIN_FILENO);
-		// 			close(pipes[j - 1][0]);
-		// 			close(pipes[j -1][1]);
-		// 			work_pipes(untils, command_pipes[j]);
-		// 			// exit(0);
-		// 		}
-		// 			//last
-		// 	}
-		// 	close(pipes[j][0]);
-		// 	close(pipes[j][1]);
-		// 	// else
-		// 	// 	wait(0);
-		// 	// waitpid(process[j], &(status), 0);
-		// 	j++;
-		// 	printf("bla %d\n", j);
-		// //просто дописать пацпы в самом конце]/ перед сдачей
-		// }
-		// j = 0;
-		// while (j < count_pipes + 1)
-		// {
-		// 	waitpid(process[j], &(status), 0);
-		// 	j++;
-		// }
-		// printf("CSD\n");
-		// j = 0;
-		// while (j < count_pipes + 1)
-		// {
-		// 	waitpid(process[j], &status, NULL);
-		// 	j++;
-		// }
-	j = 0;
-	// dup2(tmpout, 1);
-	// dup2(tmpin, 0);
-	// close(tmpout);
-	// close(tmpin);
-	// // while (com)
-	// // {
-	// // 	printf("%s  dr = %s  right = %s left = %s ->%d\n", com->command, com->redir_double_right, com->redir_right, com->redir_left, i);
-	// // 	com = com->next;
-	// // }
-	// }
 	}
 }
 

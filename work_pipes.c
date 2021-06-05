@@ -54,6 +54,9 @@ int work_pipes(t_untils *untils, t_command *start)
 			exit(0);
 		}
 		else
+		{
 			bsophia_function(save, untils);
+			exit(0);
+		}
 		return (0);
 }
