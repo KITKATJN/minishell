@@ -61,7 +61,7 @@ void	printf_list(t_parser *current)
 	printf("----------------------------------------------------------------------------\n");
 	while (current)
 	{
-		if (current->special_array == 0)
+		if (current->special_array != 0 && current->special_array == 0)
 			printf("!%s! %d\n", current->symbol, current->special);
 		else
 		{
@@ -321,8 +321,11 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	//printf("1---------------\n");
 	current = start;
 	t_parser *next;
+	int double_quotes = 0;
 	while (current->next)
 	{
+		if (current->symbol[0] == '\"')
+			double_quotes++;
 		if (current->special == 5)
 		{
 			if (current->next != 0 && current->next->symbol[0] == '\\')
@@ -330,11 +333,17 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		}
 		if (current->symbol[0] == '\\' && current->special != 0)
 		{
+			if (!(double_quotes % 2 != 0 && current->next != 0 && (current->next->symbol[0] == '\\' || current->next->symbol[0] == '\"' || current->next->symbol[0] == '$')))
+			{
+				current->special = 0;
+				continue ;
+			}
 			if (current->back == 0)
 				start = current->next;
 			next = current->next;
 			delete_current_parser2(current);
 			next->special = 0;
+			
 		}
 		current = current->next;
 	}
@@ -407,6 +416,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 
 	//printf_list(start);
 
+	//printf("4------------------------\n");
 	current = start;
 	t_parser *new_start;
 	t_parser *list_of_command;
@@ -450,6 +460,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	}
 	//printf_list(list_of_command);
 
+	//printf("5------------------------\n");
  //надо удалять первоначчальный список
 	while (start)
 	{
@@ -458,7 +469,8 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		start = current;
 	}
 
-	current = list_of_command;
+	current = list_of_command->next;
+	//printf_list(current);
 	t_parser *temporary;
 	while (current)
 	{
@@ -471,20 +483,32 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		}
 		current = current->next;
 	}
+	//printf("5.5------------------------\n");
 
-	current = list_of_command;
+	// current = list_of_command;
+	// if (current->symbol[0] == '\0')
+	// 	{
+	// 		temporary = current;
+	// 		current = current->next;
+	// 		delete_current_parser2(temporary);
+	// 		list_of_command = current;
+	// 	}
+	//printf_list(current);
 	while (current)
 	{
+		//printf("6.6.6------------------------%s\n", current->symbol);
 		if (current->symbol[0] == '>' || current->symbol[0] == '<') //  проверяю, чтобы после каждого редиректа что-то было
 		{
 			//printf("gfdshkjbgfjkdsjkfgsf------------->%c\n",current->next->symbol[0] );
 			if (current->next && (current->next->symbol[0] == '>' || current->next->symbol[0] == '<' || current->next->symbol[0] == ' ' || current->next->symbol[0] == ';'))
 				return (ft_lstnew_parser("syntax error near unexpected token `>' or '<' or '>>'", 0));
 		}
+		//printf("5.5.5------------------------\n");
 		current = current->next;
 	}
 	//printf_list(list_of_command);
 
+	//printf("6------------------------\n");
 	//printf("4------------------\n");
 	t_command *commands;
 	commands = 0;
@@ -519,7 +543,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 				//printf("%d === %ld !%s!\n", j_env ,ft_strlen(current->symbol), string_before_doolar);
 				while (j_env < ft_strlen(current->symbol))
 				{
-					if (current->special_array[j_env] == 0 || current->special_array[j_env] == 5)
+					if (current->special_array[j_env] == 0 || current->special_array[j_env] == 5 || (current->special_array[0] == 2 && current->special_array[j_env] == 2))
 						break;
 					env_tmp[j_env - i_env - 1] = current->symbol[j_env];
 					//printf("*** %c  %d %c\n", env_tmp[j_env - i_env - 1],j_env - i_env - 1 , current->symbol[j_env]);
@@ -530,6 +554,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 					command_tmp = 0;
 				else
 					command_tmp = ft_strdup(getenv(env_tmp));// ft_strjoin(getenv(env_tmp), current->symbol + j_env);
+				free(env_tmp);
 				//printf("command_tmp1 = %s\n", command_tmp);
 				if (command_tmp == 0)
 				{
@@ -542,6 +567,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 				end_command = ft_strjoin(end_command, string_before_doolar);
 				//printf("end_command1 = %s\n", end_command);
 				end_command = ft_strjoin(end_command, command_tmp);
+				free(command_tmp);
 				//printf("end_command2 = %s\n", end_command);
 				//printf("env_tmp = %s %s \n", env_tmp, command_tmp);
 				i_env = j_env;
@@ -592,5 +618,6 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	// 	delete_current_parser2(temporary2);
 	// 	current = current->next;
 	// }
+	//printf("7------------------------\n");
 	return (commands);
 }
