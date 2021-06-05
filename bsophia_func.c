@@ -37,6 +37,7 @@ int check_redir(t_command *list, int i, t_untils *untils)
 			return (0);
 		untils->std_out = dup(1);
 		dup2(untils->fd_out, 1);
+		close(untils->fd_out);
 	}
 	if (list->redir_double_right != NULL && i == 2)
 	{
@@ -45,6 +46,7 @@ int check_redir(t_command *list, int i, t_untils *untils)
 			return (0);
 		untils->std_out = dup(1);
 		dup2(untils->fd_out, 1);
+		close(untils->fd_out);
 	}
 	if (list->redir_left != NULL && i == 2)
 	{
@@ -53,6 +55,7 @@ int check_redir(t_command *list, int i, t_untils *untils)
 			return (0);
 		untils->std_in = dup(0);
 		dup2(untils->fd_in, 0);
+		close(untils->fd_in);
 	}
 	if (i == 1)
 	{
@@ -60,11 +63,13 @@ int check_redir(t_command *list, int i, t_untils *untils)
 		{
 			close(untils->fd_out);
 			dup2(untils->std_out, 1);
+			close(untils->std_out);
 		}
 		if (untils->fd_in != 99)
 		{
 			close(untils->fd_in);
 			dup2(untils->std_in, 0);
+			close(untils->std_in);
 		}
 	}
 	return (1);
@@ -97,6 +102,7 @@ void bsophia_function(t_command *list, t_untils *untils)
 		{
 			print_export(untils->env);
 			check_redir(list, 1, untils);
+			check_redir(list, 1, untils);
 			return ;
 		}
 		list = list->next;
@@ -105,6 +111,7 @@ void bsophia_function(t_command *list, t_untils *untils)
 			if (check_name(list->command))
 			{
 				printf("export error\n");
+				check_redir(list, 1, untils);
 				return ;
 			}
 			list = list->next;
@@ -112,12 +119,16 @@ void bsophia_function(t_command *list, t_untils *untils)
 		if (check_name(list->command))
 		{
 			printf("export error\n");
+			check_redir(list, 1, untils);
 			return ;
 		}
 		while (list->back)
 		{
 			if (!(ft_strcmp(list->command, "export")))
+			{
+				check_redir(list, 1, untils);
 				break ;
+			}				
 			list = list->back;
 		}
 		while (list->next)

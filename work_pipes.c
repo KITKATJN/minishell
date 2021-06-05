@@ -23,12 +23,13 @@ int work_pipes(t_untils *untils, t_command *start)
 				start = start->next;
 				i++;
 			}
-			arguments = (char**)malloc(i * sizeof(char*) + 1);
+			arguments = (char**)malloc(sizeof(char*) * (i + 1));
 			start = save;
 			i = 0;
 			while (start)
 			{
 				arguments[i] = ft_strdup_b(start->command);
+				// printf("!!! %s !!!\n", start->command);
 				start = start->next;
 				i++;
 			}
@@ -39,19 +40,18 @@ int work_pipes(t_untils *untils, t_command *start)
 			char *command;
 			command = NULL;
 			// start = save;
-			//дочка
+			//д]очка
 			char *commd;
 			commd = ft_strjoin_line("/", untils->command_ex);
 			check_redir(save, 2, untils);
-			while(bin[i] != NULL)
+			// printf("DOSTAL\n");
+			while(bin[i])
 			{
 				command = ft_strjoin_line(bin[i], commd);
-				if (execve(command, arguments, untils->env) == 0)
-				{
-					return (-1);
-				}
+				execve(command, arguments, untils->env);
 				i++;
 			}
+			exit(0);
 		}
 		else
 			bsophia_function(save, untils);

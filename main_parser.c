@@ -12,7 +12,8 @@ void redirect_check(t_command *com)
 		if (start->command[0] == '>' && start->command[1] == '>')
 		{
 			com->redir_double_right = start->next->command;
-			open(com->redir_double_right, O_CREAT | O_WRONLY | O_APPEND, 0777);
+			int gf = open(com->redir_double_right, O_CREAT | O_WRONLY | O_APPEND, 0777);
+			close (gf);
 			delete_current_parser(start->next);
 			if (start->back != 0)
 			{
@@ -53,7 +54,7 @@ void redirect_check(t_command *com)
 		else if (start->command[0] == '<')
 		{
 			com->redir_left = start->next->command;
-			int gg = open(com->redir_left, O_WRONLY | 0777);
+			int gg = open(com->redir_left, O_RDWR);
 			close(gg);
 			delete_current_parser(start->next);
 			if (start->back != 0)
@@ -75,6 +76,32 @@ void redirect_check(t_command *com)
 	}
 }
 
+void	func(t_command *current_pipe)
+{
+	int i = 0;
+	while (current_pipe)
+	{
+		printf("func %s\n", current_pipe->command);
+		current_pipe = current_pipe->next;
+	}
+}
+
+void connect_stdio_to_pipes(int prev_fds[], int next_fds[])
+{
+    if (prev_fds[0] >= 0)
+    {
+        dup2(prev_fds[0], 0);
+        close(prev_fds[0]);
+        close(prev_fds[1]);
+    }
+    if (next_fds[1] >= 0)
+    {
+        dup2(next_fds[1], 1);
+        close(next_fds[1]);
+        close(next_fds[0]);
+    }
+}
+
 void bsopia_func(t_command *com, int i, t_untils *untils)
 {
 	t_command *start;
@@ -87,6 +114,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			count_pipes++;
 		start = start->next;
 	}
+	// printf("%d\n", count_pipes);
 	start = com;
 	if (count_pipes == 0)
 	{
@@ -147,16 +175,17 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	}
 	else
 	{
-		int tmpin = dup(0);
-		int tmpout = dup(1);
-		int **pipes;
-		int *process;
+		// int tmpin = dup(0);
+		// int tmpout = dup(1);
+		// int **pipes;
+		// int *process;
+		int status;
 		int j = 0;
 		t_command **command_pipes;
 		t_command *current_pipe = 0;
-
+		
 		command_pipes =  (t_command **)malloc(sizeof(t_command*) * (count_pipes + 1));
-		j =0;
+		j = 0;
 		while (start)
 		{
 			if (start->command[0] == '|')
@@ -175,69 +204,133 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		{
 			command_pipes[j] = current_pipe;
 		}
-		pipes = (int **)malloc(sizeof(int*) * (count_pipes + 1));
+		int pipes[count_pipes][2];
+		
+		// pipes = (int **)malloc(sizeof(int*) * (count_pipes + 1));
+		// j = 0;
+		// while (j < count_pipes)
+		// {
+		// 	pipes[j] = malloc(sizeof(int) * 2);
+		// 	j++;
+		// }
 		j = 0;
-		while (j < count_pipes)
+		int process[count_pipes + 1];
+		int prev_pipe_fds[2];
+		int next_pipe_fds[2];
+		next_pipe_fds[0] = -1;
+		next_pipe_fds[1] = -1;
+		while (i < count_pipes + 1)
 		{
-			pipes[j] = malloc(sizeof(int) * 2);
-			j++;
-		}
-		j = 0;
-		process = malloc(sizeof(int) * count_pipes + 1);
-		while (j < count_pipes + 1)
-		{
-			if (j < count_pipes)
-				pipe(pipes[j]);
-			process[j] = fork();
-			if (process[j] == 0)
+			prev_pipe_fds[0] = next_pipe_fds[0];
+			prev_pipe_fds[1] = next_pipe_fds[1];
+			if (i != count_pipes)
 			{
-				if (j == 0)
-				{
-					dup2(pipes[0][1], STDOUT_FILENO);
-					close(pipes[0][1]);
-					work_pipes(untils, command_pipes[j]);
-					exit(0);
-				}
-				else if (j != count_pipes)
-					{
-						dup2(pipes[j - 1][0], STDIN_FILENO);
-						dup2(pipes[j][1], STDOUT_FILENO);
-						close(pipes[j-1][0]);
-						close(pipes[j][1]);//что мыы закрываем?
-						work_pipes(untils, command_pipes[j]);
-						//вывзываем нашу функцию
-						exit(0);
-					}
-				else
-				{
-					dup2(pipes[j - 1][0], STDIN_FILENO);
-					close(pipes[j - 1][0]);
-					//dup2(pipes[j][1], 1);
-					work_pipes(untils, command_pipes[j]);
-					exit(0);
-				}
-					//last
+				pipe(next_pipe_fds);
 			}
 			else
-				wait(0);
-			j++;
-		//просто дописать пацпы в самом конце]/ перед сдачей
+			{
+				next_pipe_fds[0] = -1;
+				next_pipe_fds[1] = -1;
+			}
+			if (fork() == 0)
+			{
+				// printf("%s\n", command_pipes[i]->command);
+				connect_stdio_to_pipes(prev_pipe_fds, next_pipe_fds);
+				work_pipes(untils, command_pipes[i]);
+				// char **cmd = cmds[i];
+				// execve(cmd[0], cmd, NULL);
+			}
+			close(prev_pipe_fds[0]);
+			close(prev_pipe_fds[1]);
+			i++;
 		}
+		j = 0;
+		while (j < count_pipes + 1)
+		{
+			waitpid(-1, &(status), 0);
+			j++;
+		}
+		// wait(NULL);
+		// wait(NULL);
+		// wait(NULL);
+		// wait(NULL);
+		// return (0);
+		// process = malloc(sizeof(int) * (count_pipes + 1));
+		// while (j < count_pipes + 1)
+		// {
+		// 	// printf("j %d\n", j);
+		// 	if (j < count_pipes)
+		// 	{
+		// 		pipe(pipes[j]);
+		// 	}
+		// 	process[j] = fork();
+		// 	if (process[j] == 0)
+		// 	{
+				
+		// 		if (j == 0)
+		// 		{
+					
+		// 			dup2(pipes[j][1], STDOUT_FILENO);
+		// 			close(pipes[j][1]);
+		// 			close(pipes[0][0]);
+		// 			work_pipes(untils, command_pipes[j]);
+		// 			// exit(0);
+		// 		}
+		// 		else if (j != count_pipes)
+		// 		{
+					
+		// 			dup2(pipes[j - 1][0], STDIN_FILENO);
+		// 			dup2(pipes[j][1], STDOUT_FILENO);
+		// 			close(pipes[j-1][0]);
+		// 			close(pipes[j - 1][1]);
+		// 			close(pipes[j][1]);//что мыы закрываем?
+		// 			close(pipes[j][0]);
+		// 			work_pipes(untils, command_pipes[j]);
+		// 			//вывзываем нашу функцию
+		// 			// exit(0);
+		// 		}
+		// 		else
+		// 		{
+		// 			dup2(pipes[j - 1][0], STDIN_FILENO);
+		// 			close(pipes[j - 1][0]);
+		// 			close(pipes[j -1][1]);
+		// 			work_pipes(untils, command_pipes[j]);
+		// 			// exit(0);
+		// 		}
+		// 			//last
+		// 	}
+		// 	close(pipes[j][0]);
+		// 	close(pipes[j][1]);
+		// 	// else
+		// 	// 	wait(0);
+		// 	// waitpid(process[j], &(status), 0);
+		// 	j++;
+		// 	printf("bla %d\n", j);
+		// //просто дописать пацпы в самом конце]/ перед сдачей
+		// }
+		// j = 0;
+		// while (j < count_pipes + 1)
+		// {
+		// 	waitpid(process[j], &(status), 0);
+		// 	j++;
+		// }
+		// printf("CSD\n");
+		// j = 0;
+		// while (j < count_pipes + 1)
+		// {
+		// 	waitpid(process[j], &status, NULL);
+		// 	j++;
+		// }
 	j = 0;
-	while (j < count_pipes)
-	{
-		close(pipes[j][0]);
-		close(pipes[j][1]);
-		j++;
-	}
-	dup2(tmpout, 1);
-	dup2(tmpin, 0);
-	close(tmpout);
-	close(tmpin);
-	// while (com)
-	// {
-	// 	printf("%s  dr = %s  right = %s left = %s ->%d\n", com->command, com->redir_double_right, com->redir_right, com->redir_left, i);
-	// 	com = com->next;
+	// dup2(tmpout, 1);
+	// dup2(tmpin, 0);
+	// close(tmpout);
+	// close(tmpin);
+	// // while (com)
+	// // {
+	// // 	printf("%s  dr = %s  right = %s left = %s ->%d\n", com->command, com->redir_double_right, com->redir_right, com->redir_left, i);
+	// // 	com = com->next;
+	// // }
 	// }
 	}
 }
