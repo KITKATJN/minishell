@@ -50,7 +50,7 @@ void	delete_current_parser2(t_parser *current)
 			back->next = next;
 	//	if (current->symbol != 0)
 		//	free(current->symbol);
-		free (current);
+		free(current);
 	}
 }
 
@@ -61,8 +61,8 @@ void	printf_list(t_parser *current)
 	printf("----------------------------------------------------------------------------\n");
 	while (current)
 	{
-		if (current->special_array != 0 && current->special_array == 0)
-			printf("!%s! %d\n", current->symbol, current->special);
+		if (current->special_array == 0)
+			printf("!%s! %d %p\n", current->symbol, current->special, current->back);
 		else
 		{
 			printf("!%s! %d ->array", current->symbol, current->special);
@@ -242,7 +242,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		i++;
 		//free(c);
 	}
-
+	free(str);
 	current = start;
 	char u;
 	while (current)
@@ -255,8 +255,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		current = current->next;
 	}
 	//printf_list(start);
-
-	current = start;
+current = start;
 	t_parser	*tmp;
 	t_parser	*tmp2;
 	t_parser	*tmp3;
@@ -267,7 +266,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 
 	//printf("1---456789------------\n");
 	//printf("1---------------%s\n", current->symbol);
-		if (current->symbol[0] == '\'' && current->next->symbol[0] == '\'')//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
+		if (current->symbol[0] == '\'' && current->next->symbol[0] == '\'' && current->back != 0 && current->back->special != 3)//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
 		{
 			tmp3 = current;
 			//printf("1+---------------\n");
@@ -290,7 +289,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 
 	//printf("1*---------------\n");
 		}
-		if (current->symbol[0] == '\"' && current->next->symbol[0] == '\"')//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
+		if (current->symbol[0] == '\"' && current->next->symbol[0] == '\"' && current->back != 0 && current->back->special != 3)//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
 		{
 			tmp3 = current;
 			while (tmp3)
@@ -316,51 +315,55 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 			break ;
 	}
 
+	//printf("134---------------\n");
+	//printf_list(start);
 	current = start;
 	while (current)
 	{
+		//printf("lllllllllllllllllllll\n");
 		if (current->special == 2)
-		{
-			current = current->next;
-			while(current->special != 2)
-				current = current->next;
-		}
-		if (current->symbol[0] == '\'' && current->special != 0)//все что в обычных ковычках меняем на простые символы, которые ничего не значат
 		{
 			current = current->next;
 			if (current == 0)
 				break ;
+			while(current != 0 && current->special != 2 && current->back != 0 && current->back->special != 3)
+				current = current->next;
+			current = current->next;
+			//printf("last -> %c next -> %c\n", current->symbol[0], current->next->symbol[0]);
+		}
+		//printf("+++++++++++++!%c! %d %d %d %p\n", current->symbol[0], current->symbol[0] == '\'' , current->special != 0 , current->back != 0, current->back);
+		//if (current->back != 0)
+			//printf("+++++++++++++!%c! %d %d %d %d\n", current->symbol[0], current->symbol[0] == '\'' , current->special != 0 , current->back != 0, current->back->special);
+		if (current->symbol[0] == '\'' && current->special != 0 && current->back != 0 && current->back->special != 3)//все что в обычных ковычках меняем на простые символы, которые ничего не значат
+		{
+			//printf("2*****************************\n");
+			current = current->next;
+			if (current == 0)
+				break ;
+			//printf("*****************************1\n");
 			while (current->special != 1)
 			{
 				current->special = 0;
 				current = current->next;
 			}
 		}
+		//printf("////////////////////\n");
 		current = current->next;
 	}
-	//printf("134---------------\n");
+	//printf("1349999999---------------\n");
 	//printf_list(start);
 	//printf("1---------------\n");
 	current = start;
 	t_parser *next;
-	int double_quotes = 0;
 	while (current->next)
 	{
-		if (current->symbol[0] == '\"')
-			double_quotes++;
 		if (current->special == 5)
 		{
 			if (current->next != 0 && current->next->symbol[0] == '\\')
 				current->special = 0;
 		}
-		if (current->symbol[0] == '\\' && current->special != 0)
+		if (current->symbol[0] == '\\' && current->special != 0 && current->next->special != 7)
 		{
-			// printf("^^^^^^^^^%c\n", current->next->symbol[0]);
-			if (double_quotes % 2 != 0 && current->next != 0 && (current->next->symbol[0] != '\\' && current->next->symbol[0] != '\"' && current->next->symbol[0] != '$'))
-			{
-				current->special = 0;
-				continue ;
-			}
 			if (current->back == 0)
 				start = current->next;
 			next = current->next;
@@ -391,6 +394,8 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	{
 		return (ft_lstnew_parser(ft_strdup("error with quotes"), 0));
 	}
+	//printf("2---------------\n");
+	//printf_list(start);
 	//printf("2---------------\n");
 	//printf_list(start);
 
@@ -541,18 +546,13 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 				ft_bzero(env_tmp, ft_strlen(current->symbol) - i_env + 1);
 				j_env = i_env + 1;
 				i = 0;
-				//printf("%d === %ld !%s!\n", j_env ,ft_strlen(current->symbol), string_before_doolar);
 				while (j_env < ft_strlen(current->symbol))
 				{
-					if (current->special_array[j_env] == 0 || current->special_array[j_env] == 5 || (current->special_array[0] == 2 && current->special_array[j_env] == 2))
+					if (current->special_array[j_env] == 0 || current->special_array[j_env] == 5 || current->special_array[j_env] == 3 || (current->special_array[0] == 2 && current->special_array[j_env] == 2))
 						break;
 					env_tmp[j_env - i_env - 1] = current->symbol[j_env];
-					//printf("*** %c  %d %c\n", env_tmp[j_env - i_env - 1],j_env - i_env - 1 , current->symbol[j_env]);
 					j_env++;
 				}
-				//printf("env_tmp = %s\n", env_tmp);
-				// if (getenv(env_tmp) == 0)
-				// 	command_tmp = 0;
 				if (my_get_env(env_tmp, untils->env) == 0)
 				{
 					command_tmp = malloc(1);
@@ -589,6 +589,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		}
 		//printf("string_before_doolar = %s | %s\n", string_before_doolar, end_command);
 		end_command = ft_strjoin(end_command, string_before_doolar);
+		free(string_before_doolar);
 		//printf("34/*/*/*/*/*/*/*/*/*/**/**/*\n");
 		if (end_command[0] != '\0' || current->symbol[0] == '$')
 			current->symbol = end_command;
