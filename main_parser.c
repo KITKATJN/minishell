@@ -247,7 +247,7 @@ void main_parser(char *str, t_untils *untils)
 	t_command	*current_command;
 
 	start = 0;
-	start = parser_into_list_2(str, untils);
+	start = parser_into_list(str, untils);
 	if (start != 0 && start->command[0] == 'e' && start->command[1] == 'r')
 		printf("->%s\n", start->command);
 }

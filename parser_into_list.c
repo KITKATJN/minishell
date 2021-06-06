@@ -36,7 +36,7 @@ void	printf_command_list(t_command *current)
 	}
 }
 
-t_command	*parser_into_list_2(char *str1, t_untils *untils)
+t_command	*parser_into_list(char *str1, t_untils *untils)
 {
 	t_parser	*current;
 	t_parser	*start;
@@ -45,11 +45,8 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 
 
 	//printf("-------------->!%s!\n", str1);
-	if (str1 == 0 || str1[0] == '\0')
+	if (str1 == 0 || str1[0] == '\0' || str1[0] == '\n')
 		return (0);
-
-	if (str1[0] == '\n')
-		return(0);
 	i = 0;
 	int _flag = 0;
 	if (str1[ft_strlen(str1) - 1] == '>' || str1[ft_strlen(str1) - 1] == '<')
@@ -132,25 +129,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	//printf("1349999999---------------\n");
 	//printf_list(start);
 	//printf("1---------------\n");
-	current = start;
-	t_parser *next;
-	while (current->next)
-	{
-		if (current->special == 5)
-		{
-			if (current->next != 0 && current->next->symbol[0] == '\\')
-				current->special = 0;
-		}
-		if (current->symbol[0] == '\\' && current->special != 0 && current->next->special != 7)
-		{
-			if (current->back == 0)
-				start = current->next;
-			next = current->next;
-			delete_current_parser2(current);
-			next->special = 0;
-		}
-		current = current->next;
-	}
+	start = escaping_characters(start);
 	//printf_list(start);
 	//printf("1.5----------------------\n");
 
@@ -181,23 +160,7 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 	//printf("3---------------\n");
 	//printf_list(start);
 
-	current = start;
-	while (current)
-	{
-		if (current->special == 2)//для замены пробелы на значащий в двойных ковычках
-		{
-			current = current->next;
-			if (current == 0)
-				break ;
-			while (current->special != 2)
-			{
-				if (current->special == -1)
-					current->special = 0;
-				current = current->next;
-			}
-		}
-		current = current->next;
-	}
+	start = change_escape_code_in_double_quotes(start);
 
 	//printf_list(start);
 
