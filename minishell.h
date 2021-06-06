@@ -92,6 +92,12 @@ int						check_name(char *str);
 int						ft_strcmp(char *str, char *str1);
 
 t_command				*parser_into_list_2(char *str, t_untils *untils);
+t_parser				*ft_lstnew_parser2(char *symbol, int special, int *special_array);
+t_parser				*assigning_code_to_elements(char *str);
+t_parser				*remove_paired_quotes(t_parser	*start);
+t_parser 				*replacing_character_codes_in_single_quotes(t_parser *start);
+void					ft_lstadd_back_parser2(t_parser **lst, t_parser *new);
+void					delete_current_parser2(t_parser *current);
 void					delete_current_parser(t_command *current);
 void					ft_lstadd_back_parser2(t_parser **lst, t_parser *new);
 t_parser				*ft_lstnew_parser2(char	*symbol, int special, int *special_array);

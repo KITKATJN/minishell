@@ -11,9 +11,11 @@ LIST 	=	backspace.c \
 			add_quotes.c command_list.c check_double_semicolon.c \
 			delete_spaces.c delete_tcommand.c ft_check_command.c \
 			ft_perror.c main_parser.c pars_to_command.c \
-			parse_add_semicolon_to_end.c \
+			parse_add_semicolon_to_end.c func_lst_parser.c \
 			bsophia_func.c ft_strcmp.c parser_into_list_2.c \
-			check_buildin.c work_pipes.c my_getenv.c
+			check_buildin.c work_pipes.c my_getenv.c \
+			assigning_code_to_elements.c remove_paired_quotes.c \
+			replacing_character_codes_in_single_quotes.c \
 
 OBJDIR	=	objs/
 

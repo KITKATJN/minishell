@@ -1,59 +1,5 @@
 #include "minishell.h"
 
-t_parser	*ft_lstnew_parser2(char *symbol, int special, int *special_array)
-{
-	t_parser	*lst;
-
-	lst = (t_parser*)malloc(sizeof(t_parser));
-	if (lst)
-	{
-		lst->symbol = symbol;
-		lst->special = special;
-		lst->next = 0;
-		lst->back = 0;
-		lst->special_array = special_array;
-	}
-	return (lst);
-}
-
-void	ft_lstadd_back_parser2(t_parser **lst, t_parser *new)
-{
-	t_parser	*list;
-
-	if (lst && new)
-	{
-		if (*lst == 0)
-			*lst = new;
-		else
-		{
-			list = *lst;
-			while (list->next)
-				list = list->next;
-			list->next = new;
-			new->back = list;
-		}
-	}
-}
-
-void	delete_current_parser2(t_parser *current)
-{
-	t_parser	*back;
-	t_parser	*next;
-
-	if (current != 0)
-	{
-		next = current->next;
-		back = current->back;
-		if (next != 0)
-			next->back = back;
-		if (back != 0)
-			back->next = next;
-	//	if (current->symbol != 0)
-		//	free(current->symbol);
-		free(current);
-	}
-}
-
 void	printf_list(t_parser *current)
 {
 	int i = 0;
@@ -92,11 +38,9 @@ void	printf_command_list(t_command *current)
 
 t_command	*parser_into_list_2(char *str1, t_untils *untils)
 {
-	t_parser	*start;
 	t_parser	*current;
-	char		*c;
+	t_parser	*start;
 	int			i;
-	int			count_1;
 	char 		*str;
 
 
@@ -165,84 +109,8 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 
 	str = ft_strdup(str1);
 	//printf("--2------------>!%s!\n", str1);
-	count_1 = 0;
-	i = 0;
-	start = 0;
-	char *r;
-	int flag_delete_probel = 0;
-	r = malloc(sizeof(char) * 2);
-	ft_bzero(r, 2);
-	r[0] = ' ';
-	while (i < ft_strlen(str))
-	{
-		if (str[i] == ' ' && !flag_delete_probel)
-		{
-			i++;
-			continue ;
-		}
-		c = malloc(sizeof(char) * 2);
-		ft_bzero(c, 2);
-		c[0] = str[i];
-		if (c[0] == '\\')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 3, 0));
-		else if (c[0] == '\"')
-		{
-			count_1++;
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 2, 0));
-		}
-		else if (c[0] == '\'')
-		{
-			count_1++;
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 1, 0));
-		}
-		else if (c[0] == '?')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 4, 0));
-		else if (c[0] == '$')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 5, 0));
-		else if (c[0] == ' ')
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, -1, 0));
-		else if (c[0] == ';' && count_1 % 2 == 0)
-		{
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 9, 0));
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
-		}
-		else if (c[0] == '|' && count_1 % 2 == 0)
-		{
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 20, 0));
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
-		}
-		else if (c[0] == '>' && count_1 % 2 == 0)
-		{
-			if (i + 1 < ft_strlen(str1) && str[i + 1] == '>')
-			{
-				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
-				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 29, 0));
-				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 29, 0));
-				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
-				i++;
-			}
-			else
-			{
-				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
-				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 19, 0));
-				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
-			}
-		}
-		else if (c[0] == '<' && count_1 % 2 == 0)
-		{
-				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
-				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 18, 0));
-				ft_lstadd_back_parser2(&start, ft_lstnew_parser2(r, -1, 0));
-		}
-		else
-			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(c, 7, 0));
-		flag_delete_probel = 1;
-		i++;
-		//free(c);
-	}
-	free(str);
+	start = assigning_code_to_elements(str);
+	//printf("fds %s\n", start->symbol);
 	current = start;
 	char u;
 	while (current)
@@ -255,101 +123,12 @@ t_command	*parser_into_list_2(char *str1, t_untils *untils)
 		current = current->next;
 	}
 	//printf_list(start);
-current = start;
-	t_parser	*tmp;
-	t_parser	*tmp2;
-	t_parser	*tmp3;
-	int			num_quotes;
-	while (current->next)
-	{
-		num_quotes = 0;
+	start = remove_paired_quotes(start);
 
-	//printf("1---456789------------\n");
-	//printf("1---------------%s\n", current->symbol);
-		if (current->symbol[0] == '\'' && current->next->symbol[0] == '\'' && current->back != 0 && current->back->special != 3)//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
-		{
-			tmp3 = current;
-			//printf("1+---------------\n");
-			while (tmp3)
-			{
-				if(tmp3->symbol[0] == '\"') //здесь и ниже я удаляю кавычки стоящие ввместе, но не удаляю ковычки стоящие вместе в других ковычках
-					num_quotes++;
-				tmp3 = tmp3->back;
-			}
-
-	//printf("1&---------------\n");
-			if (num_quotes % 2 == 0)
-			{
-				tmp = current->next;
-				tmp2 = current->back;
-				delete_current_parser2(current);
-				delete_current_parser2(tmp);
-				current = tmp2;
-			}
-
-	//printf("1*---------------\n");
-		}
-		if (current->symbol[0] == '\"' && current->next->symbol[0] == '\"' && current->back != 0 && current->back->special != 3)//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
-		{
-			tmp3 = current;
-			while (tmp3)
-			{
-				if(tmp3->symbol[0] == '\'')
-					num_quotes++;
-				tmp3 = tmp3->back;
-			}
-			if (num_quotes % 2 == 0)
-			{
-				tmp = current->next;
-				tmp2 = current->back;
-				delete_current_parser2(current);
-				delete_current_parser2(tmp);
-				current = tmp2;
-			}
-		}
-
-	//printf("1---dfghj------------\n");
-
-		current = current->next;
-		if (current == 0)
-			break ;
-	}
 
 	//printf("134---------------\n");
 	//printf_list(start);
-	current = start;
-	while (current)
-	{
-		//printf("lllllllllllllllllllll\n");
-		if (current->special == 2)
-		{
-			current = current->next;
-			if (current == 0)
-				break ;
-			while(current != 0 && current->special != 2 && current->back != 0 && current->back->special != 3)
-				current = current->next;
-			current = current->next;
-			//printf("last -> %c next -> %c\n", current->symbol[0], current->next->symbol[0]);
-		}
-		//printf("+++++++++++++!%c! %d %d %d %p\n", current->symbol[0], current->symbol[0] == '\'' , current->special != 0 , current->back != 0, current->back);
-		//if (current->back != 0)
-			//printf("+++++++++++++!%c! %d %d %d %d\n", current->symbol[0], current->symbol[0] == '\'' , current->special != 0 , current->back != 0, current->back->special);
-		if (current->symbol[0] == '\'' && current->special != 0 && current->back != 0 && current->back->special != 3)//все что в обычных ковычках меняем на простые символы, которые ничего не значат
-		{
-			//printf("2*****************************\n");
-			current = current->next;
-			if (current == 0)
-				break ;
-			//printf("*****************************1\n");
-			while (current->special != 1)
-			{
-				current->special = 0;
-				current = current->next;
-			}
-		}
-		//printf("////////////////////\n");
-		current = current->next;
-	}
+	start = replacing_character_codes_in_single_quotes(start);
 	//printf("1349999999---------------\n");
 	//printf_list(start);
 	//printf("1---------------\n");
