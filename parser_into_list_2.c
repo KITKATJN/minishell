@@ -524,8 +524,8 @@ current = start;
 	char *env_tmp;
 	char *string_before_doolar;
 	char *command_tmp;
-	char *end_command = malloc(1);
-	end_command[0] = '\0';
+	char *end_command;
+	char *str_from_my_env;
 	int i_for_str_before_dollar;
 	//printf_list(current);
 	while (current)
@@ -553,14 +553,17 @@ current = start;
 					env_tmp[j_env - i_env - 1] = current->symbol[j_env];
 					j_env++;
 				}
-				if (my_get_env(env_tmp, untils->env) == 0)
+				str_from_my_env = my_get_env(env_tmp, untils->env);
+				//printf("str from my get env %s\n", str_from_my_env);
+				if (str_from_my_env == 0)
 				{
 					command_tmp = malloc(1);
 					command_tmp[0] = '\0';
 				}
 				else
 				{
-					command_tmp = ft_strdup(my_get_env(env_tmp, untils->env));// ft_strjoin(getenv(env_tmp), current->symbol + j_env);
+					//printf("olala !%s!\n", my_get_env(env_tmp, untils->env));
+					command_tmp = str_from_my_env;// ft_strjoin(getenv(env_tmp), current->symbol + j_env);
 				}
 				free(env_tmp);
 				//printf("command_tmp1 = %s\n", command_tmp);
