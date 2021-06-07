@@ -1,9 +1,10 @@
 #include "minishell.h"
 
-static void echo_2(t_command *list)
+static void	echo_2(t_command *list)
 {
-	int i;
-	char *line;
+	int		i;
+	char	*line;
+	char	*tmp;
 
 	i = 1;
 	line = NULL;
@@ -15,17 +16,22 @@ static void echo_2(t_command *list)
 	list = list->next;
 	if ((!(ft_strcmp(list->command, "-n"))))
 	{
-			i = 0;
-			list = list->next;
+		i = 0;
+		list = list->next;
 	}
 	while (list && ft_strcmp(list->command, "|") && ft_strcmp(list->command, ";"))
 	{
 		line = ft_strjoin_line(line, list->command);
 		if (ft_lstsize_2(list) != 1)
+		{
+			tmp = line;
 			line = ft_strjoin_line(line, " ");
+			free(tmp);
+		}
 		list = list->next;
 	}
 	f_echo(line, i);
+	free(line);
 }
 
 int check_redir(t_command *list, int i, t_untils *untils)
@@ -127,7 +133,7 @@ void bsophia_function(t_command *list, t_untils *untils)
 			{
 				check_redir(list, 1, untils);
 				break ;
-			}				
+			}
 			list = list->back;
 		}
 		while (list->next)

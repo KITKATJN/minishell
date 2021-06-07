@@ -35,7 +35,7 @@ char *ft_strjoin_b(char *s1, char *s2)
 	result[j] = '\0';
 	if (s1)
 		free(s1);
-	return (result); 
+	return (result);
 }
 
 int		ft_lstsize_2(t_command *lst)
