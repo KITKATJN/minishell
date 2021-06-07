@@ -102,7 +102,6 @@ void bsophia_function(t_command *list, t_untils *untils)
 		{
 			print_export(untils->env);
 			check_redir(list, 1, untils);
-			check_redir(list, 1, untils);
 			return ;
 		}
 		list = list->next;

@@ -16,7 +16,7 @@ LIST 	=	backspace.c \
 			check_buildin.c work_pipes.c my_getenv.c \
 			assigning_code_to_elements.c remove_paired_quotes.c \
 			replacing_character_codes_in_single_quotes.c \
-			escaping_characters.c \
+			escaping_characters.c signal.c \
 
 OBJDIR	=	objs/
 

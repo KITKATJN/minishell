@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-int flag_vniz_vverh;
-
 static int count_word(char **str)
 {
 	int i;
@@ -111,6 +109,23 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		tmp = tmp->next;
 	while (1)
 	{
+		// if (g_sig_f == 1)
+		// {
+		// 	// free(line);
+		// 	// free(tmp->content);
+		// 	// tmp->content = NULL;
+		// 	// line = NULL;
+		// 	while (tmp->back)
+		// 		tmp = tmp->back;
+		// 	if (tmp->content)
+		// 		tmp->content = untils->first;
+		// 	while (tmp->next)
+		// 		tmp = tmp->next;
+		// 	write(1, "\n", 1);
+		// 	g_sig_f = 0;
+		// 	return (tmp->content);
+		// 	break ;
+		// }
 		l = read (0, buff, 1);
 		if (buff[0] == '\n')
 		{
@@ -176,6 +191,12 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 				}
 			}
 		}
+		else if (buff[0] == '\4' && !(ft_strlen(line)) && !(ft_strlen(tmp->content)))
+		{
+			printf("exit\n");
+			free(line);
+			exit(0);
+		}
 		if (!(strcmp(buff, "\177")))
 		{
 			if (untils->flag_up_down == 1)
@@ -225,16 +246,21 @@ int main(int argc, char **argv, char **envp)
 	tcgetattr(0, &term2);
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
+	signal(SIGINT, signal_c);
+	signal(SIGQUIT, signal_slash);
 	tgetent(0, term_name);
 	untils->env = copy_envp(envp, untils->env);
 	while (1)
 	{
 		tcsetattr(0, TCSANOW, &term);
+		// g_sig_f = 0;
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
 		if (!line)
+		{
 			clear_history(&history);
+		}
 		untils->fd_in = 99;
 		untils->fd_out = 99;
 		tcsetattr(0, TCSANOW, &term2);

@@ -156,6 +156,8 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			start = com;
 			if (id == 0)
 			{
+				signal(SIGINT, SIG_DFL);
+				signal(SIGQUIT, SIG_DFL);
 				//дочка
 				char *commd;
 				commd = ft_strjoin_line("/", untils->command_ex);
@@ -225,6 +227,8 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			}
 			if (fork() == 0)
 			{
+				signal(SIGINT, SIG_DFL);
+				signal(SIGQUIT, SIG_DFL);
 				connect_stdio_to_pipes(prev_pipe_fds, next_pipe_fds);
 				work_pipes(untils, command_pipes[i]);
 			}

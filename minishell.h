@@ -11,6 +11,9 @@
 #include "libft.h"
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <signal.h>
+
+int g_sig_f;
 
 typedef struct			s_untils
 {
@@ -109,5 +112,7 @@ int						check_redir(t_command *list, int i, t_untils *untils);
 void					redirect_check(t_command *com);
 int						work_pipes(t_untils *untils, t_command *start);
 char					*my_get_env(char *str, char **env);
+void					signal_c(int sig_num);
+void					signal_slash(int sig_num);
 
 #endif
