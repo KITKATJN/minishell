@@ -99,6 +99,6 @@ t_parser	*assigning_code_to_elements(char *str)
 		help.c = 0;
 		help.i += 1;
 	}
-	free(str);
+	ft_free(str);
 	return (start);
 }

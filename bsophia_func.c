@@ -26,12 +26,12 @@ static void	echo_2(t_command *list)
 		{
 			tmp = line;
 			line = ft_strjoin_line(line, " ");
-			free(tmp);
+			ft_free(tmp);
 		}
 		list = list->next;
 	}
 	f_echo(line, i);
-	free(line);
+	ft_free(line);
 }
 
 int check_redir(t_command *list, int i, t_untils *untils)

@@ -16,7 +16,7 @@ void	parse_add_semicolon_to_end(t_command *start)
 			new_command = ft_lstnew_parser(ft_strdup(";"), 0);
 			command = ft_substr(curr_command->command,
 				0, ft_strlen(curr_command->command) - 1);
-			free(curr_command->command);
+			ft_free(curr_command->command);
 			curr_command->command = command;
 			new_command->next = curr_command->next;
 			new_command->back = curr_command;

@@ -33,8 +33,7 @@ char *ft_strjoin_b(char *s1, char *s2)
 	i = 0;
 	result[j++] = s2[i];
 	result[j] = '\0';
-	if (s1)
-		free(s1);
+	ft_free(s1);
 	return (result);
 }
 

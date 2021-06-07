@@ -27,7 +27,7 @@ static int  check_name1(char *str) //сделать проверку что бы
 {
 	int i;
 
-	i = 0; 
+	i = 0;
 	while (str[i] != '\0')
 	{
 		if (str[i] == '=')
@@ -55,8 +55,7 @@ char **f_unset_line(char **cp_env, char *str)
 	{
 		if (compare_to_equal(cp_env[i], str)) //если нашли ключ кладем туда значение 55, так как в переменных окружения нельзя что бы 1 символ был цифрой то наше значение будет уникальным и не будет пересекаться
 		{
-			free(cp_env[i]);
-			cp_env[i] = NULL;
+			ft_free(cp_env[i]);
 			cp_env[i] = ft_strdup("55");
 			flag = 1;
 		}
@@ -80,7 +79,7 @@ char **f_unset_line(char **cp_env, char *str)
 	new_env[k] = NULL;
 	i = 0;
 	while(cp_env[i] != NULL)
-		free(cp_env[i++]);
-	free(cp_env);
+		ft_free(cp_env[i++]);
+	ft_free(cp_env);
 	return (new_env);
 }

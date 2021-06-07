@@ -91,7 +91,6 @@ char					*add_quotes(char *str);
 void					delete_tcommand(t_command *command);
 void					ft_perror(char *error);
 void					parse_add_semicolon_to_end(t_command *start);
-void					pars_to_command(t_command *start);
 int						delete_spaces(char **arr_of_command, char *argv, int i, char delimiter);
 char					*ft_check_command(char *command);
 void					main_parser(char *str, t_untils *untils);
@@ -101,17 +100,22 @@ void					print_env(char **cp_env);
 void					print_export(char **cp_env);
 int						check_name(char *str);
 int						ft_strcmp(char *str, char *str1);
+void					ft_free(void *p);
 
 t_command				*parser_into_list(char *str, t_untils *untils);
 t_parser				*ft_lstnew_parser2(char *symbol, int special, int *special_array);
 t_parser				*assigning_code_to_elements(char *str);
+t_parser				*assigning_symbols_to_command(t_parser *start);
 t_parser				*remove_paired_quotes(t_parser	*start);
 t_parser				*replacing_character_codes_in_single_quotes(t_parser *start);
 t_parser				*escaping_characters(t_parser *start);
 t_parser				*change_escape_code_in_double_quotes(t_parser *start);
+void					ft_lstclear_parser2(t_parser **lst);
+void					ft_lstclear_command(t_command **lst);
 void					ft_lstadd_back_parser2(t_parser **lst, t_parser *new);
 void					delete_current_parser2(t_parser *current);
 void					delete_current_parser(t_command *current);
+void					delete_current_parser_for_command_list(t_command *current);
 void					ft_lstadd_back_parser2(t_parser **lst, t_parser *new);
 t_parser				*ft_lstnew_parser2(char	*symbol, int special, int *special_array);
 void					bsopia_func(t_command *com, int i, t_untils *untils);
@@ -123,5 +127,7 @@ int						work_pipes(t_untils *untils, t_command *start);
 char					*my_get_env(char *str, char **env);
 void					signal_c(int sig_num);
 void					signal_slash(int sig_num);
+void	printf_command_list(t_command *current);
+void	printf_list(t_parser *current);
 
 #endif

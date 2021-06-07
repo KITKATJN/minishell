@@ -6,6 +6,7 @@ void redirect_check(t_command *com)
 {
 	t_command *start;
 
+	//printf_command_list(com);
 	start = com;
 	while (start)
 	{
