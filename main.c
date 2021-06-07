@@ -94,7 +94,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 	t_history *tmp;
 	char *save;
 
-	line = calloc(1, 1);
 	tmp = ft_lstnew(NULL);
 	ft_lstadd_back(history, tmp);
 	untils->flag_up_down = 0;
@@ -130,18 +129,21 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		if (buff[0] == '\n')
 		{
 			write(1, "\n", 1);
-				save = ft_strjoin_line(tmp->content, line);
-				while (tmp->next)
-					tmp = tmp->next;
-				tmp->content = ft_strdup_b(save);
-				free(save);
-				free(line);
-				while (tmp->back)
+			save = ft_strjoin_line(tmp->content, line);
+			while (tmp->next)
+				tmp = tmp->next;
+			tmp->content = ft_strdup_b(save);
+			free(save);
+			while (tmp->back)
+			{
+				if (tmp->line)
 				{
-					if (tmp->line)
-						tmp->content = ft_strdup_b(tmp->line);
-					tmp = tmp->back;
+					if (tmp->content != 0)
+						free(tmp->content);
+					tmp->content = ft_strdup_b(tmp->line);
 				}
+				tmp = tmp->back;
+			}
 			if (line && untils->flag == 1)
 			{
 				untils->first = ft_strdup_b(tmp->content);
@@ -150,9 +152,15 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			while (tmp->back)
 				tmp = tmp->back;
 			if (tmp->content)
+			{
+				if (tmp->content != 0)
+					free(tmp->content);
 				tmp->content = untils->first;
+			}
 			while (tmp->next)
 				tmp = tmp->next;
+			if (line != 0)
+				free(line);
 			return (tmp->content);
 		}
 		else if (buff[0] == '\e')
@@ -168,6 +176,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					if (line)
 					{
 						tmp->content = ft_strjoin_line(tmp->content, line);
+						free(line);
 						line = 0;
 					}
 					tmp = tmp->back;
@@ -184,6 +193,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					if (line)
 					{
 						tmp->content = ft_strjoin_line(tmp->content, line);
+						free(line);
 						line = 0;
 					}
 					tmp = tmp->next;
@@ -224,6 +234,8 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			line = ft_strjoin_b(line, buff);
 		}
 	}
+	if (line != 0)
+		free(line);
 	return (tmp->content);
 }
 
