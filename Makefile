@@ -35,7 +35,7 @@ CC		= gcc
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) -ltermcap -O3 $(OBJS) libft.a -o $(NAME) -lncurses -fsanitize=address
+		$(CC) -ltermcap -O3 $(OBJS) libft.a -o $(NAME) -lncurses #-fsanitize=address
 
 $(OBJDIR)%.o: %.c Makefile
 	mkdir -p $(OBJDIR)

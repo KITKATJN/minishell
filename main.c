@@ -154,7 +154,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			if (tmp->content)
 			{
 				if (tmp->content != 0)
-					free(tmp->content);
+					// free(tmp->content);
 				tmp->content = untils->first;
 			}
 			while (tmp->next)
@@ -205,6 +205,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		{
 			printf("exit\n");
 			free(line);
+			//фришить все что есть(структуры и так далее);
 			exit(0);
 		}
 		if (!(strcmp(buff, "\177")))
