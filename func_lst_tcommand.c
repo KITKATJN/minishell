@@ -84,13 +84,11 @@ void	delete_current_parser(t_command *current)
 			next->back = back;
 		if (back != 0)
 			back->next = next;
-	//	if (current->symbol != 0)
-		// //	free(current->symbol);
-		//ft_free(current->command);
-		// ft_free(current->redir_double_right);
-		// ft_free(current->redir_left);
-		// ft_free(current->redir_right);
-		// ft_free(current->flag);
+		ft_free(current->command);
+		ft_free(current->redir_double_right);
+		ft_free(current->redir_left);
+		ft_free(current->redir_right);
+		ft_free(current->flag);
 		free (current);
 	}
 }

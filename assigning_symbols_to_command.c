@@ -38,11 +38,9 @@ t_parser	*assigning_symbols_to_command(t_parser *start)
 			}
 			ft_lstadd_back_parser2(&list_of_command, ft_lstnew_parser2(str, 0, special_array));
 			i = 0;
-			//ft_free(str);
 			//printf("2------------------------%d\n", special_array[0]);
 			if (new_start != 0)
 				new_start = new_start->next;
-
 		}
 		current = current->next;
 	}

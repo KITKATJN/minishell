@@ -138,6 +138,11 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 
 	//printf("6------------------------\n");
 	//printf("4------------------\n");
+	// if (ft_strcmp(ft_check_command(list_of_command->symbol), "error") == 0)
+	// {
+	// 	ft_lstclear_parser2(&list_of_command);
+	// 	return (ft_lstnew_parser("error: command not found", 0));
+	// }
 	t_command *commands;
 	commands = 0;
 	current = list_of_command;
@@ -149,6 +154,7 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	char *end_command;
 	char *str_from_my_env;
 	int i_for_str_before_dollar;
+	char *tmp;
 	//printf_list(current);
 	while (current)
 	{
@@ -190,10 +196,15 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 			i_for_str_before_dollar++;
 			i_env++;
 		}
+		tmp = end_command;
 		end_command = ft_strjoin(end_command, string_before_doolar);
+		ft_free(tmp);
 		ft_free(string_before_doolar);
 		if (end_command[0] != '\0' || current->symbol[0] == '$')
+		{
+			ft_free(current->symbol);
 			current->symbol = end_command;
+		}
 		if (current->special_array[0] == 9)
 		{
 			bsopia_func(commands, 2, untils);
