@@ -182,7 +182,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		int j = 0;
 		t_command **command_pipes;
 		t_command *current_pipe = 0;
-		
+
 		command_pipes =  (t_command **)malloc(sizeof(t_command*) * (count_pipes + 1));
 		j = 0;
 		while (start)
@@ -247,5 +247,7 @@ void main_parser(char *str, t_untils *untils)
 	t_command	*current_command;
 
 	start = 0;
-	start = parser_into_list_2(str, untils);
+	start = parser_into_list(str, untils);
+	if (start != 0 && start->command[0] == 'e' && start->command[1] == 'r')
+		printf("->%s\n", start->command);
 }
