@@ -34,6 +34,15 @@ typedef struct			s_history
 	struct s_history	*back;
 }						t_history;
 
+typedef struct			s_helper_parser
+{
+	int					count_1;
+	int					i;
+	char				*str;
+	int					flag_delete_probel;
+	char				*c;
+}						t_helper_parser;
+
 typedef struct			s_parser
 {
 	char				*symbol;

@@ -48,8 +48,13 @@ void	delete_current_parser2(t_parser *current)
 			next->back = back;
 		if (back != 0)
 			back->next = next;
-	//	if (current->symbol != 0)
-		//	free(current->symbol);
+		if (current->special_array != 0)
+		{
+			free(current->special_array);
+			current->special_array = 0;
+		}
+		free(current->symbol);
+		current->symbol = 0;
 		free(current);
 	}
 }
