@@ -27,17 +27,39 @@ int check_name(char *str)
 		return (1);
 	while (str[i] != '\0' && str[i] != '=')
 	{
-		if (!(ft_isalpha(str[i])) && (!(ft_isdigit(str[i]))) && str[i] != '_' && str[i] != '=')
+		if (!(ft_isalpha(str[i])) && (!(ft_isdigit(str[i]))) 
+			&& str[i] != '_' && str[i] != '=')
 			return (1);
 		i++;
 	}
 	return (0);
 }
 
+static char **export_add_2(char **cp_env, char *str, t_untils *untils, int i)
+{
+	char **new_env;
+
+	new_env = (char**)malloc(i * sizeof(char*));
+	i = 0;
+	while(cp_env[i] != NULL)
+	{
+		new_env[i] = ft_strdup(cp_env[i]);
+		i++;
+	}
+	new_env[i++] = ft_strdup(str);
+	new_env[i] = NULL;
+	i = 0;
+	while(cp_env[i] != NULL)
+		ft_free(cp_env[i++]);
+	ft_free(cp_env);
+	untils->env = new_env;
+	return(new_env);
+}
+
 char **export_add(char **cp_env, char *str, t_untils *untils)
 {
 	int i;
-	char **new_env;
+	// char **new_env;
 	int k;
 
 	k = 0;
@@ -61,19 +83,20 @@ char **export_add(char **cp_env, char *str, t_untils *untils)
 		i++;
 	}
 	i += 2;
-	new_env = (char**)malloc(i * sizeof(char*));
-	i = 0;
-	while(cp_env[i] != NULL)
-	{
-		new_env[i] = ft_strdup(cp_env[i]);
-		i++;
-	}
-	new_env[i++] = ft_strdup(str);
-	new_env[i] = NULL;
-	i = 0;
-	while(cp_env[i] != NULL)
-		ft_free(cp_env[i++]);
-	ft_free(cp_env);
-	untils->env = new_env;
-	return(new_env);
+	return (export_add_2(cp_env, str, untils, i));
+	// new_env = (char**)malloc(i * sizeof(char*));
+	// i = 0;
+	// while(cp_env[i] != NULL)
+	// {
+	// 	new_env[i] = ft_strdup(cp_env[i]);
+	// 	i++;
+	// }
+	// new_env[i++] = ft_strdup(str);
+	// new_env[i] = NULL;
+	// i = 0;
+	// while(cp_env[i] != NULL)
+	// 	ft_free(cp_env[i++]);
+	// ft_free(cp_env);
+	// untils->env = new_env;
+	// return(new_env);
 }

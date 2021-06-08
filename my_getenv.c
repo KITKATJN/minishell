@@ -18,8 +18,9 @@ char *my_get_env(char *str, char **env)
 		result = ft_strnstr(tmp, str, ft_strlen(str));
 		if (result != 0 && tmp[ft_strlen(str)] == '=')
 		{
-			ft_free(result);
+			// ft_free(result);
 			result = ft_strdup(&tmp[ft_strlen(str) + 1]);
+			ft_free(tmp);
 			return (result);
 		}
 		ft_free(tmp);

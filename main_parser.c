@@ -150,10 +150,10 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			}
 			arguments[i] = NULL;
 			i = 0;
-			int id;
-			id = fork();
 			char *command;
 			command = NULL;
+			int id;
+			id = fork();
 			start = com;
 			if (id == 0)
 			{
@@ -166,6 +166,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 				while(bin[i] != NULL)
 				{
 					command = ft_strjoin_line(bin[i], commd);
+					//проверка на наличие PATH;
 					if (execve(command, arguments, untils->env) == 0)
 					{
 						ft_free(command);
@@ -175,7 +176,8 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 					i++;
 				}
 				ft_free(commd);
-				exit(0);
+				if (bin[i] == NULL)
+					exit(0);
 			}
 			else
 				wait(0);
@@ -247,7 +249,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		j = 0;
 		while (j < count_pipes + 1)
 		{
-			waitpid(-1, &(status), 0);
+			waitpid(-1, &(status), 0); //вместо status какую-то переменную куда будем записывать код завершения операции
 			j++;
 		}
 	}

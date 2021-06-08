@@ -84,7 +84,7 @@ int check_redir(t_command *list, int i, t_untils *untils)
 void bsophia_function(t_command *list, t_untils *untils)
 {
 	int i = 0;
-
+	
 	check_redir(list, 2, untils);
 	while (list->command[i])
 	{

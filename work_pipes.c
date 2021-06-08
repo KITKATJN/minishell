@@ -48,6 +48,7 @@ int work_pipes(t_untils *untils, t_command *start)
 			while(bin[i])
 			{
 				command = ft_strjoin_line(bin[i], commd);
+				//проверка на наличие PATH;
 				execve(command, arguments, untils->env);
 				i++;
 			}

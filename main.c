@@ -293,6 +293,7 @@ int main(int argc, char **argv, char **envp)
 	term_name = "xterm-256color"; //костыль достать из envp, если нет то выходим из программы (везде где пользуемся переменными окружения проверяем есть ли она там)
 	tcgetattr(0, &term);
 	tcgetattr(0, &term2);
+	//проверка на envp;
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
 	term.c_cc[VMIN] = 0;
