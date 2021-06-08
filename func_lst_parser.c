@@ -16,6 +16,23 @@ t_parser	*ft_lstnew_parser2(char *symbol, int special, int *special_array)
 	return (lst);
 }
 
+void		ft_lstclear_parser2(t_parser **lst)
+{
+	t_parser	*head;
+	t_parser	*temp;
+
+	head = *lst;
+	if (!(*lst))
+		return ;
+	while (head)
+	{
+		temp = head->next;
+		delete_current_parser2(head);
+		head = temp;
+	}
+	*lst = NULL;
+}
+
 void	ft_lstadd_back_parser2(t_parser **lst, t_parser *new)
 {
 	t_parser	*list;
@@ -48,13 +65,8 @@ void	delete_current_parser2(t_parser *current)
 			next->back = back;
 		if (back != 0)
 			back->next = next;
-		if (current->special_array != 0)
-		{
-			free(current->special_array);
-			current->special_array = 0;
-		}
-		free(current->symbol);
-		current->symbol = 0;
-		free(current);
+		ft_free(current->special_array);
+		ft_free(current->symbol);
+		ft_free(current);
 	}
 }

@@ -53,7 +53,7 @@ char **export_add(char **cp_env, char *str, t_untils *untils)
 			return(cp_env);
 		if (compare_to_equal(cp_env[i], str)) //если ключ существует то значение в нем заменится на новое;
 		{
-			free(cp_env[i]);
+			ft_free(cp_env[i]);
 			cp_env[i] = NULL;
 			cp_env[i] = ft_strdup(str);
 			return(cp_env);
@@ -72,8 +72,8 @@ char **export_add(char **cp_env, char *str, t_untils *untils)
 	new_env[i] = NULL;
 	i = 0;
 	while(cp_env[i] != NULL)
-		free(cp_env[i++]);
-	free(cp_env);
+		ft_free(cp_env[i++]);
+	ft_free(cp_env);
 	untils->env = new_env;
 	return(new_env);
 }

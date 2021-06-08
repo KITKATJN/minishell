@@ -23,8 +23,7 @@ int		delete_spaces(char **arr_of_command, char *argv, int i, char delimiter)
 		arr_of_command[i + k][0] = '\0';
 		k++;
 	}
-	free(arr_of_command[i]);
-	arr_of_command[i] = 0;
+	ft_free(arr_of_command[i]);
 	arr_of_command[i] = str;
 	return (i + k);
 

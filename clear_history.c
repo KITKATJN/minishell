@@ -18,8 +18,7 @@ void clear_history(t_history **history)
 				tmp->back->next = 0;
 				tmp->back = 0;
 			}
-			free(tmp);
-			tmp = 0;
+			ft_free(tmp);
 			*history = tmp2;
 			break ;
 		}

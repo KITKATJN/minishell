@@ -16,6 +16,6 @@ char *backspace(char *str)
 		k++;
 	}
 	n_str[k] = '\0';
-	free(str);
+	ft_free(str);
 	return(n_str);
 }

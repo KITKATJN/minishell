@@ -1,17 +1,16 @@
 #include "minishell.h"
 
-
-
 void redirect_check(t_command *com)
 {
 	t_command *start;
 
+	//printf_command_list(com);
 	start = com;
 	while (start)
 	{
 		if (start->command[0] == '>' && start->command[1] == '>')
 		{
-			com->redir_double_right = start->next->command;
+			com->redir_double_right = ft_strdup(start->next->command);
 			int gf = open(com->redir_double_right, O_CREAT | O_WRONLY | O_APPEND, 0777);
 			close (gf);
 			delete_current_parser(start->next);
@@ -32,7 +31,7 @@ void redirect_check(t_command *com)
 		}
 		else if (start->command[0] == '>')
 		{
-			com->redir_right = start->next->command;
+			com->redir_right = ft_strdup(start->next->command);
 			int ff = open(com->redir_right, O_CREAT | O_WRONLY | O_TRUNC, 0777);
 			close (ff);
 			delete_current_parser(start->next);
@@ -53,7 +52,7 @@ void redirect_check(t_command *com)
 		}
 		else if (start->command[0] == '<')
 		{
-			com->redir_left = start->next->command;
+			com->redir_left = ft_strdup(start->next->command);
 			int gg = open(com->redir_left, O_RDWR);
 			close(gg);
 			delete_current_parser(start->next);
@@ -127,8 +126,10 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		// start = com;
 		if (check_buildin(start->command))
 		{
+			ft_free(untils->command_ex);
 			untils->command_ex = ft_strdup_b(start->command);
 			// start = start->next;
+			ft_free(untils->path);
 			untils->path = find_path(untils);
 			char **bin = ft_split(untils->path, ':');
 			char **arguments;
@@ -166,16 +167,23 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 				{
 					command = ft_strjoin_line(bin[i], commd);
 					if (execve(command, arguments, untils->env) == 0)
+					{
+						ft_free(command);
 						break ;
+					}
+					ft_free(command);
 					i++;
 				}
+				ft_free(commd);
 				exit(0);
 			}
 			else
 				wait(0);
 		}
 		else
+		{
 			bsophia_function(com, untils);
+		}
 	}
 	else
 	{
@@ -252,6 +260,6 @@ void main_parser(char *str, t_untils *untils)
 
 	start = 0;
 	start = parser_into_list(str, untils);
-	if (start != 0 && start->command[0] == 'e' && start->command[1] == 'r')
+	if (start != 0 )//&& start->command[0] == 'e' && start->command[1] == 'r')
 		printf("->%s\n", start->command);
 }
