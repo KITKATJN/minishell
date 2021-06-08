@@ -181,6 +181,21 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			}
 			else
 				wait(0);
+			int p;
+			p = 0;
+			while (arguments[p] != 0)
+			{
+				ft_free(arguments[p]);
+				p++;
+			}
+			ft_free(arguments);
+			p = 0;
+			while (bin[p] != 0)
+			{
+				ft_free(bin[p]);
+				p++;
+			}
+			ft_free(bin);
 		}
 		else
 		{
