@@ -1,5 +1,28 @@
 #include "minishell.h"
 
+char	*ft_strdup_b2(const char *src)
+{
+	int		i;
+	char	*b;
+
+	i = 0;
+	if (!src)
+		return (NULL);
+	while (src[i] != '\0')
+		i++;
+	b = (char*)malloc(sizeof(char) * (i + 1));
+	if (b == NULL)
+		return (NULL);
+	i = 0;
+	while (src[i] != '\0')
+	{
+		b[i] = src[i];
+		i++;
+	}
+	b[i] = '\0';
+	return (b);
+}
+
 static int count_word(char **str)
 {
 	int i;
@@ -132,18 +155,19 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			save = ft_strjoin_line(tmp->content, line);
 			while (tmp->next)
 				tmp = tmp->next;
-			tmp->content = ft_strdup_b(save);
+			tmp->content = ft_strdup_b2(save);
 			ft_free(save);
 			while (tmp->back)
 			{
 				if (tmp->line)
 				{
+					printf("1--------------\n");
 					// if (tmp->content != 0)
 					// {
 					// 	printf("hello %s\n", tmp->content); // здесь получаем ошибку связанную с двойным особождением памяти
 					//ft_free(tmp->content);
 					// }
-					tmp->content = 0;
+					ft_free(tmp->content);
 					tmp->content = ft_strdup_b(tmp->line);
 				}
 				tmp = tmp->back;
@@ -158,12 +182,13 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			if (tmp->content)
 			{
 				//ft_free(tmp->content); // здесь мы получаем ошибку, что память была освобождена, когда пытаемся прочитать первый элемент истории несколько раз
-				tmp->content = untils->first;
+				ft_free(tmp->content);
+				tmp->content = ft_strdup_b(untils->first);
 			}
 			while (tmp->next)
 				tmp = tmp->next;
 			ft_free(line);
-			return (tmp->content);
+			return (ft_strdup_b(tmp->content));
 		}
 		else if (buff[0] == '\e')
 		{
@@ -236,7 +261,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		}
 	}
 	ft_free(line);
-	return (tmp->content);
+	return (ft_strdup_b(tmp->content));
 }
 
 int main(int argc, char **argv, char **envp)
@@ -251,8 +276,7 @@ int main(int argc, char **argv, char **envp)
 
 	history = NULL;
 	line = NULL;
-	untils = malloc(sizeof(t_untils));
-	untils->flag = 1;
+	untils = init_untils(untils);
 	term_name = "xterm-256color"; //костыль достать из envp, если нет то выходим из программы (везде где пользуемся переменными окружения проверяем есть ли она там)
 	tcgetattr(0, &term);
 	tcgetattr(0, &term2);
@@ -277,5 +301,6 @@ int main(int argc, char **argv, char **envp)
 		untils->fd_out = 99;
 		tcsetattr(0, TCSANOW, &term2);
 		main_parser(line, untils);
+		ft_free(line);
 	}
 }

@@ -40,7 +40,6 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	// {
 	// 	return (ft_lstnew_parser(ft_strdup("error with quotes _==--_"), 0));
 	// }
-
 	i = 0;
 	_flag = 0;
 	while (i < ft_strlen(str1))
@@ -116,7 +115,6 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	{
 		return (ft_lstnew_parser(ft_strdup("error with quotes"), 0));
 	}
-
 	start = change_escape_code_in_double_quotes(start);
 	t_parser *list_of_command;
 	list_of_command = assigning_symbols_to_command(start);

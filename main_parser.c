@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-
-
 void redirect_check(t_command *com)
 {
 	t_command *start;
@@ -128,8 +126,10 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		// start = com;
 		if (check_buildin(start->command))
 		{
+			ft_free(untils->command_ex);
 			untils->command_ex = ft_strdup_b(start->command);
 			// start = start->next;
+			ft_free(untils->path);
 			untils->path = find_path(untils);
 			char **bin = ft_split(untils->path, ':');
 			char **arguments;
@@ -181,7 +181,9 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 				wait(0);
 		}
 		else
+		{
 			bsophia_function(com, untils);
+		}
 	}
 	else
 	{

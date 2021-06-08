@@ -101,6 +101,8 @@ void					print_export(char **cp_env);
 int						check_name(char *str);
 int						ft_strcmp(char *str, char *str1);
 void					ft_free(void *p);
+void					delete_current_untils(t_untils *current);
+t_untils				*init_untils(t_untils *untils);
 
 t_command				*parser_into_list(char *str, t_untils *untils);
 t_parser				*ft_lstnew_parser2(char *symbol, int special, int *special_array);
