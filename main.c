@@ -148,7 +148,19 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		// 	return (tmp->content);
 		// 	break ;
 		// }
+		
+		ft_memset(buff, 0, 5);
 		l = read (0, buff, 1);
+	
+		if (g_sig_f == 1)
+		{
+			ft_memset(buff, 0, 5);
+			buff[0] = '\n';
+			free(line);
+			line = 0;
+			g_sig_f = 0;
+			return(0);
+		}
 		if (buff[0] == '\n')
 		{
 			write(1, "\n", 1);
@@ -161,13 +173,13 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			{
 				if (tmp->line)
 				{
-					printf("1--------------\n");
+					// printf("1--------------\n");
 					// if (tmp->content != 0)
 					// {
 					// 	printf("hello %s\n", tmp->content); // здесь получаем ошибку связанную с двойным особождением памяти
 					//ft_free(tmp->content);
 					// }
-					ft_free(tmp->content);
+					// ft_free(tmp->content);
 					tmp->content = ft_strdup_b(tmp->line);
 				}
 				tmp = tmp->back;
@@ -182,12 +194,12 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			if (tmp->content)
 			{
 				//ft_free(tmp->content); // здесь мы получаем ошибку, что память была освобождена, когда пытаемся прочитать первый элемент истории несколько раз
-				ft_free(tmp->content);
+				// ft_free(tmp->content);
 				tmp->content = ft_strdup_b(untils->first);
 			}
 			while (tmp->next)
 				tmp = tmp->next;
-			ft_free(line);
+			// ft_free(line);
 			return (ft_strdup_b(tmp->content));
 		}
 		else if (buff[0] == '\e')
@@ -203,7 +215,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					if (line)
 					{
 						tmp->content = ft_strjoin_line(tmp->content, line);
-						ft_free(line);
+						// ft_free(line);
 					}
 					tmp = tmp->back;
 					write(1, tmp->content, ft_strlen_b(tmp->content));
@@ -219,7 +231,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					if (line)
 					{
 						tmp->content = ft_strjoin_line(tmp->content, line);
-						ft_free(line);
+						// ft_free(line);
 					}
 					tmp = tmp->next;
 					write(1, tmp->content, ft_strlen_b(tmp->content));
@@ -229,7 +241,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		else if (buff[0] == '\4' && !(ft_strlen(line)) && !(ft_strlen(tmp->content)))
 		{
 			printf("exit\n");
-			ft_free(line);
+			// ft_free(line);
 			//фришить все что есть(структуры и так далее);
 			exit(0);
 		}
@@ -257,10 +269,11 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		if ((strcmp(buff, "\177") && buff[0] != '\e'))
 		{
 			write (1, &buff[0], 1);
-			line = ft_strjoin_b(line, buff);
+			if (ft_isprint(buff[0]))
+				line = ft_strjoin_b(line, buff);
 		}
 	}
-	ft_free(line);
+	// ft_free(line);
 	return (ft_strdup_b(tmp->content));
 }
 
@@ -282,6 +295,8 @@ int main(int argc, char **argv, char **envp)
 	tcgetattr(0, &term2);
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
+	term.c_cc[VMIN] = 0;
+    term.c_cc[VTIME] = 1;
 	signal(SIGINT, signal_c);
 	signal(SIGQUIT, signal_slash);
 	tgetent(0, term_name);
@@ -293,14 +308,15 @@ int main(int argc, char **argv, char **envp)
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
-		if (!line)
-		{
+		// if (!line)
+		// {
 			clear_history(&history);
-		}
+		// }
 		untils->fd_in = 99;
 		untils->fd_out = 99;
 		tcsetattr(0, TCSANOW, &term2);
-		main_parser(line, untils);
-		ft_free(line);
+		if (line)
+			main_parser(line, untils);
+		// ft_free(line);
 	}
 }

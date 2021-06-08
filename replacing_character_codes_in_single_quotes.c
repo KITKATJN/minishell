@@ -34,13 +34,15 @@ t_parser *replacing_character_codes_in_single_quotes(t_parser *start)
 			if (current == 0)
 				break ;
 			//printf("*****************************1\n");
-			while (current->special != 1)
+			while (current != 0 && current->special != 1)
 			{
 				current->special = 0;
 				current = current->next;
 			}
 		}
 		//printf("////////////////////\n");
+		if (current == 0)
+			break ;
 		current = current->next;
 	}
 	return (start);
