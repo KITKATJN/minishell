@@ -1,28 +1,5 @@
 #include "minishell.h"
 
-char	*ft_strdup_b2(const char *src)
-{
-	int		i;
-	char	*b;
-
-	i = 0;
-	if (!src)
-		return (NULL);
-	while (src[i] != '\0')
-		i++;
-	b = (char*)malloc(sizeof(char) * (i + 1));
-	if (b == NULL)
-		return (NULL);
-	i = 0;
-	while (src[i] != '\0')
-	{
-		b[i] = src[i];
-		i++;
-	}
-	b[i] = '\0';
-	return (b);
-}
-
 static int count_word(char **str)
 {
 	int i;
@@ -167,7 +144,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			save = ft_strjoin_line(tmp->content, line);
 			while (tmp->next)
 				tmp = tmp->next;
-			tmp->content = ft_strdup_b2(save);
+			tmp->content = ft_strdup_b(save);
 			ft_free(save);
 			while (tmp->back)
 			{
@@ -318,6 +295,6 @@ int main(int argc, char **argv, char **envp)
 		tcsetattr(0, TCSANOW, &term2);
 		if (line)
 			main_parser(line, untils);
-		// ft_free(line);
+		ft_free(line);
 	}
 }

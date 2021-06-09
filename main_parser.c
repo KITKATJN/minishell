@@ -223,6 +223,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		t_command *current_pipe = 0;
 
 		command_pipes =  (t_command **)malloc(sizeof(t_command*) * (count_pipes + 1));
+		command_pipes[count_pipes] = 0;
 		j = 0;
 		while (start)
 		{
@@ -234,7 +235,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			}
 			else
 			{
-				ft_lstadd_back_parser(&current_pipe, ft_lstnew_parser(start->command, 0));
+				ft_lstadd_back_parser(&current_pipe, ft_lstnew_parser(ft_strdup_b(start->command), 0));
 			}
 			start = start->next;
 		}
@@ -284,6 +285,13 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 				printf("command not found\n");
 			j++;
 		}
+		j = 0;
+		while (j < count_pipes + 1)
+		{
+			ft_lstclear_command(&command_pipes[j]);
+			j++;
+		}
+		ft_free(command_pipes);
 	}
 }
 
