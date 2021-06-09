@@ -36,29 +36,57 @@ static void	echo_2(t_command *list)
 
 int check_redir(t_command *list, int i, t_untils *untils)
 {
+	struct stat buf;
+	int k;
+
 	if (list->redir_right != NULL && i == 2)
 	{
 		untils->fd_out = open(list->redir_right, O_CREAT | O_WRONLY | O_TRUNC, 0777);
 		if (untils->fd_out < 0)
+		{
+			printf("! %s !\n", strerror(errno));
+			untils->status = 1;
+			// printf("%s : Permission denied\n", list->redir_right);
+			// exit(1);
 			return (0);
+		}
 		untils->std_out = dup(1);
 		dup2(untils->fd_out, 1);
 		close(untils->fd_out);
 	}
 	if (list->redir_double_right != NULL && i == 2)
 	{
+		//проверка на нет прав
 		untils->fd_out = open(list->redir_double_right, O_CREAT | O_WRONLY | O_APPEND, 0777);
 		if (untils->fd_out < 0)
+		{
+			printf("! %s !\n", strerror(errno));
+			// printf("%s : Permission denied\n", list->redir_double_right);
+			// exit(1);
+			untils->status = 1;
 			return (0);
+		}
 		untils->std_out = dup(1);
 		dup2(untils->fd_out, 1);
 		close(untils->fd_out);
 	}
 	if (list->redir_left != NULL && i == 2)
 	{
+		// if (buf.st_mode & S_IXUSR) S_IFREG указывает простой ли это файл
+		// {
+		// 	printf("mode = %o\n", buf.st_mode);
+		// 	printf("est dostupa\n");
+		// }
+		//проверить есть ли файл и доступ к файлу
+		stat(list->redir_left, &buf);
 		untils->fd_in = open(list->redir_left, O_RDWR);
 		if (untils->fd_in < 0)
+		{
+			printf("! %s !\n", strerror(errno));
+			untils->status = 1;
+			// exit(1);
 			return (0);
+		}
 		untils->std_in = dup(0);
 		dup2(untils->fd_in, 0);
 		close(untils->fd_in);
@@ -85,7 +113,9 @@ void bsophia_function(t_command *list, t_untils *untils)
 {
 	int i = 0;
 	
-	check_redir(list, 2, untils);
+	if (!check_redir(list, 2, untils))
+		return ;
+	untils->status = 0;
 	while (list->command[i])
 	{
 		list->command[i] = ft_tolower(list->command[i]);
@@ -98,7 +128,7 @@ void bsophia_function(t_command *list, t_untils *untils)
 		get_pwd(); //сместить указатель и установить после пайпа или редиректа(до следующей исполняющей команды)
 	if (!(ft_strcmp(list->command, "cd")))
 	{
-		printf(" cd = %d\n", f_cd(list, untils));//при ошибках возвращает -1 и ставит errno в должное значение/ сделать менеджмент ошибок
+		f_cd(list, untils);//при ошибках возвращает -1 и ставит errno в должное значение/ сделать менеджмент ошибок
 	}
 	if (!(ft_strcmp(list->command, "env")))
 		print_env(untils->env);
@@ -150,8 +180,10 @@ void bsophia_function(t_command *list, t_untils *untils)
 		while (list->next)
 		{
 			list = list->next;
-			untils->env = f_unset_line(untils->env, list->command);
+			untils->env = f_unset_line(untils->env, list->command, untils);
 		}
 	}
+	if(!ft_strcmp(list->command, "exit"))
+		ft_exit(list, untils);
 	check_redir(list, 1, untils);
 }

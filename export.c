@@ -67,6 +67,7 @@ char **export_add(char **cp_env, char *str, t_untils *untils)
 	if (check_name(str))
 	{
 		printf("error\n");
+		untils->status = 1;
 		return (cp_env);
 	}
 	while(cp_env[i] != NULL)

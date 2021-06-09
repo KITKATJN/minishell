@@ -15,6 +15,8 @@ int work_pipes(t_untils *untils, t_command *start)
 			untils->command_ex = ft_strdup_b(start->command);
 			// start = start->next;
 			untils->path = find_path(untils);
+			if (!untils->path)
+				exit(1);
 			char **bin = ft_split(untils->path, ':');
 			char **arguments;
 			int i = 0;
@@ -43,7 +45,8 @@ int work_pipes(t_untils *untils, t_command *start)
 			//д]очка
 			char *commd;
 			commd = ft_strjoin_line("/", untils->command_ex);
-			check_redir(save, 2, untils);
+			if (!check_redir(start, 2, untils))
+				exit(1);
 			// printf("DOSTAL\n");
 			while(bin[i])
 			{
@@ -52,12 +55,13 @@ int work_pipes(t_untils *untils, t_command *start)
 				execve(command, arguments, untils->env);
 				i++;
 			}
-			exit(0);
+			if (bin[i] == NULL && ft_strcmp(untils->command_ex, "minishell") && ft_strcmp(untils->command_ex, "./minishell"))
+				exit(127);
 		}
 		else
 		{
 			bsophia_function(save, untils);
 			exit(0);
 		}
-		return (0);
+		return (1);
 }

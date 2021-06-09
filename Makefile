@@ -17,7 +17,7 @@ LIST 	=	backspace.c \
 			assigning_code_to_elements.c remove_paired_quotes.c \
 			replacing_character_codes_in_single_quotes.c \
 			escaping_characters.c signal.c ft_free.c printf_list.c \
-			func_lst_untils.c \
+			func_lst_untils.c ft_exit.c \
 
 OBJDIR	=	objs/
 
