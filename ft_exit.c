@@ -50,11 +50,12 @@ void      ft_exit(t_command *command, t_untils *untils)
 				delete_current_untils(untils);
 				exit(EXIT_NOT_FOUND);
 			}
-		i++;
+			i++;
 		}
+		error = (unsigned char)ft_atoi(command->next->command);
 		delete_current_parser_for_command_list(command);
 		delete_current_untils(untils);
-		exit((unsigned char)ft_atoi(command->next->command));
+		exit(error);
 	}
 	delete_current_parser_for_command_list(command);
 	delete_current_untils(untils);
