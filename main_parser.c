@@ -153,16 +153,19 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			char *command;
 			command = NULL;
 			int id;
-			id = fork();
+			// id = fork();
 			start = com;
-			if (id == 0)
+			int process[1];
+			process[0] = fork();
+			if (process[0] == 0)
 			{
 				signal(SIGINT, SIG_DFL);
 				signal(SIGQUIT, SIG_DFL);
 				//дочка
 				char *commd;
 				commd = ft_strjoin_line("/", untils->command_ex);
-				check_redir(start, 2, untils);
+				if (!check_redir(start, 2, untils))
+					exit(1);
 				while(bin[i] != NULL)
 				{
 					command = ft_strjoin_line(bin[i], commd);
@@ -176,11 +179,19 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 					i++;
 				}
 				ft_free(commd);
-				if (bin[i] == NULL)
-					exit(0);
+				if (bin[i] == NULL && ft_strcmp(untils->command_ex, "minishell") && ft_strcmp(untils->command_ex, "./minishell"))
+				{
+					printf("123\n");
+					exit(127);
+				}
 			}
 			else
-				wait(0);
+			{
+				waitpid(process[0], &untils->status, 0);
+				untils->status = untils->status / 256;
+				if(untils->status == 127)
+					printf("command not found\n");
+			}
 			int p;
 			p = 0;
 			while (arguments[p] != 0)
@@ -200,6 +211,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		else
 		{
 			bsophia_function(com, untils);
+			// printf("!! %d\n", untils->status);
 		}
 	}
 	else
@@ -250,7 +262,8 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 				next_pipe_fds[0] = -1;
 				next_pipe_fds[1] = -1;
 			}
-			if (fork() == 0)
+			process[j] = fork();
+			if (process[j] == 0)
 			{
 				signal(SIGINT, SIG_DFL);
 				signal(SIGQUIT, SIG_DFL);
@@ -260,11 +273,15 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			close(prev_pipe_fds[0]);
 			close(prev_pipe_fds[1]);
 			i++;
+			j++;
 		}
 		j = 0;
 		while (j < count_pipes + 1)
 		{
-			waitpid(-1, &(status), 0); //вместо status какую-то переменную куда будем записывать код завершения операции
+			waitpid(process[j], &(untils->status), 0);
+			untils->status = untils->status / 256;
+			if (untils->status == 127)
+				printf("command not found\n");
 			j++;
 		}
 	}

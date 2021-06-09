@@ -12,8 +12,14 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <sys/stat.h>
+#include <errno.h>
 
 int g_sig_f;
+
+#define EXIT_SUCCESS 0
+#define EXIT_FAILURE 1
+#define EXIT_NOT_FOUND 127
 
 typedef struct			s_untils
 {
@@ -27,6 +33,7 @@ typedef struct			s_untils
 	int					std_out;
 	char				*command_ex;
 	char				*path;
+	int					status;
 }						t_untils;
 
 typedef struct			s_history
@@ -83,7 +90,7 @@ int						f_echo(char *str, int i);
 int						f_cd(t_command *list, t_untils *untils);
 char					**copy_envp(char **envp, char **cp_env);
 char					**export_add(char **cp_env, char *str, t_untils *untils);
-char					**f_unset_line(char **env, char *str);
+char					**f_unset_line(char **cp_env, char *str, t_untils *untils);
 t_command				*check_double_semicolon(char *argv);
 t_command				*ft_lstnew_parser(void *command, void *flag);
 void					ft_lstadd_back_parser(t_command **lst, t_command *new);
@@ -131,5 +138,6 @@ void					signal_c(int sig_num);
 void					signal_slash(int sig_num);
 void	printf_command_list(t_command *current);
 void	printf_list(t_parser *current);
+void      ft_exit(t_command *command, t_untils *untils);
 
 #endif

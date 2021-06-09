@@ -69,7 +69,7 @@ static char **f_unset_line_2(char **cp_env, char *str, int i)
 	return (new_env);
 }
 
-char **f_unset_line(char **cp_env, char *str)
+char **f_unset_line(char **cp_env, char *str, t_untils *untils)
 {
 	char **new_env;
 	int i;
@@ -84,6 +84,7 @@ char **f_unset_line(char **cp_env, char *str)
 	if (check_name1(str))
 	{	
 		printf("error name\n");
+		untils->status = 1;
 		return (cp_env);
 	}
 	while(cp_env[i] != NULL)
