@@ -14,6 +14,8 @@ static t_parser	*helper_function3(t_parser *start, t_helper_parser *help, char *
 		{
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(ft_strdup(" "), -1, 0));
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(help->c, 29, 0));
+			help->c = ft_calloc(2, 2);
+			help->c[0] = '>';
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(help->c, 29, 0));
 			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(ft_strdup(" "), -1, 0));
 			help->i += 1;
@@ -99,6 +101,5 @@ t_parser	*assigning_code_to_elements(char *str)
 		help.c = 0;
 		help.i += 1;
 	}
-	ft_free(str);
 	return (start);
 }

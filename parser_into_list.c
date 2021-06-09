@@ -70,6 +70,7 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	str = ft_strdup(str1);
 	//printf("--2------------>!%s!\n", str1);
 	start = assigning_code_to_elements(str);
+	ft_free(str);
 	//printf("fds %s\n", start->symbol);
 	current = start;
 	char u;

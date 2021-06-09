@@ -148,10 +148,10 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		// 	return (tmp->content);
 		// 	break ;
 		// }
-		
+
 		ft_memset(buff, 0, 5);
 		l = read (0, buff, 1);
-	
+
 		if (g_sig_f == 1)
 		{
 			ft_memset(buff, 0, 5);
@@ -179,7 +179,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					// 	printf("hello %s\n", tmp->content); // здесь получаем ошибку связанную с двойным особождением памяти
 					//ft_free(tmp->content);
 					// }
-					// ft_free(tmp->content);
+					ft_free(tmp->content);
 					tmp->content = ft_strdup_b(tmp->line);
 				}
 				tmp = tmp->back;
@@ -194,12 +194,12 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			if (tmp->content)
 			{
 				//ft_free(tmp->content); // здесь мы получаем ошибку, что память была освобождена, когда пытаемся прочитать первый элемент истории несколько раз
-				// ft_free(tmp->content);
+				ft_free(tmp->content);
 				tmp->content = ft_strdup_b(untils->first);
 			}
 			while (tmp->next)
 				tmp = tmp->next;
-			// ft_free(line);
+			ft_free(line);
 			return (ft_strdup_b(tmp->content));
 		}
 		else if (buff[0] == '\e')
@@ -241,7 +241,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		else if (buff[0] == '\4' && !(ft_strlen(line)) && !(ft_strlen(tmp->content)))
 		{
 			printf("exit\n");
-			// ft_free(line);
+			ft_free(line);
 			//фришить все что есть(структуры и так далее);
 			exit(0);
 		}
@@ -273,7 +273,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 				line = ft_strjoin_b(line, buff);
 		}
 	}
-	// ft_free(line);
+	ft_free(line);
 	return (ft_strdup_b(tmp->content));
 }
 

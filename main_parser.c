@@ -181,6 +181,21 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			}
 			else
 				wait(0);
+			int p;
+			p = 0;
+			while (arguments[p] != 0)
+			{
+				ft_free(arguments[p]);
+				p++;
+			}
+			ft_free(arguments);
+			p = 0;
+			while (bin[p] != 0)
+			{
+				ft_free(bin[p]);
+				p++;
+			}
+			ft_free(bin);
 		}
 		else
 		{
@@ -264,4 +279,5 @@ void main_parser(char *str, t_untils *untils)
 	start = parser_into_list(str, untils);
 	if (start != 0 )//&& start->command[0] == 'e' && start->command[1] == 'r')
 		printf("->%s\n", start->command);
+	delete_current_parser_for_command_list(start);
 }
