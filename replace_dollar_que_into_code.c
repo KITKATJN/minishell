@@ -16,6 +16,7 @@ char        *replace_dollar_que_into_code(char *str, t_untils *untils)
         first_part = ft_substr(str, 0, ft_strlen(str) - ft_strlen(start));
         second_part = ft_substr(str, ft_strlen(str) - ft_strlen(start) + 4, ft_strlen(str));
         temporary = ft_strjoin(first_part, ft_itoa(untils->status));
+        //printf("temporary = %s int = %d\n", ft_itoa(untils->status), untils->status);
         ft_free(first_part);
         ft_free(str);
         str = ft_strjoin(temporary, second_part);

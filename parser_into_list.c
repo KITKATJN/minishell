@@ -188,7 +188,7 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 					env_tmp[j_env - i_env - 1] = current->symbol[j_env];
 					j_env++;
 				}
-				printf("-->%s\n", env_tmp);
+				//printf("-->%s\n", env_tmp);
 				if (env_tmp[0] == '?')
 					str_from_my_env = ft_strdup("$?+");
 				else
