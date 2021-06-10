@@ -13,10 +13,15 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		return (0);
 	i = 0;
 	int _flag = 0;
+	int _flag_pipes = 0;
 	if (str1[ft_strlen(str1) - 1] == '>' || str1[ft_strlen(str1) - 1] == '<')
 		return (ft_lstnew_parser("syntax error near unexpected token `\\n'", 0));
 	while (i < ft_strlen(str1))
 	{
+		if (str1[i] == '|' && _flag_pipes == 0)
+			return (ft_lstnew_parser("syntax error near unexpected token '|'", 0));
+		if (str1[i] != '|' && str1[i] != ' ')
+			_flag_pipes = 1;
 		if (str1[i] == '\"' || str1[i] == '\'')
 			_flag++;
 		if (str1[i] == ';' && _flag % 2 == 0)
@@ -165,6 +170,8 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		{
 			if (current->special_array[i_env] == 5)
 			{
+				if (current->special_array[i_env + 1] != 0)
+				{
 				env_tmp = malloc(sizeof(char*) * (ft_strlen(current->symbol) - i_env) + 1);
 				ft_bzero(env_tmp, ft_strlen(current->symbol) - i_env + 1);
 				j_env = i_env + 1;
@@ -189,6 +196,7 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 				ft_bzero(string_before_doolar, ft_strlen(current->symbol) + 1);
 				i_for_str_before_dollar = 0;
 				continue ;
+				}
 			}
 			if (i_env < ft_strlen(current->symbol))
 				string_before_doolar[i_for_str_before_dollar] = current->symbol[i_env];
@@ -215,8 +223,11 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		ft_lstadd_back_parser(&commands, ft_lstnew_parser(ft_strdup(current->symbol), 0));
 		current = current->next;
 	}
-	bsopia_func(commands, 0, untils);
-	ft_lstclear_command(&commands);
+	if (commands != 0)
+	{
+		bsopia_func(commands, 0, untils);
+		ft_lstclear_command(&commands);
+	}
 	ft_lstclear_parser2(&list_of_command);
 	return (commands);
 }
