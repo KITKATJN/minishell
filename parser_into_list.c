@@ -168,7 +168,7 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		i_for_str_before_dollar = 0;
 		while (i_env < ft_strlen(current->symbol))
 		{
-			if (current->special_array[i_env] == 5 && current->symbol[i_env + 1] != 0 && current->symbol[i_env + 1] != '?')
+			if (current->special_array[i_env] == 5 )//&& current->symbol[i_env + 1] != 0 && current->symbol[i_env + 1] != '?')
 			{
 				if (current->special_array[i_env + 1] != 0)
 				{
@@ -180,10 +180,19 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 				{
 					if (current->special_array[j_env] == 0 || current->special_array[j_env] == 5 || current->special_array[j_env] == 3 || (current->special_array[0] == 2 && current->special_array[j_env] == 2))
 						break;
+					if (current->symbol[j_env] == '?')
+					{
+						env_tmp[j_env - i_env - 1] = current->symbol[j_env];
+						break ;
+					}
 					env_tmp[j_env - i_env - 1] = current->symbol[j_env];
 					j_env++;
 				}
-				str_from_my_env = my_get_env(env_tmp, untils->env);
+				//printf("-->%s\n", env_tmp);
+				if (env_tmp[0] == '?')
+					str_from_my_env = ft_strdup("$?+");
+				else
+					str_from_my_env = my_get_env(env_tmp, untils->env);
 				if (str_from_my_env == 0)
 					command_tmp = ft_calloc(1, 1);
 				else

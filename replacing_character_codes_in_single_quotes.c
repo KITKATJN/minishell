@@ -13,23 +13,28 @@ t_parser *replacing_character_codes_in_single_quotes(t_parser *start)
 			current = current->next;
 			if (current == 0)
 				break ;
+			//printf("1---------\n");
 			while(current != 0 && current->special != 2 && current->back != 0 && current->back->special != 3)
 			{
 				//printf("hello %c\n", current->symbol[0]);
 				current = current->next;
 			}
+			//printf("2---------%p\n", current);
+			if (current == 0)
+				break ;
 			current = current->next;
 			if (current == 0)
 				break ;
 			//printf("last -> %c next -> %c\n", current->symbol[0], current->next->symbol[0]);
 		}
+		//printf("3---------\n");
 		//printf("+++++++++++++!%c! %d %d %d %p\n", current->symbol[0], current->symbol[0] == '\'' , current->special != 0 , current->back != 0, current->back);
 		//if (current->back != 0)
 			//printf("+++++++++++++!%c! %d %d %d %d\n", current->symbol[0], current->symbol[0] == '\'' , current->special != 0 , current->back != 0, current->back->special);
 		if (current->symbol[0] == '\'' && current->special != 0 &&
 			current->back != 0 && current->back->special != 3)//все что в обычных ковычках меняем на простые символы, которые ничего не значат
 		{
-			//printf("2*****************************\n");
+		//	printf("2*****************************\n");
 			current = current->next;
 			if (current == 0)
 				break ;

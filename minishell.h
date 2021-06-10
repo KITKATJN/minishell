@@ -139,5 +139,6 @@ void					signal_slash(int sig_num);
 void	printf_command_list(t_command *current);
 void	printf_list(t_parser *current);
 void      ft_exit(t_command *command, t_untils *untils);
+char        *replace_dollar_que_into_code(char *str, t_untils *untils);
 
 #endif

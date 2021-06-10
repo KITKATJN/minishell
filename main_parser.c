@@ -123,7 +123,15 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		// 		printf("%s  dr = %s  right = %s left = %s ->%d\n", start->command, start->redir_double_right, start->redir_right, start->redir_left, i);
 		// 		start = start->next;
 		// 	}
-		// start = com;
+		while (start)
+		{
+			//printf("dsfsdfsd*************\n");
+			//printf("start->command  = %s\n", start->command );
+			start->command = replace_dollar_que_into_code(start->command, untils);
+			//printf("dsfsdfsd+++\n");
+			start = start->next;
+		}
+		start = com;
 		if (check_buildin(start->command))
 		{
 			ft_free(untils->command_ex);

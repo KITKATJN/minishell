@@ -10,6 +10,15 @@ int work_pipes(t_untils *untils, t_command *start)
 		// 		printf("%s  dr = %s  right = %s left = %s ->%d\n", start->command, start->redir_double_right, start->redir_right, start->redir_left, i);
 		// 		start = start->next;
 		// 	}
+		while (save)
+		{
+			//printf("dsfsdfsd*************\n");
+			//printf("start->command  = %s\n", start->command );
+			save->command = replace_dollar_que_into_code(save->command, untils);
+			//printf("dsfsdfsd+++\n");
+			save = save->next;
+		}
+		save = start;
 		if (check_buildin(start->command))
 		{
 			untils->command_ex = ft_strdup_b(start->command);

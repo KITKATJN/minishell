@@ -17,5 +17,6 @@ t_untils	*init_untils(t_untils *untils)
 	untils->env = 0;
 	untils->first = 0;
 	untils->path = 0;
+	untils->status = 0;
 	return(untils);
 }
