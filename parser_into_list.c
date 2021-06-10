@@ -132,7 +132,7 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		if (current->symbol[0] == '>' || current->symbol[0] == '<') //  проверяю, чтобы после каждого редиректа что-то было
 		{
 			//printf("gfdshkjbgfjkdsjkfgsf------------->%c\n",current->next->symbol[0] );
-			if (current->next && (current->next->symbol[0] == '>' || current->next->symbol[0] == '<' || current->next->symbol[0] == ' ' || current->next->symbol[0] == ';'))
+			if (current->next && (current->next->symbol[0] == '>' || current->next->symbol[0] == '<' || current->next->symbol[0] == ' ' || current->next->symbol[0] == ';' || current->next->symbol[0] == '|'))
 				return (ft_lstnew_parser("syntax error near unexpected token `>' or '<' or '>>'", 0));
 		}
 		//printf("5.5.5------------------------\n");

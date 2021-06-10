@@ -144,6 +144,8 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 				signal(SIGQUIT, SIG_DFL);
 				if (check_bin(start->command))
 				{
+					if (!check_redir(start, 2, untils))
+						exit(1);
 					work_bin(start, untils);
 				}
 				if (!(find_path(untils)) && !(check_bin(start->command)))

@@ -23,6 +23,17 @@ int work_pipes(t_untils *untils, t_command *start)
 		{
 			untils->command_ex = ft_strdup_b(start->command);
 			// start = start->next;
+			if (check_bin(start->command))
+			{
+				if (!check_redir(start, 2, untils))
+					exit(1);
+				work_bin(start, untils);
+			}
+			if (!(find_path(untils)) && !(check_bin(start->command)))
+			{
+				printf("123\n");
+				exit(127);
+			}
 			untils->path = find_path(untils);
 			if (!untils->path)
 				exit(1);
