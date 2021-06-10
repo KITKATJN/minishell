@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static void	echo_2(t_command *list)
+static void	echo_2(t_command *list, t_untils *untils)
 {
 	int		i;
 	char	*line;
@@ -14,6 +14,12 @@ static void	echo_2(t_command *list)
 		return ;
 	}
 	list = list->next;
+	if (!(ft_strcmp(list->command, "$?")))
+	{
+		printf("%d\n", untils->status);
+		return ;
+	}
+	untils->status = 0;
 	if ((!(ft_strcmp(list->command, "-n"))))
 	{
 		i = 0;
@@ -36,8 +42,7 @@ static void	echo_2(t_command *list)
 
 int check_redir(t_command *list, int i, t_untils *untils)
 {
-	struct stat buf;
-	int k;
+	// struct stat buf;
 
 	if (list->redir_right != NULL && i == 2)
 	{
@@ -78,7 +83,7 @@ int check_redir(t_command *list, int i, t_untils *untils)
 		// 	printf("est dostupa\n");
 		// }
 		//проверить есть ли файл и доступ к файлу
-		stat(list->redir_left, &buf);
+		// stat(list->redir_left, &buf);
 		untils->fd_in = open(list->redir_left, O_RDWR);
 		if (untils->fd_in < 0)
 		{
@@ -115,7 +120,6 @@ void bsophia_function(t_command *list, t_untils *untils)
 	
 	if (!check_redir(list, 2, untils))
 		return ;
-	untils->status = 0;
 	while (list->command[i])
 	{
 		list->command[i] = ft_tolower(list->command[i]);
@@ -123,7 +127,8 @@ void bsophia_function(t_command *list, t_untils *untils)
 	}
 	// printf("bsophia first command =====> %s\n", list->command);
 	if (!(ft_strcmp(list->command, "echo")))
-		echo_2(list);
+		echo_2(list, untils);
+	untils->status = 0;
 	if (!(ft_strcmp(list->command, "pwd")))
 		get_pwd(); //сместить указатель и установить после пайпа или редиректа(до следующей исполняющей команды)
 	if (!(ft_strcmp(list->command, "cd")))

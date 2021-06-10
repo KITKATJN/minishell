@@ -44,6 +44,7 @@ int work_pipes(t_untils *untils, t_command *start)
 			// start = save;
 			//д]очка
 			char *commd;
+			start = save;
 			commd = ft_strjoin_line("/", untils->command_ex);
 			if (!check_redir(start, 2, untils))
 				exit(1);
@@ -55,8 +56,10 @@ int work_pipes(t_untils *untils, t_command *start)
 				execve(command, arguments, untils->env);
 				i++;
 			}
-			if (bin[i] == NULL && ft_strcmp(untils->command_ex, "minishell") && ft_strcmp(untils->command_ex, "./minishell"))
+			if (bin[i] == NULL && ft_strcmp(untils->command_ex, "minishell") && ft_strcmp(untils->command_ex, "./minishell") && ft_strcmp(untils->command_ex, "$?"))
 				exit(127);
+			if (ft_strcmp(untils->command_ex, "$?"))
+				printf("0 : command not found");
 		}
 		else
 		{

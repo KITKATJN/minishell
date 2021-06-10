@@ -168,7 +168,7 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		i_for_str_before_dollar = 0;
 		while (i_env < ft_strlen(current->symbol))
 		{
-			if (current->special_array[i_env] == 5)
+			if (current->special_array[i_env] == 5 && current->symbol[i_env + 1] != 0 && current->symbol[i_env + 1] != '?')
 			{
 				if (current->special_array[i_env + 1] != 0)
 				{

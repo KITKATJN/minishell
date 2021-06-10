@@ -179,9 +179,14 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 					i++;
 				}
 				ft_free(commd);
-				if (bin[i] == NULL && ft_strcmp(untils->command_ex, "minishell") && ft_strcmp(untils->command_ex, "./minishell"))
+				if (bin[i] == NULL && ft_strcmp(untils->command_ex, "minishell") && ft_strcmp(untils->command_ex, "./minishell") && ft_strcmp(untils->command_ex, "$?"))
 				{
 					printf("123\n");
+					exit(127);
+				}
+				if (!(ft_strcmp(untils->command_ex, "$?")))
+				{
+					printf("0 : command not found");
 					exit(127);
 				}
 			}
@@ -189,7 +194,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			{
 				waitpid(process[0], &untils->status, 0);
 				untils->status = untils->status / 256;
-				if(untils->status == 127)
+				if (untils->status == 127 && ft_strcmp(untils->command_ex, "$?"))
 					printf("command not found\n");
 			}
 			int p;
@@ -282,7 +287,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			waitpid(process[j], &(untils->status), 0);
 			untils->status = untils->status / 256;
 			if (untils->status == 127)
-				printf("command not found\n");
+				printf("%s: command not found\n", command_pipes[j]->command);
 			j++;
 		}
 		j = 0;
