@@ -136,6 +136,24 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 		{
 			ft_free(untils->command_ex);
 			untils->command_ex = ft_strdup_b(start->command);
+			int process[1];
+			process[0] = fork();
+			if (process[0] == 0)
+			{
+				signal(SIGINT, SIG_DFL);
+				signal(SIGQUIT, SIG_DFL);
+				if (check_bin(start->command))
+				{
+					work_bin(start, untils);
+				}
+				if (!(find_path(untils)) && !(check_bin(start->command)))
+				{
+					printf("123\n");
+					exit(127);
+				}
+			// {
+			// 	work_bin(start, untils);
+			
 			// start = start->next;
 			ft_free(untils->path);
 			untils->path = find_path(untils);
@@ -163,8 +181,8 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			int id;
 			// id = fork();
 			start = com;
-			int process[1];
-			process[0] = fork();
+			// int process[1];
+			// process[0] = fork();
 			if (process[0] == 0)
 			{
 				signal(SIGINT, SIG_DFL);
@@ -180,6 +198,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 					//проверка на наличие PATH;
 					if (execve(command, arguments, untils->env) == 0)
 					{
+						printf("make\n");
 						ft_free(command);
 						break ;
 					}
@@ -189,7 +208,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 				ft_free(commd);
 				if (bin[i] == NULL && ft_strcmp(untils->command_ex, "minishell") && ft_strcmp(untils->command_ex, "./minishell") && ft_strcmp(untils->command_ex, "$?"))
 				{
-					printf("123\n");
+					printf("123222\n");
 					exit(127);
 				}
 				if (!(ft_strcmp(untils->command_ex, "$?")))
@@ -198,6 +217,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 					exit(127);
 				}
 			}
+			}
 			else
 			{
 				waitpid(process[0], &untils->status, 0);
@@ -205,22 +225,22 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 				if (untils->status == 127 && ft_strcmp(untils->command_ex, "$?"))
 					printf("command not found\n");
 			}
-			int p;
-			p = 0;
-			while (arguments[p] != 0)
-			{
-				ft_free(arguments[p]);
-				p++;
-			}
-			ft_free(arguments);
-			p = 0;
-			while (bin[p] != 0)
-			{
-				ft_free(bin[p]);
-				p++;
-			}
-			ft_free(bin);
 		}
+			// int p;
+			// p = 0;
+			// while (arguments[p] != 0)
+			// {
+			// 	ft_free(arguments[p]);
+			// 	p++;
+			// }
+			// ft_free(arguments);
+			// p = 0;
+			// while (bin[p] != 0)
+			// {
+			// 	ft_free(bin[p]);
+			// 	p++;
+			// }
+			// ft_free(bin);
 		else
 		{
 			bsophia_function(com, untils);

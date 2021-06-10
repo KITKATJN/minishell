@@ -10,4 +10,5 @@ void get_pwd()
 	write(1, pwd, ft_strlen(pwd));
 	write(1, "\n", 1);
 	ft_free(line);
+	ft_free(pwd);
 }

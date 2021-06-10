@@ -18,6 +18,7 @@ LIST 	=	backspace.c \
 			replacing_character_codes_in_single_quotes.c \
 			escaping_characters.c signal.c ft_free.c printf_list.c \
 			func_lst_untils.c ft_exit.c replace_dollar_que_into_code.c \
+			check_bin.c work_bin.c
 
 OBJDIR	=	objs/
 
@@ -36,7 +37,7 @@ CC		= gcc
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) -ltermcap -O3 $(OBJS) libft.a -o $(NAME) -lncurses -fsanitize=address
+		$(CC) -ltermcap -O3 $(OBJS) libft.a -o $(NAME) -lncurses #-fsanitize=address
 
 $(OBJDIR)%.o: %.c Makefile
 	mkdir -p $(OBJDIR)
