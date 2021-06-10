@@ -26,15 +26,21 @@ t_parser	*assigning_symbols_to_command(t_parser *start)
 			while (new_start != current)
 			{
 				//printf("1------------------------\n");
-				str[i] = new_start->symbol[0];
-				special_array[i] = new_start->special;
+				if (new_start->special != 1 && new_start->special != 2)
+				{
+					str[i] = new_start->symbol[0];
+					special_array[i] = new_start->special;
+					i++;
+				}
 				new_start = new_start->next;
-				i++;
 			}
 			if (current->next == 0 && current->special != -1)
 			{
-				str[i] = new_start->symbol[0];
-				special_array[i] = new_start->special;
+				if (new_start->special != 1 && new_start->special != 2)
+				{
+					str[i] = new_start->symbol[0];
+					special_array[i] = new_start->special;
+				}
 			}
 			ft_lstadd_back_parser2(&list_of_command, ft_lstnew_parser2(str, 0, special_array));
 			i = 0;
