@@ -248,7 +248,6 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			}
 			else
 			{
-				start->command = replace_dollar_que_into_code(start->command, untils);
 				ft_lstadd_back_parser(&current_pipe, ft_lstnew_parser(ft_strdup_b(start->command), 0));
 			}
 			start = start->next;
