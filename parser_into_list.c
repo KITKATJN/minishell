@@ -185,6 +185,12 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 						env_tmp[j_env - i_env - 1] = current->symbol[j_env];
 						break ;
 					}
+					if (ft_isdigit (current->symbol[j_env]))
+					{
+						env_tmp[j_env - i_env - 1] = current->symbol[j_env];
+						j_env++;
+						break ;
+					}
 					env_tmp[j_env - i_env - 1] = current->symbol[j_env];
 					j_env++;
 				}
