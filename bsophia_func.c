@@ -14,11 +14,11 @@ static void	echo_2(t_command *list, t_untils *untils)
 		return ;
 	}
 	list = list->next;
-	if (!(ft_strcmp(list->command, "$?")))
-	{
-		printf("%d\n", untils->status);
-		return ;
-	}
+	// if (!(ft_strcmp(list->command, "$?")))
+	// {
+	// 	printf("%d\n", untils->status);
+	// 	return ;
+	// }
 	untils->status = 0;
 	if ((!(ft_strcmp(list->command, "-n"))))
 	{

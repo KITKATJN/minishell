@@ -9,6 +9,11 @@ char        *replace_dollar_que_into_code(char *str, t_untils *untils)
 
     if (str == 0)
         return (str);
+    if (str[0] == '~' && str[1] == 0)
+    {
+        ft_free(str);
+        return(my_get_env("HOME", untils->env));
+    }
     while (1)
     {
         if ((start = ft_strnstr(str, "$?+?", ft_strlen(str))) == 0)

@@ -229,6 +229,18 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 				break ;
 			current = current->next;
 		}
+		if (current->symbol[0] == '\'' && current->symbol[ft_strlen(current->symbol) - 1] == '\'')
+		{
+			tmp = current->symbol;
+			current->symbol = ft_substr(current->symbol, 1 , ft_strlen(current->symbol) - 2);
+			ft_free(tmp);
+		}
+		if (current->symbol[0] == '\"' && current->symbol[ft_strlen(current->symbol) - 1] == '\"')
+		{
+			tmp = current->symbol;
+			current->symbol = ft_substr(current->symbol, 1 , ft_strlen(current->symbol) - 2);
+			ft_free(tmp);
+		}
 		ft_lstadd_back_parser(&commands, ft_lstnew_parser(ft_strdup(current->symbol), 0));
 		current = current->next;
 	}
