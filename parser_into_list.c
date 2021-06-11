@@ -101,19 +101,9 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		}
 		current = current->next;
 	}
-	//printf_list(start);
 	start = remove_paired_quotes(start);
-
-
-	//printf("134---------------\n");
-	//printf_list(start);
 	start = replacing_character_codes_in_single_quotes(start);
-	//printf("1349999999---------------\n");
-	//printf_list(start);
-	//printf("1---------------\n");
 	start = escaping_characters(start);
-	//printf_list(start);
-	//printf("1.5----------------------\n");
 
 	current = start;
 	int		count = 0;
@@ -159,109 +149,5 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		delete_current_parser2(current);
 	}
 
-	//printf("6------------------------\n");
-	//printf("4------------------\n");
-	// if (ft_strcmp(ft_check_command(list_of_command->symbol), "error") == 0)
-	// {
-	// 	ft_lstclear_parser2(&list_of_command);
-	// 	return (ft_lstnew_parser("error: command not found", 0));
-	// }
-	t_command *commands;
-	commands = 0;
-	current = list_of_command;
-	int i_env;
-	int j_env;
-	char *env_tmp;
-	char *string_before_doolar;
-	char *command_tmp;
-	char *end_command;
-	char *str_from_my_env;
-	int i_for_str_before_dollar;
-	char *tmp;
-	//printf_list(current);
-	while (current)
-	{
-		i_env = 0;
-		end_command = ft_calloc(1, 1);
-		string_before_doolar = ft_calloc(ft_strlen(current->symbol) + 1, ft_strlen(current->symbol) + 1);
-		i_for_str_before_dollar = 0;
-		while (i_env < ft_strlen(current->symbol))
-		{
-			if (current->special_array[i_env] == 5 )//&& current->symbol[i_env + 1] != 0 && current->symbol[i_env + 1] != '?')
-			{
-				if (current->special_array[i_env + 1] != 0)
-				{
-				env_tmp = malloc(sizeof(char*) * (ft_strlen(current->symbol) - i_env) + 1);
-				ft_bzero(env_tmp, ft_strlen(current->symbol) - i_env + 1);
-				j_env = i_env + 1;
-				i = 0;
-				while (j_env < ft_strlen(current->symbol))
-				{
-					if (current->special_array[j_env] == 0 || current->special_array[j_env] == 5 || current->special_array[j_env] == 3 || (current->special_array[0] == 2 && current->special_array[j_env] == 2))
-						break;
-					if (current->symbol[j_env] == '?')
-					{
-						env_tmp[j_env - i_env - 1] = current->symbol[j_env];
-						break ;
-					}
-					if (ft_isdigit (current->symbol[j_env]))
-					{
-						env_tmp[j_env - i_env - 1] = current->symbol[j_env];
-						j_env++;
-						break ;
-					}
-					env_tmp[j_env - i_env - 1] = current->symbol[j_env];
-					j_env++;
-				}
-				//printf("-->%s\n", env_tmp);
-				if (env_tmp[0] == '?')
-					str_from_my_env = ft_strdup("$?+");
-				else
-					str_from_my_env = my_get_env(env_tmp, untils->env);
-				if (str_from_my_env == 0)
-					command_tmp = ft_calloc(1, 1);
-				else
-					command_tmp = str_from_my_env;// ft_strjoin(getenv(env_tmp), current->symbol + j_env);
-				ft_free(env_tmp);
-				end_command = ft_strjoin(end_command, string_before_doolar);
-				end_command = ft_strjoin(end_command, command_tmp);
-				ft_free(command_tmp);
-				i_env = j_env;
-				ft_bzero(string_before_doolar, ft_strlen(current->symbol) + 1);
-				i_for_str_before_dollar = 0;
-				continue ;
-				}
-			}
-			if (i_env < ft_strlen(current->symbol))
-				string_before_doolar[i_for_str_before_dollar] = current->symbol[i_env];
-			i_for_str_before_dollar++;
-			i_env++;
-		}
-		tmp = end_command;
-		end_command = ft_strjoin(end_command, string_before_doolar);
-		ft_free(tmp);
-		ft_free(string_before_doolar);
-		if (end_command[0] != '\0' || current->symbol[0] == '$')
-		{
-			ft_free(current->symbol);
-			current->symbol = end_command;
-		}
-		if (current->special_array[0] == 9)
-		{
-			bsopia_func(commands, 2, untils);
-			ft_lstclear_command(&commands);
-			if (current->next == 0)
-				break ;
-			current = current->next;
-		}
-		ft_lstadd_back_parser(&commands, ft_lstnew_parser(ft_strdup(current->symbol), 0));
-		current = current->next;
-	}
-	if (commands != 0)
-	{
-		bsopia_func(commands, 0, untils);
-		ft_lstclear_command(&commands);
-	}
-	ft_lstclear_parser2(&list_of_command);
-	return (commands);
+	return (command_transmission_to_bsopia(list_of_command, untils));
 }

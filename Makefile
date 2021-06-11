@@ -3,7 +3,7 @@ NAME 	= minishell
 DIR 	= .
 
 LIST 	=	backspace.c \
-			cd.c \
+			cd.c command_transmission_to_bsopia.c \
 			clear_history.c copy_envp.c echo.c \
 			export.c ft_lstadd_back.c ft_lstnew.c \
 			ft_lstsize.c ft_strdup.c ft_strjoin_line.c \
@@ -18,7 +18,7 @@ LIST 	=	backspace.c \
 			replacing_character_codes_in_single_quotes.c \
 			escaping_characters.c signal.c ft_free.c printf_list.c \
 			func_lst_untils.c ft_exit.c replace_dollar_que_into_code.c \
-			check_bin.c work_bin.c
+			check_bin.c work_bin.c \
 
 OBJDIR	=	objs/
 
