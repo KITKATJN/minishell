@@ -139,6 +139,12 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		current = current->next;
 	}
 	//printf_list(list_of_command);
+	if (list_of_command->symbol[0] == '\0')
+	{
+		current = list_of_command;
+		list_of_command = list_of_command->next;
+		delete_current_parser2(current);
+	}
 
 	//printf("6------------------------\n");
 	//printf("4------------------\n");
