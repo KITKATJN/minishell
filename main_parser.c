@@ -239,7 +239,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 					exit(127);
 				if (!(ft_strcmp(untils->command_ex, "$?")))
 				{
-					printf("0 : command not found");
+					printf("%d : command not found", untils->status);
 					exit(127);
 				}
 			}
@@ -248,7 +248,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			{
 				waitpid(process[0], &untils->status, 0);
 				untils->status = untils->status / 256;
-				if (untils->status == 127 && ft_strcmp(untils->command_ex, "$?"))
+				if (untils->status == 127 && ft_strcmp(untils->command_ex, "$?") && !(check_bin(start->command)))
 					printf("%s: command not found\n", untils->command_ex);
 			}
 		}
