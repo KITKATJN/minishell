@@ -1,9 +1,25 @@
 #include "minishell.h"
 
-void redirect_check(t_command *com)
+t_command		*redirect_check(t_command *com)
 {
-	t_command *start;
+	t_command	*start;
 
+	if (com->command[0] == '>' && com->command[1] == '>')
+	{
+		start = com->next->next;
+		if (start != 0)
+			start->redir_double_right = ft_strdup(com->next->command);
+		int gf = open(com->next->command, O_CREAT | O_WRONLY | O_APPEND, 0777);
+		close (gf);
+		return (start);
+	}
+	if (com->command[0] == '>' && com->command[1] == '\0')
+	{
+		start = com->next->next;
+		int ff = open(com->next->command, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+		close (ff);
+		return (start);
+	}
 	//printf_command_list(com);
 	start = com;
 	while (start)
@@ -73,6 +89,7 @@ void redirect_check(t_command *com)
 		}
 		start = start->next;
 	}
+	return (com);
 }
 
 void	func(t_command *current_pipe)
@@ -117,7 +134,10 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	start = com;
 	if (count_pipes == 0)
 	{
-		redirect_check(com);
+		com = redirect_check(com);
+		if (com == 0)
+			return ;
+	//	printf_command_list(com);
 		// while (start) // echo pl | echo hgfda123 | echo 456
 		// 	{
 		// 		printf("%s  dr = %s  right = %s left = %s ->%d\n", start->command, start->redir_double_right, start->redir_right, start->redir_left, i);
