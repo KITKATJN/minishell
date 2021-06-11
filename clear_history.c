@@ -1,14 +1,12 @@
 #include "minishell.h"
 
-void clear_history(t_history **history)
+void	clear_history(t_history **history)
 {
-	t_history *tmp;
-	t_history *tmp2;
+	t_history	*tmp;
+	t_history	*tmp2;
 
 	tmp = *history;
-
-
-	while(tmp && ft_lstsize(*history) >= 1)
+	while (tmp && ft_lstsize(*history) >= 1)
 	{
 		if (tmp->content == NULL || !(ft_strlen_b(tmp->content)))
 		{
