@@ -103,28 +103,6 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	}
 	start = remove_paired_quotes(start);
 	//printf_list(start);
-	current = start;
-	//printf("sdfsd\n");
-	while (current)
-	{
-		if (current->symbol[0] == '\"' && current->back->symbol[0] != '\\')
-		{
-			current = current->next;
-			while (current != 0)
-			{
-			//	printf("44\n");
-				if (current->symbol[0] == '\"' && current->back->symbol[0] != '\\')
-					break ;
-				if (current->special == 1)
-					current->special = 0;
-				current = current->next;
-			}
-		}
-		if (current == 0)
-			break ;
-		current = current->next;
-	}
-
 	start = replacing_character_codes_in_single_quotes(start);
 	//printf_list(start);
 	start = escaping_characters(start);
