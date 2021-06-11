@@ -78,7 +78,7 @@ echo \'\"\\ "\hello\$PWD" ++
 echo "\$PWD" "\PWD" ++
 echo "\""
 echo "\'" не должен экранировать ковычку
-"echo f" hello segf!!!!
+"echo f" hello ++
 >"helo l" echo hell\ f не записал в файл, а вывел в консоль
 >>"helo l" echo hell\ f ; echo hell\ f ++
 export t=n; echo -$t -n "-"'n' hello должен просто hello у нас еще обавляет -n -n и тд

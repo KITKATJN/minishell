@@ -140,7 +140,7 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	//printf("sdfsd\n");
 	while (current)
 	{
-		if (current->symbol[0] == '\"' && current->back->symbol[0] != '\\')
+		if (current->symbol[0] == '\"' && current->back != 0 && current->back->symbol[0] != '\\')
 		{
 			current = current->next;
 			while (current != 0)
@@ -157,12 +157,10 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 			break ;
 		current = current->next;
 	}
-
 	start = replacing_character_codes_in_single_quotes(start);
 	//printf_list(start);
 	//printf_list(start);
 	start = escaping_characters(start);
-
 	current = start;
 	int		count = 0;
 	int		count_double = 0;
@@ -188,7 +186,6 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	start = change_escape_code_in_double_quotes(start);
 	t_parser *list_of_command;
 	list_of_command = assigning_symbols_to_command(start);
-
 	current = list_of_command;
 	while (current)
 	{
@@ -209,6 +206,6 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		list_of_command = list_of_command->next;
 		delete_current_parser2(current);
 	}
-
+	//printf_list(list_of_command);
 	return (command_transmission_to_bsopia(list_of_command, untils));
 }
