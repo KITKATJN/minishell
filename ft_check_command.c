@@ -2,55 +2,15 @@
 
 char	*ft_check_command(char *command)
 {
-	char	*tmp;
-	int		i;
-	int		i_double_quotes;
-	int		i_alone_quotes;
-	int		j;
-
-	tmp = malloc(sizeof(char) * ft_strlen(command));
-	ft_bzero(tmp, ft_strlen(command));
-	i = 0;
-	j = 0;
-	i_alone_quotes = 0;
-	i_double_quotes = 0;
-	//printf("command[i] =------------> %s\n", command);
-	//printf("1----------------\n");
-	while (command[i] != '\0')
-	{
-		if (command[i + 1] != '\0')
-		{
-			if (command[i] != '\\' && command[i + 1] != '\\')
-			{
-				tmp[j] = command[i];
-				j++;
-				i++;
-				continue ;
-			}
-		}
-		else if (command[i] == '\\' && command[i + 1] == '\0')
-		{
-			tmp[j] = command[i];
-			break ;
-		}
-		if (command[i] != '\\' && command[i] != '\'' && command[i] != '\"')
-		{
-			tmp[j] = command[i];
-			j++;
-		}
-		//printf("command[i] = %c\n", command[i]);
-		i++;
-	}
-	//printf("1----------------tmp = %s\ncommand--->%s\n", tmp, command);
 	if (command[0] == 'e')
 	{
-		if (!ft_strncmp(command, "echo", ft_strlen(command)))
+		if (!ft_strncmp(command, "echo", 4))
 			return ("echo");
-		if (!ft_strncmp(command, "env", ft_strlen(command)))
+		if (!ft_strncmp(command, "env", 3))
 			return ("env");
-		if (!ft_strncmp(command, "exit", ft_strlen(command)))
+		if (!ft_strncmp(command, "exit", 4))
 			return ("exit");
-		if (!ft_strncmp(command, "export", ft_strlen(command)))
+		if (!ft_strncmp(command, "export", 6))
 			return ("export");
 		ft_putstr_fd("command \"", 2);
 		ft_putstr_fd(command, 2);
@@ -63,8 +23,5 @@ char	*ft_check_command(char *command)
 		return ("pwd");
 	if (!ft_strncmp(command, "unset", ft_strlen(command)))
 		return ("unset");
-	ft_putstr_fd("command \"", 2);
-	ft_putstr_fd(command, 2);
-	ft_putstr_fd("\" not found\n", 2);
 	return ("error");
 }

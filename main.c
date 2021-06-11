@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-int flag_vniz_vverh;
-
 static int count_word(char **str)
 {
 	int i;
@@ -96,7 +94,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 	t_history *tmp;
 	char *save;
 
-	line = calloc(1, 1);
 	tmp = ft_lstnew(NULL);
 	ft_lstadd_back(history, tmp);
 	untils->flag_up_down = 0;
@@ -111,22 +108,60 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		tmp = tmp->next;
 	while (1)
 	{
+		// if (g_sig_f == 1)
+		// {
+		// 	// free(line);
+		// 	// free(tmp->content);
+		// 	// tmp->content = NULL;
+		// 	// line = NULL;
+		// 	while (tmp->back)
+		// 		tmp = tmp->back;
+		// 	if (tmp->content)
+		// 		tmp->content = untils->first;
+		// 	while (tmp->next)
+		// 		tmp = tmp->next;
+		// 	write(1, "\n", 1);
+		// 	g_sig_f = 0;
+		// 	return (tmp->content);
+		// 	break ;
+		// }
+
+		ft_memset(buff, 0, 5);
 		l = read (0, buff, 1);
+
+		if (g_sig_f == 1)
+		{
+			ft_memset(buff, 0, 5);
+			// buff[0] = '\n';
+			write(1, "\n", 1);
+			free(line);
+			line = 0;
+			g_sig_f = 0;
+			return(0);
+		}
 		if (buff[0] == '\n')
 		{
 			write(1, "\n", 1);
-				save = ft_strjoin_line(tmp->content, line);
-				while (tmp->next)
-					tmp = tmp->next;
-				tmp->content = ft_strdup_b(save);
-				free(save);
-				free(line);
-				while (tmp->back)
+			save = ft_strjoin_line(tmp->content, line);
+			while (tmp->next)
+				tmp = tmp->next;
+			tmp->content = ft_strdup_b(save);
+			ft_free(save);
+			while (tmp->back)
+			{
+				if (tmp->line)
 				{
-					if (tmp->line)
-						tmp->content = ft_strdup_b(tmp->line);
-					tmp = tmp->back;
+					// printf("1--------------\n");
+					// if (tmp->content != 0)
+					// {
+					// 	printf("hello %s\n", tmp->content); // здесь получаем ошибку связанную с двойным особождением памяти
+					//ft_free(tmp->content);
+					// }
+					ft_free(tmp->content);
+					tmp->content = ft_strdup_b(tmp->line);
 				}
+				tmp = tmp->back;
+			}
 			if (line && untils->flag == 1)
 			{
 				untils->first = ft_strdup_b(tmp->content);
@@ -135,10 +170,15 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			while (tmp->back)
 				tmp = tmp->back;
 			if (tmp->content)
-				tmp->content = untils->first;
+			{
+				//ft_free(tmp->content); // здесь мы получаем ошибку, что память была освобождена, когда пытаемся прочитать первый элемент истории несколько раз
+				ft_free(tmp->content);
+				tmp->content = ft_strdup_b(untils->first);
+			}
 			while (tmp->next)
 				tmp = tmp->next;
-			return (tmp->content);
+			ft_free(line);
+			return (ft_strdup_b(tmp->content));
 		}
 		else if (buff[0] == '\e')
 		{
@@ -153,7 +193,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					if (line)
 					{
 						tmp->content = ft_strjoin_line(tmp->content, line);
-						line = 0;
+						// ft_free(line);
 					}
 					tmp = tmp->back;
 					write(1, tmp->content, ft_strlen_b(tmp->content));
@@ -169,12 +209,21 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					if (line)
 					{
 						tmp->content = ft_strjoin_line(tmp->content, line);
-						line = 0;
+						// ft_free(line);
 					}
 					tmp = tmp->next;
 					write(1, tmp->content, ft_strlen_b(tmp->content));
 				}
 			}
+		}
+		else if (buff[0] == '\4' && !(ft_strlen(line)) && !(ft_strlen(tmp->content)))
+		{
+			printf("exit\n");
+			// write(1, "exit\n", 5);
+			// write(1, "\n", 1);
+			ft_free(line);
+			//фришить все что есть(структуры и так далее);
+			exit(0);
 		}
 		if (!(strcmp(buff, "\177")))
 		{
@@ -199,17 +248,22 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		}
 		if ((strcmp(buff, "\177") && buff[0] != '\e'))
 		{
-			write (1, &buff[0], 1);
-			line = ft_strjoin_b(line, buff);
+			if (ft_isprint(buff[0]))
+			{
+				write (1, &buff[0], 1);
+				line = ft_strjoin_b(line, buff);
+			}
 		}
 	}
-	return (tmp->content);
+	ft_free(line);
+	return (ft_strdup_b(tmp->content));
 }
 
 int main(int argc, char **argv, char **envp)
 {
 	// char *buff[2];
 	struct termios term;
+	struct termios term2;
 	char *line;
 	char *term_name;
 	t_history *history;
@@ -217,24 +271,38 @@ int main(int argc, char **argv, char **envp)
 
 	history = NULL;
 	line = NULL;
-	untils = malloc(sizeof(t_untils));
-	untils->flag = 1;
-	term_name = "xterm-256color";
+	untils = init_untils(untils);
+	term_name = "xterm-256color"; //костыль достать из envp, если нет то выходим из программы (везде где пользуемся переменными окружения проверяем есть ли она там)
 	tcgetattr(0, &term);
+	tcgetattr(0, &term2);
+	if (envp == 0)
+		exit(1);
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
-	tcsetattr(0, TCSANOW, &term);
+	term.c_cc[VMIN] = 0;
+    term.c_cc[VTIME] = 1;
+	// signal(SIGINT, signal_c);
+	// signal(SIGQUIT, SIG_IGN);
 	tgetent(0, term_name);
 	untils->env = copy_envp(envp, untils->env);
 	while (1)
 	{
+		signal(SIGINT, signal_c);
+		signal(SIGQUIT, SIG_IGN);
+		tcsetattr(0, TCSANOW, &term);
+		// g_sig_f = 0;
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
-		if (!line)
+		// if (!line)
+		// {
 			clear_history(&history);
+		// }
 		untils->fd_in = 99;
 		untils->fd_out = 99;
-		main_parser(line, untils);
+		tcsetattr(0, TCSANOW, &term2);
+		if (line)
+			main_parser(line, untils);
+		ft_free(line);
 	}
 }

@@ -1,321 +1,171 @@
 #include "minishell.h"
 
-static	t_command	*make_list(char **arr_of_command, char *argv)
+t_command	*parser_into_list(char *str1, t_untils *untils)
 {
-	t_command		*start;
-	t_command		*new_element;
-	int				i;
+	t_parser	*current;
+	t_parser	*start;
+	int			i;
+	char 		*str;
 
-	start = 0;
-	new_element = 0;
+
+	//printf("-------------->!%s!\n", str1);
+	if (str1 == 0 || str1[0] == '\0' || str1[0] == '\n')
+		return (0);
 	i = 0;
-	while (i < ft_strlen(argv))
+	int _flag = 0;
+	int _flag_pipes = 0;
+	while (str1[i])
 	{
-		if (arr_of_command[i][0] != '\0')
+		if (str1[i] != ' ' && str1[i] != ';')
+			_flag = 1;
+		//printf("dffsd %c %d\n", str1[i], _flag);
+		if (str1[i] == ';' && _flag == 0)
 		{
-			new_element = ft_lstnew_parser(ft_strdup(arr_of_command[i]), 0);
-			//printf("element = %s\n", arr_of_command[i]);
-			ft_lstadd_back_parser(&start, new_element);
+			//printf("fdsfdfssdfdsfdsfds\n");
+			untils->status = 258;
+			return (ft_lstnew_parser("syntax error near unexpected token `;'", 0));
 		}
 		i++;
 	}
-	i = 0;
-	while (i < ft_strlen(argv))
+	_flag = 0;
+	if (str1[ft_strlen(str1) - 1] == '>' || str1[ft_strlen(str1) - 1] == '<')
 	{
-		free(arr_of_command[i]);
-		i++;
+		untils->status = 258;
+		return (ft_lstnew_parser("syntax error near unexpected token `\\n'", 0));
 	}
-	free(arr_of_command);
-	return (start);
-}
-
-static	void		from_symb_to_command(char **arr_of_command, char *argv)
-{
-	int				i;
-	int				j;
-	int				k;
-	char			*str;
-
-	// j = 0;
-	// while (j < ft_strlen(argv))
-	// {
-	// 	printf("!+++!arr_of_command3[%d] = !%s!\n", j,arr_of_command[j]);
-	// 	j++;
-	// }
-	i = 0;
-	j = 0;
-	while (i < ft_strlen(argv))
+	while (i < ft_strlen(str1))
 	{
-		if (i == ft_strlen(argv) - 1)
-			break ;
-		//printf("++++++++++++++++++++++++++++++++++++++++++++%d %d\n", i, ft_strlen(argv));
-		if (arr_of_command[i][0] != '\0' &&	arr_of_command[i][0] != '\'' && arr_of_command[i][0] != '\"')
+		if (str1[i] == '|' && _flag_pipes == 0)
 		{
-			//printf("1------------------------------------------\n");
-			j = i;
-			while (j < ft_strlen(argv))
-			{
-				//printf("************%d %d\n", j, ft_strlen(argv));
-				if (arr_of_command[j][0] == '\0' || arr_of_command[j][0] == '\'' || arr_of_command[j][0] == '\"')
-					break ;
-				j++;
-			}
-			str = malloc(sizeof(char) * (j - i + 1));
-			ft_bzero(str, (j - i + 1));
-			k =	0;
-			//printf("!!!i = %d j = %d  !%c! !%c!\n", i,j, arr_of_command[i][0], arr_of_command[j][0]);
-			while (i + k < j)
-			{
-				str[k] = arr_of_command[i + k][0];
-				arr_of_command[i + k][0] = '\0';
-				k++;
-			}
-			free(arr_of_command[i]);
-			arr_of_command[i] = str;
-			str = 0;
-			i += k - 1;
-			//printf("i =%d\n",i);
-			// while (++i < j)
-			// 	arr_of_command[i][0] = '\0';
-			//continue ;
+			untils->status = 258;
+			return (ft_lstnew_parser("syntax error near unexpected token '|'", 0));
 		}
-		i++;
-	}
-
-	// j = 0;
-	// while (j < ft_strlen(argv))
-	// {
-	// 	printf("!!arr_of_command3[%d] = !%s!\n", j,arr_of_command[j]);
-	// 	j++;
-	// }
-}
-
-static	void		change_space_to_end_str(char **arr_of_command, char *argv, int flag)
-{
-	int				i;
-	int j;
-
-	i = 0;
-	// j = 0;
-	// while (j < ft_strlen(argv))
-	// {
-	// 	printf("1->arr_of_command3[%d] = !%c!\n", j,arr_of_command[j][0]);
-	// 	j++;
-	// }
-	int t;
-	while (i < ft_strlen(argv))
-	{
-		if (arr_of_command[i][0] == ' ' && i > flag)
-			arr_of_command[i][0] = '\0';
-		//printf("=---------------------------------------------------------------------------=\n");
-		if (arr_of_command[i][0] == '\'')
+		if (str1[i] != '|' && str1[i] != ' ')
+			_flag_pipes = 1;
+		if (str1[i] == '\"' || str1[i] == '\'')
+			_flag++;
+		if (str1[i] == ';' && _flag % 2 == 0)
 		{
-			t = i;
-			i = delete_spaces(arr_of_command, argv, i, '\'');
-			//printf("+++++arr = %s %d\n",arr_of_command[t], i);
-			continue ;
-		}
-		if (arr_of_command[i][0] == '\"')
-		{
-			i = delete_spaces(arr_of_command, argv, i, '\"');
-			continue ;
-		}
-		i++;
-	}
-
-	// j = 0;
-	// while (j < ft_strlen(argv))
-	// {
-	// 	printf("->arr_of_command3[%d] = %c\n", j,arr_of_command[j][0]);
-	// 	j++;
-	// }
-}
-
-static	int		from_str_to_symb(char **arr_of_command, char *argv)
-{
-	int				i;
-	int				flag;
-	int				j;
-	int				double_quotes;
-	int				alone_quotes;
-	int				check_quotes;
-
-	flag = 1;
-	i = 0;
-	j = 0;
-	while (j < ft_strlen(argv))
-	{
-		arr_of_command[j] = malloc(sizeof(char) * 2);
-		ft_bzero(arr_of_command[j], 2);
-		j++;
-	}
-	j = 0;
-	while (i < ft_strlen(argv))
-	{
-		//arr_of_command[j] = malloc(sizeof(char) * 2);
-		//ft_bzero(arr_of_command[j], 2);
-		if (i >= ft_strlen(argv))
-			break ;
-		if (argv[i] == ';')
-		{
-			alone_quotes = 0;
-			double_quotes = 0;
-			check_quotes = i;
-			while (check_quotes >= 0)
-			{
-				if (argv[check_quotes] == '\'')
-					alone_quotes++;
-				if (argv[check_quotes] == '\"')
-					double_quotes++;
-				check_quotes--;
-			}
-			//printf("---->>>%d alone = %d\n", double_quotes, alone_quotes);
-			if (double_quotes % 2 == 0 && alone_quotes % 2 == 0)
-				flag = 1;
-		}
-		//if (argv[i] == ' ')
-		//	flag = 0;
-		if (argv[i] == '\'' && flag)
-		{
-			if (i + 1 < ft_strlen(argv) && argv[i + 1] == '\'')
-			{
-				i += 2;
-				continue ;
-			}
-		}
-		if (argv[i] == '\"' && flag)
-		{
-			if (i + 1 < ft_strlen(argv) && argv[i + 1] == '\"')
-			{
-				i += 2;
-				continue ;
-			}
-		}
-		arr_of_command[j][0] = argv[i];
-		//printf("arr_of_command[%d] = %c\n", j,arr_of_command[j][0]);
-		arr_of_command[j][1] = '\0';
-		if ((argv[i] == '\'' || argv[i] == '\"') && !flag)
-			flag = 1;
-		j++;
-		i++;
-	}
-	while (j < ft_strlen(argv))
-	{
-		arr_of_command[j] = malloc(sizeof(char) * 1);
-		arr_of_command[j][0] = '\0';
-		j++;
-	}
-
-	// j = 0;
-	// while (j < ft_strlen(argv))
-	// {
-	// 	printf("before !arr_of_command3[%d] = !%c!\n", j,arr_of_command[j][0]);
-	// 	j++;
-	// }
-
-	flag = 0;
-	i = 0;
-	while (i < ft_strlen(argv))
-	{
-		if (arr_of_command[i][0] == ' ')
-		{
-			alone_quotes = 0;
-			double_quotes = 0;
-			check_quotes = i;
-			while (check_quotes >= 0)
-			{
-				if (arr_of_command[check_quotes][0] == '\'')
-					alone_quotes++;
-				if (arr_of_command[check_quotes][0] == '\"')
-					double_quotes++;
-				check_quotes--;
-			}
-			//printf("---->>>%d alone = %d\n", double_quotes, alone_quotes);
-			if (double_quotes % 2 == 0 && alone_quotes % 2 == 0)
-			{
-				flag = i;
+			i++;
+			if (i >= ft_strlen(str1))
 				break ;
+			while (str1[i] == ' ')
+				i++;
+			if (i < ft_strlen(str1) && str1[i] == ';')
+			{
+				untils->status = 258;
+				return (ft_lstnew_parser("syntax error near unexpected token `;;'", 0));
+			}
+		}
+		if (str1[i] == '	')
+		{
+			untils->status = 258;
+			return (ft_lstnew_parser("syntax error near unexpected token `	'", 0));
+		}
+		i++;
+	}
+
+	// if (_flag % 2 != 0)
+	// {
+	// 	return (ft_lstnew_parser(ft_strdup("error with quotes _==--_"), 0));
+	// }
+	i = 0;
+	_flag = 0;
+	while (i < ft_strlen(str1))
+	{
+		if (str1[i] == '\"' || str1[i] == '\'')
+			_flag++;
+		if (str1[i] == '|' && _flag % 2 == 0)
+		{
+			i++;
+			if (i >= ft_strlen(str1))
+				break ;
+			while (str1[i] == ' ')
+				i++;
+			if (i < ft_strlen(str1) && str1[i] == '|')
+			{
+				i++;
+				if (i >= ft_strlen(str1))
+					break ;
+				while (str1[i] == ' ')
+					i++;
+				if (i < ft_strlen(str1) && str1[i] == '|')
+				{
+					untils->status = 258;
+					return (ft_lstnew_parser("syntax error near unexpected token `|'", 0));
+				}
 			}
 		}
 		i++;
 	}
-	//printf("flag = %d\n", flag);
-	j = 0;
-	int iterator;
-	int number_of_quotes = 0;
-	if (!flag)
-		flag = ft_strlen(argv) - 1;
-	//flag = 0;
-	if (double_quotes > 0 || alone_quotes > 0)
+
+	str = ft_strdup(str1);
+	//printf("--2------------>!%s!\n", str1);
+	start = assigning_code_to_elements(str);
+	ft_free(str);
+	//printf("fds %s\n", start->symbol);
+	current = start;
+	char u;
+	while (current)
 	{
-	while (j < flag)
-	{
-		if (arr_of_command[j][0] == '\'')
+		if (current->symbol[0] == '\\' && current->next == 0)
 		{
-			//printf("iterator = %d\n", j);
-			iterator = j;
-			while (iterator + 1 < ft_strlen(argv))
-			{
-				//printf("arrr1 = %s !%s!\n", arr_of_command[iterator], arr_of_command[iterator+1]);
-				arr_of_command[iterator][0] = arr_of_command[iterator + 1][0];
-				//printf("arrr2 = %s\n", arr_of_command[iterator]);
-				iterator++;
-			}
-			arr_of_command[iterator][0] = '\0';//ft_strdup("");
-			number_of_quotes++;
-			j = 0;
+			u = ' ';
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(ft_strdup(&u), -1, 0));
 		}
-		else if (arr_of_command[j][0] == '\"')
-		{
-			//printf("iterator = %d\n", j);
-			iterator = j;
-			while (iterator + 1 < ft_strlen(argv))
-			{
-				//printf("arrr1 = %s !%s!\n", arr_of_command[iterator], arr_of_command[iterator+1]);
-				arr_of_command[iterator][0] = arr_of_command[iterator + 1][0];
-				//printf("arrr2 = %s\n", arr_of_command[iterator]);
-				iterator++;
-			}
-			arr_of_command[iterator][0] = '\0';//ft_strdup("");
-			number_of_quotes++;
-			j = 0;
-		}
-		j++;
+		current = current->next;
 	}
-	// j = 0;
-	if (flag - number_of_quotes > -1 && number_of_quotes > 0)
+	start = remove_paired_quotes(start);
+	// printf_list(start);
+	start = replacing_character_codes_in_single_quotes(start);
+	// printf_list(start);
+	start = escaping_characters(start);
+
+	current = start;
+	int		count = 0;
+	int		count_double = 0;
+	// printf_list(start);
+	while (current)
 	{
-		//arr_of_command[flag - 1 - number_of_quotes][0] = ' ';
-		//printf("************%d %d\n", flag, number_of_quotes);
-		arr_of_command[flag - number_of_quotes][0] = '\0';
+		if (current->symbol[0] == '\'' && current->special != 0 && count_double % 2 == 0)//если ковычек не четное число то выходим с error
+		{
+			count++;
+		}
+		if (current->symbol[0] == '\"' && current->special != 0 && count % 2 == 0)//если ковычек не четное число то выходим с нулем
+		{
+			count_double++;
+		}
+		current = current->next;
 	}
+	if (count % 2 != 0 || count_double % 2 != 0)
+	{
+		ft_lstclear_parser2(&start);
+		return (ft_lstnew_parser("error with quotes", 0));
+	}
+	start = change_escape_code_in_double_quotes(start);
+	t_parser *list_of_command;
+	list_of_command = assigning_symbols_to_command(start);
+
+	current = list_of_command;
+	while (current)
+	{
+		//printf("6.6.6------------------------%s\n", current->symbol);
+		if (current->symbol[0] == '>' || current->symbol[0] == '<') //  проверяю, чтобы после каждого редиректа что-то было
+		{
+			//printf("gfdshkjbgfjkdsjkfgsf------------->%c\n",current->next->symbol[0] );
+			if (current->next && (current->next->symbol[0] == '>' || current->next->symbol[0] == '<' || current->next->symbol[0] == ' ' || current->next->symbol[0] == ';' || current->next->symbol[0] == '|'))
+				return (ft_lstnew_parser("syntax error near unexpected token `>' or '<' or '>>'", 0));
+		}
+		//printf("5.5.5------------------------\n");
+		current = current->next;
+	}
+	//printf_list(list_of_command);
+	if (list_of_command->symbol[0] == '\0')
+	{
+		current = list_of_command;
+		list_of_command = list_of_command->next;
+		delete_current_parser2(current);
 	}
 
-
-
-	j = 0;
-	// while (j < ft_strlen(argv))
-	// {
-	// 	printf("!arr_of_command3[%d] = !%c!\n", j,arr_of_command[j][0]);
-	// 	j++;
-	// }
-	return (flag - 3);
-}
-
-t_command			*parser_into_list(char *argv)
-{
-	int				i;
-	int flag;
-	char			**arr_of_command;
-
-	i = 0;
-	arr_of_command = malloc(sizeof(char*) * ft_strlen(argv));
-	if (check_double_semicolon(argv) != 0)
-		return (check_double_semicolon(argv));
-	if (add_quotes(argv))
-		argv = add_quotes(argv);
-	flag = from_str_to_symb(arr_of_command, argv);
-	change_space_to_end_str(arr_of_command, argv, flag);
-	from_symb_to_command(arr_of_command, argv);
-	return (make_list(arr_of_command, argv));
+	return (command_transmission_to_bsopia(list_of_command, untils));
 }
