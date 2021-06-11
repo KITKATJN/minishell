@@ -34,6 +34,54 @@ static void	ft_exit2(t_command *command, t_untils *untils, int error)
 	exit(error);
 }
 
+static void	ft_exit_3(t_command *command, t_untils *untils, int error)
+{
+	if (command->next->command[0] == '-')
+	{
+		if (ft_strlen(command->next->command)
+			> ft_strlen("-9223372036854775808"))
+		{
+			printf("exit\n%s: numeric argument required\n",
+				command->next->command);
+			ft_exit2(command, untils, 255);
+		}
+		else if (ft_strlen(command->next->command)
+			== ft_strlen("-9223372036854775808"))
+		{
+			if (ft_strcmp(command->next->command, "-9223372036854775808") > 0)
+			{
+				printf("exit\n%s: numeric argument required\n",
+					command->next->command);
+				ft_exit2(command, untils, 255);
+			}
+		}
+		error = (unsigned char)ft_atoi_long_long(command->next->command);
+		printf("exit\n");
+		ft_exit2(command, untils, error);
+	}
+}
+
+static void	ft_exit_4(t_command *command, t_untils *untils, int error)
+{
+	if (ft_strlen(command->next->command) > ft_strlen("9223372036854775807"))
+	{
+		printf("exit\n%s: numeric argument required\n", command->next->command);
+		ft_exit2(command, untils, 255);
+	}
+	else if (ft_strlen(command->next->command)
+		== ft_strlen("9223372036854775807"))
+	{
+		if (ft_strcmp(command->next->command, "9223372036854775807") > 0)
+		{
+			printf("exit\n%s: numeric argument required\n",
+				command->next->command);
+			ft_exit2(command, untils, 255);
+		}
+	}
+	error = (unsigned char)ft_atoi_long_long(command->next->command);
+	ft_exit2(command, untils, error);
+}
+
 void	ft_exit(t_command *command, t_untils *untils)
 {
 	int	error;
@@ -46,17 +94,21 @@ void	ft_exit(t_command *command, t_untils *untils)
 	}
 	if (command->next->next == 0)
 	{
-		i = 0;
-		while (command->next->command[i] != 0)
+		i = -1;
+		while (command->next->command[++i] != 0)
 		{
 			if (ft_isalpha(command->next->command[i]))
 			{
-				ft_exit2(command, untils, EXIT_NOT_FOUND);
+				printf("exit\n%s: numeric argument required\n",
+					command->next->command);
+				ft_exit2(command, untils, 255);
 			}
-			i++;
 		}
-		error = (unsigned char)ft_atoi(command->next->command);
-		ft_exit2(command, untils, error);
+		if (command->next->command[0] == '-')
+			ft_exit_3(command, untils, error);
+		else
+			ft_exit_4(command, untils, error);
 	}
+	printf("exit: too many arguments\n");
 	ft_exit2(command, untils, EXIT_FAILURE);
 }

@@ -102,12 +102,15 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		current = current->next;
 	}
 	start = remove_paired_quotes(start);
+	printf_list(start);
 	start = replacing_character_codes_in_single_quotes(start);
+	printf_list(start);
 	start = escaping_characters(start);
 
 	current = start;
 	int		count = 0;
 	int		count_double = 0;
+	printf_list(start);
 	while (current)
 	{
 		if (current->symbol[0] == '\'' && current->special != 0 && count_double % 2 == 0)//если ковычек не четное число то выходим с error
@@ -122,7 +125,8 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	}
 	if (count % 2 != 0 || count_double % 2 != 0)
 	{
-		return (ft_lstnew_parser(ft_strdup("error with quotes"), 0));
+		ft_lstclear_parser2(&start);
+		return (ft_lstnew_parser("error with quotes", 0));
 	}
 	start = change_escape_code_in_double_quotes(start);
 	t_parser *list_of_command;
