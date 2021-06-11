@@ -66,7 +66,7 @@ char **export_add(char **cp_env, char *str, t_untils *untils)
 	i = 0;
 	if (check_name(str))
 	{
-		printf("error\n");
+		printf("export: %s: not a valid identifier\n", str);
 		untils->status = 1;
 		return (cp_env);
 	}

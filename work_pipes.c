@@ -71,8 +71,8 @@ int work_pipes(t_untils *untils, t_command *start)
 			// printf("DOSTAL\n");
 			while(bin[i])
 			{
-				command = ft_strjoin_line(bin[i], commd);
 				//проверка на наличие PATH;
+				command = ft_strjoin_line(bin[i], commd);
 				execve(command, arguments, untils->env);
 				i++;
 			}

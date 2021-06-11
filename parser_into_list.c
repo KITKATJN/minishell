@@ -15,11 +15,17 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	int _flag = 0;
 	int _flag_pipes = 0;
 	if (str1[ft_strlen(str1) - 1] == '>' || str1[ft_strlen(str1) - 1] == '<')
+	{
+		untils->status = 258;
 		return (ft_lstnew_parser("syntax error near unexpected token `\\n'", 0));
+	}
 	while (i < ft_strlen(str1))
 	{
 		if (str1[i] == '|' && _flag_pipes == 0)
+		{
+			untils->status = 258;
 			return (ft_lstnew_parser("syntax error near unexpected token '|'", 0));
+		}
 		if (str1[i] != '|' && str1[i] != ' ')
 			_flag_pipes = 1;
 		if (str1[i] == '\"' || str1[i] == '\'')
@@ -32,10 +38,14 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 			while (str1[i] == ' ')
 				i++;
 			if (i < ft_strlen(str1) && str1[i] == ';')
+			{
+				untils->status = 258;
 				return (ft_lstnew_parser("syntax error near unexpected token `;;'", 0));
+			}
 		}
 		if (str1[i] == '	')
 		{
+			untils->status = 258;
 			return (ft_lstnew_parser("syntax error near unexpected token `	'", 0));
 		}
 		i++;
@@ -66,7 +76,10 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 				while (str1[i] == ' ')
 					i++;
 				if (i < ft_strlen(str1) && str1[i] == '|')
+				{
+					untils->status = 258;
 					return (ft_lstnew_parser("syntax error near unexpected token `|'", 0));
+				}
 			}
 		}
 		i++;

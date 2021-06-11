@@ -43,13 +43,23 @@ void work_bin(t_command *com, t_untils *untils)
 	int j;
 
 	i = 0;
+	j = 0;
 	save = com;
 	argument = 0;
 	argument = get_argument(com);
 	com = save;
-	j = 0;
 	execve(com->command, argument, NULL);
-	printf("! %s !\n", strerror(errno));
-	printf("%s\n", com->command);
+	// printf("! %s !\n", strerror(errno));
+	// printf("%s\n", com->command);
+	while(com->command[i])
+	{
+		if (com->command[i] == '/' && com->command[i] == '\0')
+		{
+			printf("%s: is a directory\n", com->command);
+			exit(126);
+		}
+		i++;
+	}
+	printf("%s: No such file or directory\n", com->command);
 	exit (127);
 }

@@ -149,19 +149,11 @@ void bsophia_function(t_command *list, t_untils *untils)
 		while (list->next)
 		{
 			if (check_name(list->command))
-			{
-				printf("export error\n");
 				check_redir(list, 1, untils);
-				return ;
-			}
 			list = list->next;
 		}
 		if (check_name(list->command))
-		{
-			printf("export error\n");
 			check_redir(list, 1, untils);
-			return ;
-		}
 		while (list->back)
 		{
 			if (!(ft_strcmp(list->command, "export")))
