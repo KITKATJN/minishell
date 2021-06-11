@@ -94,7 +94,6 @@ char					**f_unset_line(char **cp_env, char *str, t_untils *untils);
 t_command				*check_double_semicolon(char *argv);
 t_command				*ft_lstnew_parser(void *command, void *flag);
 void					ft_lstadd_back_parser(t_command **lst, t_command *new);
-char					*add_quotes(char *str);
 void					delete_tcommand(t_command *command);
 void					ft_perror(char *error);
 void					parse_add_semicolon_to_end(t_command *start);

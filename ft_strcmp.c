@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int		ft_strcmp(char *str, char *str1)
+int	ft_strcmp(char *str, char *str1)
 {
 	int	i;
 

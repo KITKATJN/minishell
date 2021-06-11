@@ -8,7 +8,7 @@ LIST 	=	backspace.c \
 			export.c ft_lstadd_back.c ft_lstnew.c \
 			ft_lstsize.c ft_strdup.c ft_strjoin_line.c \
 			main.c pwd.c unset.c untils_func.c \
-			add_quotes.c func_lst_tcommand.c check_double_semicolon.c \
+			func_lst_tcommand.c check_double_semicolon.c \
 			delete_spaces.c delete_tcommand.c ft_check_command.c \
 			ft_perror.c main_parser.c assigning_symbols_to_command.c \
 			parse_add_semicolon_to_end.c func_lst_parser.c \

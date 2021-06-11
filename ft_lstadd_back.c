@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void		ft_lstadd_back(t_history **lst, t_history *new)
+void	ft_lstadd_back(t_history **lst, t_history *new)
 {
 	t_history	*temp;
 

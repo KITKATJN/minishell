@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_history		*ft_lstnew(void *content)
+t_history	*ft_lstnew(void *content)
 {
 	t_history	*new;
 

@@ -4,7 +4,7 @@ t_parser	*ft_lstnew_parser2(char *symbol, int special, int *special_array)
 {
 	t_parser	*lst;
 
-	lst = (t_parser*)malloc(sizeof(t_parser));
+	lst = (t_parser *)malloc(sizeof(t_parser));
 	if (lst)
 	{
 		lst->symbol = symbol;
@@ -16,7 +16,7 @@ t_parser	*ft_lstnew_parser2(char *symbol, int special, int *special_array)
 	return (lst);
 }
 
-void		ft_lstclear_parser2(t_parser **lst)
+void	ft_lstclear_parser2(t_parser **lst)
 {
 	t_parser	*head;
 	t_parser	*temp;

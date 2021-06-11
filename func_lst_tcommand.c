@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void		ft_lstclear_command(t_command **lst)
+void	ft_lstclear_command(t_command **lst)
 {
 	t_command	*head;
 	t_command	*temp;
@@ -21,7 +21,7 @@ t_command	*ft_lstnew_parser(void *command, void *flag)
 {
 	t_command	*lst;
 
-	lst = (t_command*)malloc(sizeof(t_command));
+	lst = (t_command *)malloc(sizeof(t_command));
 	if (lst)
 	{
 		lst->command = command;
