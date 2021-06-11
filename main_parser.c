@@ -142,6 +142,10 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			{
 				signal(SIGINT, SIG_DFL);
 				signal(SIGQUIT, SIG_DFL);
+				// signal(SIGINT, SIG_IGN);
+				// signal(SIGTERM, SIG_IGN);
+				// signal(SIGQUIT, SIG_IGN);
+				
 				if (check_bin(start->command))
 				{
 					if (!check_redir(start, 2, untils))
@@ -189,6 +193,9 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			{
 				signal(SIGINT, SIG_DFL);
 				signal(SIGQUIT, SIG_DFL);
+				// signal(SIGINT, SIG_IGN);
+				// signal(SIGTERM, SIG_IGN);
+				// signal(SIGQUIT, SIG_IGN);
 				//дочка
 				char *commd;
 				commd = ft_strjoin_line("/", untils->command_ex);
@@ -301,6 +308,9 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 			process[j] = fork();
 			if (process[j] == 0)
 			{
+				// signal(SIGINT, SIG_IGN);
+				// signal(SIGTERM, SIG_IGN);
+				// signal(SIGQUIT, SIG_IGN);
 				signal(SIGINT, SIG_DFL);
 				signal(SIGQUIT, SIG_DFL);
 				connect_stdio_to_pipes(prev_pipe_fds, next_pipe_fds);

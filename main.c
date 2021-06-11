@@ -132,7 +132,8 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		if (g_sig_f == 1)
 		{
 			ft_memset(buff, 0, 5);
-			buff[0] = '\n';
+			// buff[0] = '\n';
+			write(1, "\n", 1);
 			free(line);
 			line = 0;
 			g_sig_f = 0;
@@ -218,6 +219,8 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		else if (buff[0] == '\4' && !(ft_strlen(line)) && !(ft_strlen(tmp->content)))
 		{
 			printf("exit\n");
+			// write(1, "exit\n", 5);
+			// write(1, "\n", 1);
 			ft_free(line);
 			//фришить все что есть(структуры и так далее);
 			exit(0);
@@ -275,13 +278,15 @@ int main(int argc, char **argv, char **envp)
 	term.c_lflag &= ~(ICANON);
 	term.c_cc[VMIN] = 0;
     term.c_cc[VTIME] = 1;
-	signal(SIGINT, signal_c);
-	signal(SIGQUIT, signal_slash);
+	// signal(SIGINT, signal_c);
+	// signal(SIGQUIT, SIG_IGN);
 	tgetent(0, term_name);
 	untils->env = copy_envp(envp, untils->env);
 	while (1)
 	{
 		tcsetattr(0, TCSANOW, &term);
+		signal(SIGINT, signal_c);
+		signal(SIGQUIT, SIG_IGN);
 		// g_sig_f = 0;
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
