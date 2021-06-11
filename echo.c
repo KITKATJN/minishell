@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int f_echo(char *str, int i)
+int	f_echo(char *str, int i)
 {
 	if (i == 1)
 	{

@@ -1,32 +1,33 @@
 #include "minishell.h"
 
-int ft_putchar(int c)
+int	ft_putchar(int c)
 {
 	write(1, &c, 1);
-	return(0);
+	return (0);
 }
 
-int ft_strlen_b(char *str)
+int	ft_strlen_b(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (str == NULL)
 		return (0);
-	while(str[i] != '\0')
+	while (str[i] != '\0')
 		i++;
 	return (i);
 }
 
-char *ft_strjoin_b(char *s1, char *s2)
+char	*ft_strjoin_b(char *s1, char *s2)
 {
-	char *result;
-	int i;
-	int j;
+	char	*result;
+	int		i;
+	int		j;
 
 	i = 0;
 	j = 0;
-	if (!(result = malloc(ft_strlen_b(s1) + ft_strlen_b(s2) + 1)))
+	result = malloc(ft_strlen_b(s1) + ft_strlen_b(s2) + 1);
+	if (!result)
 		return (NULL);
 	while (s1 && s1[i] != '\0')
 		result[j++] = s1[i++];
@@ -37,7 +38,7 @@ char *ft_strjoin_b(char *s1, char *s2)
 	return (result);
 }
 
-int		ft_lstsize_2(t_command *lst)
+int	ft_lstsize_2(t_command *lst)
 {
 	int	i;
 

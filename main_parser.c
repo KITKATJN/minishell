@@ -20,6 +20,15 @@ t_command		*redirect_check(t_command *com)
 		close (ff);
 		return (start);
 	}
+	if (com->command[0] == '<' && com->command[1] == '\0')
+	{
+		start = com->next->next;
+		if (start != 0)
+			start->redir_double_right = ft_strdup(com->next->command);
+		int gg = open(com->redir_left, O_RDWR);
+		close(gg);
+		return (start);
+	}
 	//printf_command_list(com);
 	start = com;
 	while (start)
@@ -165,7 +174,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 				// signal(SIGINT, SIG_IGN);
 				// signal(SIGTERM, SIG_IGN);
 				// signal(SIGQUIT, SIG_IGN);
-				
+
 				if (check_bin(start->command))
 				{
 					if (!check_redir(start, 2, untils))
@@ -179,7 +188,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 				}
 			// {
 			// 	work_bin(start, untils);
-			
+
 			// start = start->next;
 			ft_free(untils->path);
 			untils->path = find_path(untils);

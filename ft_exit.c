@@ -27,7 +27,7 @@ static	int	ft_atoi_long_long(const char *nptr)
 	return ((int)(j * minus));
 }
 
-static void	ft_exit2(t_command *command, t_untils *untils, int error)
+void	ft_exit2(t_command *command, t_untils *untils, int error)
 {
 	delete_current_parser_for_command_list(command);
 	delete_current_untils(untils);
@@ -87,11 +87,7 @@ void	ft_exit(t_command *command, t_untils *untils)
 	int	error;
 	int	i;
 
-	if (command->next == 0)
-	{
-		error = untils->status;
-		ft_exit2(command, untils, error);
-	}
+	check_name_exit(command, untils, error);
 	if (command->next->next == 0)
 	{
 		i = -1;
@@ -109,6 +105,6 @@ void	ft_exit(t_command *command, t_untils *untils)
 		else
 			ft_exit_4(command, untils, error);
 	}
-	printf("exit: too many arguments\n");
-	ft_exit2(command, untils, EXIT_FAILURE);
+	check_name_exit_2(command, untils, error);
+	last(command, untils, error);
 }
