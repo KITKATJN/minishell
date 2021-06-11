@@ -14,6 +14,24 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	i = 0;
 	int _flag = 0;
 	int _flag_pipes = 0;
+
+	i = ft_strlen(str1) - 1;
+	while (i > -1)
+	{
+		if (str1[i] != ' ' && str1[i] != '|')
+			_flag = 1;
+		//printf("dffsd %c %d\n", str1[i], _flag);
+		if (str1[i] == '|' && _flag == 0)
+		{
+			//printf("fdsfdfssdfdsfdsfds\n");
+			untils->status = 258;
+			return (ft_lstnew_parser("syntax error near unexpected token `|'", 0));
+		}
+		i--;
+	}
+
+	_flag = 0;
+	i = 0;
 	while (str1[i])
 	{
 		if (str1[i] != ' ' && str1[i] != ';')
@@ -164,6 +182,7 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	if (count % 2 != 0 || count_double % 2 != 0)
 	{
 		ft_lstclear_parser2(&start);
+		untils->status = 1;
 		return (ft_lstnew_parser("error with quotes", 0));
 	}
 	start = change_escape_code_in_double_quotes(start);

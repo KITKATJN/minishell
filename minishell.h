@@ -53,6 +53,15 @@ typedef struct s_helper_parser
 	char				*c;
 }						t_helper_parser;
 
+typedef struct s_rdqic
+{
+	char				*start;
+	char				*temporary;
+	char				*first_part;
+	char				*second_part;
+	char				*tmp;
+}						t_rdqic;
+
 typedef struct s_parser
 {
 	char				*symbol;

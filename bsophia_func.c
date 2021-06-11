@@ -27,7 +27,9 @@ static void	echo_2(t_command *list, t_untils *untils)
 	}
 	while (list && ft_strcmp(list->command, "|") && ft_strcmp(list->command, ";"))
 	{
+		tmp = line;
 		line = ft_strjoin_line(line, list->command);
+		ft_free(tmp);
 		if (ft_lstsize_2(list) != 1)
 		{
 			tmp = line;
@@ -117,7 +119,7 @@ int check_redir(t_command *list, int i, t_untils *untils)
 void bsophia_function(t_command *list, t_untils *untils)
 {
 	int i = 0;
-	
+
 	if (!check_redir(list, 2, untils))
 		return ;
 	while (list->command[i])

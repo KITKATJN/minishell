@@ -291,7 +291,7 @@ int main(int argc, char **argv, char **envp)
 		signal(SIGQUIT, SIG_IGN);
 		tcsetattr(0, TCSANOW, &term);
 		// g_sig_f = 0;
-		tputs("$S> ", 1, ft_putchar);
+		tputs("MY_DICK_IS_VERY_BIG$S E-bash-> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
 		// if (!line)
