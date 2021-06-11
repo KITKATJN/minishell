@@ -248,9 +248,11 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		}
 		if ((strcmp(buff, "\177") && buff[0] != '\e'))
 		{
-			write (1, &buff[0], 1);
 			if (ft_isprint(buff[0]))
+			{
+				write (1, &buff[0], 1);
 				line = ft_strjoin_b(line, buff);
+			}
 		}
 	}
 	ft_free(line);
@@ -273,7 +275,8 @@ int main(int argc, char **argv, char **envp)
 	term_name = "xterm-256color"; //костыль достать из envp, если нет то выходим из программы (везде где пользуемся переменными окружения проверяем есть ли она там)
 	tcgetattr(0, &term);
 	tcgetattr(0, &term2);
-	//проверка на envp;
+	if (envp == 0)
+		exit(1);
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
 	term.c_cc[VMIN] = 0;
@@ -284,9 +287,9 @@ int main(int argc, char **argv, char **envp)
 	untils->env = copy_envp(envp, untils->env);
 	while (1)
 	{
-		tcsetattr(0, TCSANOW, &term);
 		signal(SIGINT, signal_c);
 		signal(SIGQUIT, SIG_IGN);
+		tcsetattr(0, TCSANOW, &term);
 		// g_sig_f = 0;
 		tputs("$S> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
