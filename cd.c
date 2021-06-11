@@ -27,6 +27,7 @@ static void	cd_home(t_command *list, t_untils *untils)
 	char	*line;
 	int		i;
 	char	*pwd;
+	char	*tmp;
 
 	line = NULL;
 	home = find_home(untils);
@@ -37,17 +38,25 @@ static void	cd_home(t_command *list, t_untils *untils)
 		return ;
 	}
 	pwd = getcwd(line, 0);
+	tmp = pwd;
 	pwd = ft_strjoin_line("OLDPWD=", pwd);
+	ft_free(tmp);
 	export_add(untils->env, pwd, untils);
+	ft_free(pwd);
 	if (chdir(home) == -1)
 	{
+		ft_free(home);
 		printf("cd: %s\n", strerror(errno));
 		untils->status = 1;
 		return ;
 	}
+	ft_free(home);
 	pwd = getcwd(line, 0);
+	home = pwd;
 	pwd = ft_strjoin_line("PWD=", pwd);
+	ft_free(home);
 	export_add(untils->env, pwd, untils);
+	ft_free(pwd);
 }
 
 static void	f_cd_2(t_command *list, t_untils *untils)

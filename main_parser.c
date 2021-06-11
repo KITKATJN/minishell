@@ -50,6 +50,7 @@ while (start != 0 && (start->command[0] == '>' || start->command[0] == '<'))
 	{
 		if (start->command[0] == '>' && start->command[1] == '>')
 		{
+			ft_free(com->redir_double_right);
 			com->redir_double_right = ft_strdup(start->next->command);
 			int gf = open(com->redir_double_right, O_CREAT | O_WRONLY | O_APPEND, 0777);
 			close (gf);
@@ -71,6 +72,7 @@ while (start != 0 && (start->command[0] == '>' || start->command[0] == '<'))
 		}
 		else if (start->command[0] == '>')
 		{
+			ft_free(com->redir_right);
 			com->redir_right = ft_strdup(start->next->command);
 			int ff = open(com->redir_right, O_CREAT | O_WRONLY | O_TRUNC, 0777);
 			close (ff);
