@@ -2,7 +2,6 @@
 
 char	*ft_check_command(char *command)
 {
-	//printf("1----------------tmp = %s\ncommand--->%s\n", tmp, command);
 	if (command[0] == 'e')
 	{
 		if (!ft_strncmp(command, "echo", 4))
@@ -24,8 +23,5 @@ char	*ft_check_command(char *command)
 		return ("pwd");
 	if (!ft_strncmp(command, "unset", ft_strlen(command)))
 		return ("unset");
-	// ft_putstr_fd("command \"", 2);
-	// ft_putstr_fd(command, 2);
-	// ft_putstr_fd("\" not found\n", 2);
 	return ("error");
 }
