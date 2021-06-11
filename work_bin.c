@@ -1,11 +1,11 @@
 #include "minishell.h"
 
-static char **get_argument(t_command *com)
+static char	**get_argument(t_command *com)
 {
-	int i;
-	char **argument;
-	t_command *save;
-	int j;
+	int			i;
+	char		**argument;
+	t_command	*save;
+	int			j;
 
 	save = com;
 	i = 0;
@@ -35,12 +35,12 @@ static char **get_argument(t_command *com)
 	return (argument);
 }
 
-void work_bin(t_command *com, t_untils *untils)
+void	work_bin(t_command *com, t_untils *untils)
 {
-	int i;
-	char **argument;
-	t_command *save;
-	int j;
+	int			i;
+	char		**argument;
+	t_command	*save;
+	int			j;
 
 	i = 0;
 	j = 0;
@@ -49,7 +49,6 @@ void work_bin(t_command *com, t_untils *untils)
 	argument = get_argument(com);
 	com = save;
 	execve(com->command, argument, NULL);
-	printf("errno %d\n", errno);
 	if (errno == 13)
 	{
 		printf("%s: is a directory\n", com->command);

@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-t_parser		*change_escape_code_in_double_quotes(t_parser *start)
+t_parser	*change_escape_code_in_double_quotes(t_parser *start)
 {
-	t_parser *current;
+	t_parser	*current;
 
 	current = start;
 	while (current)
@@ -24,7 +24,7 @@ t_parser		*change_escape_code_in_double_quotes(t_parser *start)
 	return (start);
 }
 
-t_parser		*escaping_characters(t_parser *start)
+t_parser	*escaping_characters(t_parser *start)
 {
 	t_parser	*current;
 	t_parser	*next;

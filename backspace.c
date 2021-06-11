@@ -1,10 +1,10 @@
 #include "minishell.h"
 
-char *backspace(char *str)
+char	*backspace(char *str)
 {
-	int i;
-	char *n_str;
-	int k;
+	int		i;
+	char	*n_str;
+	int		k;
 
 	k = 0;
 	i = 0;
@@ -17,5 +17,5 @@ char *backspace(char *str)
 	}
 	n_str[k] = '\0';
 	ft_free(str);
-	return(n_str);
+	return (n_str);
 }

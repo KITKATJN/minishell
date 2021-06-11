@@ -14,6 +14,20 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	i = 0;
 	int _flag = 0;
 	int _flag_pipes = 0;
+	while (str1[i])
+	{
+		if (str1[i] != ' ' && str1[i] != ';')
+			_flag = 1;
+		//printf("dffsd %c %d\n", str1[i], _flag);
+		if (str1[i] == ';' && _flag == 0)
+		{
+			//printf("fdsfdfssdfdsfdsfds\n");
+			untils->status = 258;
+			return (ft_lstnew_parser("syntax error near unexpected token `;'", 0));
+		}
+		i++;
+	}
+	_flag = 0;
 	if (str1[ft_strlen(str1) - 1] == '>' || str1[ft_strlen(str1) - 1] == '<')
 	{
 		untils->status = 258;
@@ -103,14 +117,38 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	}
 	start = remove_paired_quotes(start);
 	//printf_list(start);
+	//printf_list(start);
+	current = start;
+	//printf("sdfsd\n");
+	while (current)
+	{
+		if (current->symbol[0] == '\"' && current->back->symbol[0] != '\\')
+		{
+			current = current->next;
+			while (current != 0)
+			{
+			//	printf("44\n");
+				if (current->symbol[0] == '\"' && current->back->symbol[0] != '\\')
+					break ;
+				if (current->special == 1)
+					current->special = 0;
+				current = current->next;
+			}
+		}
+		if (current == 0)
+			break ;
+		current = current->next;
+	}
+
 	start = replacing_character_codes_in_single_quotes(start);
+	//printf_list(start);
 	//printf_list(start);
 	start = escaping_characters(start);
 
 	current = start;
 	int		count = 0;
 	int		count_double = 0;
-	printf_list(start);
+	// printf_list(start);
 	while (current)
 	{
 		if (current->symbol[0] == '\'' && current->special != 0 && count_double % 2 == 0)//если ковычек не четное число то выходим с error

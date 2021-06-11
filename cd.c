@@ -1,9 +1,9 @@
 #include "minishell.h"
 
-static char *find_home(t_untils *untils)
+static char	*find_home(t_untils *untils)
 {
-	int i;
-	char *home;
+	int		i;
+	char	*home;
 
 	home = NULL;
 	i = 0;
@@ -21,14 +21,14 @@ static char *find_home(t_untils *untils)
 	return (NULL);
 }
 
-static void cd_home(t_command *list, t_untils *untils)
+static void	cd_home(t_command *list, t_untils *untils)
 {
-	char *home;
-	char *line;
-	int i;
-	char *pwd;
+	char	*home;
+	char	*line;
+	int		i;
+	char	*pwd;
 
-	line  = NULL;
+	line = NULL;
 	home = find_home(untils);
 	if (!home)
 	{
@@ -39,10 +39,9 @@ static void cd_home(t_command *list, t_untils *untils)
 	pwd = getcwd(line, 0);
 	pwd = ft_strjoin_line("OLDPWD=", pwd);
 	export_add(untils->env, pwd, untils);
-	i = chdir(home);
-	if (i == -1)
+	if (chdir(home) == -1)
 	{
-		printf("! %s !\n", strerror(errno));
+		printf("cd: %s\n", strerror(errno));
 		untils->status = 1;
 		return ;
 	}
@@ -51,32 +50,45 @@ static void cd_home(t_command *list, t_untils *untils)
 	export_add(untils->env, pwd, untils);
 }
 
-int f_cd(t_command *list, t_untils *untils)
+static void	f_cd_2(t_command *list, t_untils *untils)
 {
-	int i;
-	char *line;
-	char *pwd;
-	
+	char	*pwd;
+	char	*tmp;
+	char	*line;
+
+	pwd = getcwd(line, 0);
+	tmp = pwd;
+	pwd = ft_strjoin_line("PWD=", pwd);
+	ft_free(tmp);
+	export_add(untils->env, pwd, untils);
+	ft_free(pwd);
+}
+
+int	f_cd(t_command *list, t_untils *untils)
+{
+	int		i;
+	char	*line;
+	char	*pwd;
+	char	*tmp;
+
 	if (!(list->next))
 	{
-		cd_home(list,untils);
+		cd_home(list, untils);
 		return (1);
 	}
 	line = NULL;
 	pwd = getcwd(line, 0);
+	tmp = pwd;
 	pwd = ft_strjoin_line("OLDPWD=", pwd);
-	//возможно утечка line
+	ft_free(tmp);
 	export_add(untils->env, pwd, untils);
+	ft_free(pwd);
 	list = list->next;
-	i = chdir(list->command);
-	if (i == -1)
+	if (chdir(list->command) == -1)
 	{
-		printf("! %s !\n", strerror(errno));
+		printf("cd: %s\n", strerror(errno));
 		untils->status = 1;
 	}
-	pwd = getcwd(line, 0);
-	pwd = ft_strjoin_line("PWD=", pwd);
-	export_add(untils->env, pwd, untils);
-	//возможно утечка line
+	f_cd_2(list, untils);
 	return (i);
 }

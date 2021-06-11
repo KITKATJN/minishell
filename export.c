@@ -1,9 +1,9 @@
 #include "minishell.h"
 
-static int compare_to_equal(char *s1, char *s2)
+static int	compare_to_equal(char *s1, char *s2)
 {
-	int i;
-	int flag;
+	int	i;
+	int	flag;
 
 	i = 0;
 	flag = 0;
@@ -18,16 +18,16 @@ static int compare_to_equal(char *s1, char *s2)
 	return (0);
 }
 
-int check_name(char *str)
+int	check_name(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!(ft_isalpha(str[0])) && str[0] != '_')
 		return (1);
 	while (str[i] != '\0' && str[i] != '=')
 	{
-		if (!(ft_isalpha(str[i])) && (!(ft_isdigit(str[i]))) 
+		if (!(ft_isalpha(str[i])) && (!(ft_isdigit(str[i])))
 			&& str[i] != '_' && str[i] != '=')
 			return (1);
 		i++;
@@ -85,19 +85,4 @@ char **export_add(char **cp_env, char *str, t_untils *untils)
 	}
 	i += 2;
 	return (export_add_2(cp_env, str, untils, i));
-	// new_env = (char**)malloc(i * sizeof(char*));
-	// i = 0;
-	// while(cp_env[i] != NULL)
-	// {
-	// 	new_env[i] = ft_strdup(cp_env[i]);
-	// 	i++;
-	// }
-	// new_env[i++] = ft_strdup(str);
-	// new_env[i] = NULL;
-	// i = 0;
-	// while(cp_env[i] != NULL)
-	// 	ft_free(cp_env[i++]);
-	// ft_free(cp_env);
-	// untils->env = new_env;
-	// return(new_env);
 }

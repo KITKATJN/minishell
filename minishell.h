@@ -115,8 +115,6 @@ void					ft_lstadd_back_parser(t_command **lst, t_command *new);
 void					delete_tcommand(t_command *command);
 void					ft_perror(char *error);
 void					parse_add_semicolon_to_end(t_command *start);
-int						delete_spaces(char **arr_of_command,
-							char *argv, int i, char delimiter);
 char					*ft_check_command(char *command);
 void					main_parser(char *str, t_untils *untils);
 void					bsophia_function(t_command *list, t_untils *untils);
@@ -166,5 +164,12 @@ char					*replace_dollar_que_into_code(char *str,
 							t_untils *untils);
 int						check_bin(char *str);
 void					work_bin(t_command *com, t_untils *untils);
+void					last(t_command *command, t_untils *untils, int error);
+void					check_name_exit(t_command *command, t_untils *untils,
+							int error);
+void					check_name_exit_2(t_command *command, t_untils *untils,
+							int error);
+void					ft_exit2(t_command *command, t_untils *untils,
+							int error);
 
 #endif

@@ -37,11 +37,13 @@ static	void	command_transmission_to_bsopia5(t_cttb *cttb, t_untils *untils)
 	else
 		cttb->command_tmp = cttb->str_from_my_env;
 	ft_free(cttb->env_tmp);
-	cttb->end_command = ft_strjoin(cttb->end_command,
-			cttb->string_before_doolar);
-	cttb->end_command = ft_strjoin(cttb->end_command,
-			cttb->command_tmp);
+	cttb->env_tmp = cttb->end_command;
+	cttb->end_command = ft_strjoin(cttb->end_command,cttb->string_before_doolar);
+	ft_free(cttb->env_tmp);
+	cttb->env_tmp = cttb->end_command;
+	cttb->end_command = ft_strjoin(cttb->end_command,cttb->command_tmp);
 	ft_free(cttb->command_tmp);
+	ft_free(cttb->env_tmp);
 	cttb->i_env = cttb->j_env;
 	ft_bzero(cttb->string_before_doolar, ft_strlen(cttb->current->symbol) + 1);
 	cttb->i_for_str_before_dollar = 0;
