@@ -157,7 +157,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	int count_pipes = 0;
 	while (start)
 	{
-		if (start->command[0] == '|')
+		if (start->command[0] == '|' && start->command[1] == '\0')
 			count_pipes++;
 		start = start->next;
 	}
