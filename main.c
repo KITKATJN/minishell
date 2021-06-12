@@ -108,6 +108,8 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		tmp = tmp->next;
 	while (1)
 	{
+		if (g_sig_f == 1)
+			break ;
 		// if (g_sig_f == 1)
 		// {
 		// 	// free(line);
@@ -129,16 +131,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		ft_memset(buff, 0, 5);
 		l = read (0, buff, 1);
 
-		if (g_sig_f == 1)
-		{
-			ft_memset(buff, 0, 5);
-			// buff[0] = '\n';
-			write(1, "\n", 1);
-			free(line);
-			line = 0;
-			g_sig_f = 0;
-			return(0);
-		}
 		if (buff[0] == '\n')
 		{
 			write(1, "\n", 1);
@@ -193,7 +185,8 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					if (line)
 					{
 						tmp->content = ft_strjoin_line(tmp->content, line);
-						// ft_free(line);
+						free(line);
+						line = 0;
 					}
 					tmp = tmp->back;
 					write(1, tmp->content, ft_strlen_b(tmp->content));
@@ -209,7 +202,8 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					if (line)
 					{
 						tmp->content = ft_strjoin_line(tmp->content, line);
-						// ft_free(line);
+						free(line);
+						line = 0;
 					}
 					tmp = tmp->next;
 					write(1, tmp->content, ft_strlen_b(tmp->content));
@@ -255,6 +249,16 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			}
 		}
 	}
+	if (g_sig_f == 1)
+	{
+		ft_memset(buff, 0, 5);
+		// buff[0] = '\n';
+		write(1, "\n", 1);
+		free(line);
+		line = 0;
+		g_sig_f = 0;
+		return(0);
+	}
 	ft_free(line);
 	return (ft_strdup_b(tmp->content));
 }
@@ -281,17 +285,17 @@ int main(int argc, char **argv, char **envp)
 	term.c_lflag &= ~(ICANON);
 	term.c_cc[VMIN] = 0;
     term.c_cc[VTIME] = 1;
-	// signal(SIGINT, signal_c);
-	// signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, signal_c);
+	signal(SIGQUIT, SIG_IGN);
 	tgetent(0, term_name);
 	untils->env = copy_envp(envp, untils->env);
 	while (1)
 	{
-		signal(SIGINT, signal_c);
-		signal(SIGQUIT, SIG_IGN);
+		// signal(SIGINT, signal_c);
+		// signal(SIGQUIT, SIG_IGN);
 		tcsetattr(0, TCSANOW, &term);
 		// g_sig_f = 0;
-		tputs("MY_DICK_IS_VERY_BIG$S E-bash-> ", 1, ft_putchar);
+		tputs("bash $> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
 		// if (!line)
