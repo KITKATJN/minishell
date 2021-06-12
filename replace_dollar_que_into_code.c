@@ -2,10 +2,7 @@
 
 char        *replace_dollar_que_into_code(char *str, t_untils *untils)
 {
-    char    *start;
-    char    *temporary;
-    char    *first_part;
-    char    *second_part;
+    t_rdqic r;
 
     if (str == 0)
         return (str);
@@ -16,17 +13,18 @@ char        *replace_dollar_que_into_code(char *str, t_untils *untils)
     }
     while (1)
     {
-        if ((start = ft_strnstr(str, "$?+?", ft_strlen(str))) == 0)
+        if ((r.start = ft_strnstr(str, "$?+?", ft_strlen(str))) == 0)
             return (str);
-        first_part = ft_substr(str, 0, ft_strlen(str) - ft_strlen(start));
-        second_part = ft_substr(str, ft_strlen(str) - ft_strlen(start) + 4, ft_strlen(str));
-        temporary = ft_strjoin(first_part, ft_itoa(untils->status));
-        //printf("temporary = %s int = %d\n", ft_itoa(untils->status), untils->status);
-        ft_free(first_part);
+        r.first_part = ft_substr(str, 0, ft_strlen(str) - ft_strlen(r.start));
+        r.second_part = ft_substr(str, ft_strlen(str) - ft_strlen(r.start) + 4, ft_strlen(str));
+        r.tmp = ft_itoa(untils->status);
+        r.temporary = ft_strjoin(r.first_part, r.tmp);
+        ft_free(r.tmp);
+        ft_free(r.first_part);
         ft_free(str);
-        str = ft_strjoin(temporary, second_part);
-        ft_free(temporary);
-        ft_free(second_part);
+        str = ft_strjoin(r.temporary, r.second_part);
+        ft_free(r.temporary);
+        ft_free(r.second_part);
     }
     return (str);
 }

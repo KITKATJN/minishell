@@ -53,6 +53,15 @@ typedef struct s_helper_parser
 	char				*c;
 }						t_helper_parser;
 
+typedef struct s_rdqic
+{
+	char				*start;
+	char				*temporary;
+	char				*first_part;
+	char				*second_part;
+	char				*tmp;
+}						t_rdqic;
+
 typedef struct s_parser
 {
 	char				*symbol;
@@ -152,7 +161,7 @@ void					bsopia_func(t_command *com, int i, t_untils *untils);
 int						check_buildin(char *str);
 char					*find_path(t_untils *untils);
 int						check_redir(t_command *list, int i, t_untils *untils);
-t_command				*redirect_check(t_command *com);
+t_command				*redirect_check(t_command *com, t_untils *untils);
 int						work_pipes(t_untils *untils, t_command *start);
 char					*my_get_env(char *str, char **env);
 void					signal_c(int sig_num);

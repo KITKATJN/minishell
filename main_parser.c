@@ -1,9 +1,14 @@
 #include "minishell.h"
 
-t_command		*redirect_check(t_command *com)
+t_command		*redirect_check(t_command *com, t_untils *untils)
 {
 	t_command	*start;
 
+	start = com;
+//printf("1.1---------------------\n");
+while (start != 0 && (start->command[0] == '>' || start->command[0] == '<'))
+{
+	//printf("1---------------------\n");
 	if (com->command[0] == '>' && com->command[1] == '>')
 	{
 		start = com->next->next;
@@ -11,30 +16,45 @@ t_command		*redirect_check(t_command *com)
 			start->redir_double_right = ft_strdup(com->next->command);
 		int gf = open(com->next->command, O_CREAT | O_WRONLY | O_APPEND, 0777);
 		close (gf);
-		return (start);
+		if (start == 0)
+			return (start);
 	}
+	//printf("2---------------------\n");
 	if (com->command[0] == '>' && com->command[1] == '\0')
 	{
 		start = com->next->next;
 		int ff = open(com->next->command, O_CREAT | O_WRONLY | O_TRUNC, 0777);
 		close (ff);
-		return (start);
+		if (start == 0)
+			return (start);
 	}
+	//printf("3---------------------\n");
 	if (com->command[0] == '<' && com->command[1] == '\0')
 	{
 		start = com->next->next;
 		if (start != 0)
 			start->redir_double_right = ft_strdup(com->next->command);
-		int gg = open(com->redir_left, O_RDWR);
+		int gg = open(com->next->command, O_RDWR);
+		if (gg == -1)
+		{
+			untils->status = 1;
+			printf("%s: no such file or directory\n", com->next->command);
+			return (0);
+		}
 		close(gg);
-		return (start);
+		if (start == 0)
+			return (start);
 	}
+	com = start;
+}
+//printf("1.2---------------------\n");
 	//printf_command_list(com);
-	start = com;
+	//start = com;
 	while (start)
 	{
 		if (start->command[0] == '>' && start->command[1] == '>')
 		{
+			ft_free(com->redir_double_right);
 			com->redir_double_right = ft_strdup(start->next->command);
 			int gf = open(com->redir_double_right, O_CREAT | O_WRONLY | O_APPEND, 0777);
 			close (gf);
@@ -56,6 +76,7 @@ t_command		*redirect_check(t_command *com)
 		}
 		else if (start->command[0] == '>')
 		{
+			ft_free(com->redir_right);
 			com->redir_right = ft_strdup(start->next->command);
 			int ff = open(com->redir_right, O_CREAT | O_WRONLY | O_TRUNC, 0777);
 			close (ff);
@@ -130,6 +151,7 @@ void connect_stdio_to_pipes(int prev_fds[], int next_fds[])
 void bsopia_func(t_command *com, int i, t_untils *untils)
 {
 	t_command *start;
+	char *tmp;
 
 	start = com;
 	int count_pipes = 0;
@@ -143,7 +165,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	start = com;
 	if (count_pipes == 0)
 	{
-		com = redirect_check(com);
+		com = redirect_check(com, untils);
 		if (com == 0)
 			return ;
 	//	printf_command_list(com);
@@ -181,11 +203,12 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 						exit(1);
 					work_bin(start, untils);
 				}
-				if (!(find_path(untils)) && !(check_bin(start->command)))
+				if (!(tmp = find_path(untils)) && !(check_bin(start->command)))
 				{
 					printf("123\n");
 					exit(127);
 				}
+				ft_free(tmp);
 			// {
 			// 	work_bin(start, untils);
 

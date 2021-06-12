@@ -3,8 +3,12 @@
 int work_pipes(t_untils *untils, t_command *start)
 {
 	t_command *save;
-	save = start;
-		redirect_check(start);
+	char *tmp;
+
+		start = redirect_check(start, untils);
+		if (start == 0)
+			return (0);
+		save = start;
 		// while (start) // echo pl | echo hgfda123 | echo 456
 		// 	{
 		// 		printf("%s  dr = %s  right = %s left = %s ->%d\n", start->command, start->redir_double_right, start->redir_right, start->redir_left, i);
@@ -29,11 +33,12 @@ int work_pipes(t_untils *untils, t_command *start)
 					exit(1);
 				work_bin(start, untils);
 			}
-			if (!(find_path(untils)) && !(check_bin(start->command)))
+			if (!(tmp = find_path(untils)) && !(check_bin(start->command)))
 			{
 				printf("123\n");
 				exit(127);
 			}
+			ft_free(tmp);
 			untils->path = find_path(untils);
 			if (!untils->path)
 				exit(1);
@@ -67,13 +72,17 @@ int work_pipes(t_untils *untils, t_command *start)
 			start = save;
 			commd = ft_strjoin_line("/", untils->command_ex);
 			if (!check_redir(start, 2, untils))
+			{
+				ft_free(commd);
 				exit(1);
+			}
 			// printf("DOSTAL\n");
 			while(bin[i])
 			{
 				//проверка на наличие PATH;
 				command = ft_strjoin_line(bin[i], commd);
 				execve(command, arguments, untils->env);
+				ft_free(command);
 				i++;
 			}
 			if (bin[i] == NULL && ft_strcmp(untils->command_ex, "minishell") && ft_strcmp(untils->command_ex, "./minishell") && ft_strcmp(untils->command_ex, "$?"))
