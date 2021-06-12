@@ -43,6 +43,8 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 			untils->status = 258;
 			return (ft_lstnew_parser("syntax error near unexpected token `;'", 0));
 		}
+		if (str1[i] == ';' && _flag == 1)
+			_flag = 0;
 		i++;
 	}
 	_flag = 0;
@@ -206,6 +208,13 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 		list_of_command = list_of_command->next;
 		delete_current_parser2(current);
 	}
-	//printf_list(list_of_command);
+	current = list_of_command;
+	while (current->next)
+	{
+		current = current->next;
+	}
+	if (current->symbol[0] == ';')
+		delete_current_parser2(current);
+	printf_list(list_of_command);
 	return (command_transmission_to_bsopia(list_of_command, untils));
 }
