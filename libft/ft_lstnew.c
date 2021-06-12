@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsophia <bsophia@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cmarguer <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/10 12:48:30 by bsophia           #+#    #+#             */
-/*   Updated: 2020/11/10 13:55:20 by bsophia          ###   ########.fr       */
+/*   Updated: 2021/06/12 17:11:54 by cmarguer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list		*ft_lstnew(void *content)
+t_list		*ft_lstnew1(void *content)
 {
 	t_list	*new;
 

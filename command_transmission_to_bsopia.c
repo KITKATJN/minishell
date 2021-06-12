@@ -14,6 +14,8 @@ static	int	command_transmission_to_bsopia3(t_cttb *cttb, t_untils *untils)
 	}
 	if (cttb->current->special_array[0] == 9)
 	{
+		printf_command_list(cttb->commands);
+		
 		bsopia_func(cttb->commands, 2, untils);
 		ft_lstclear_command(&cttb->commands);
 		if (cttb->current->next == 0)
@@ -60,6 +62,7 @@ static	void	command_transmission_to_bsopia4(t_cttb *cttb, t_untils *untils)
 	{
 		if (cttb->current->special_array[cttb->j_env] == 0
 			|| cttb->current->special_array[cttb->j_env] == 5
+			|| cttb->current->symbol[cttb->j_env] == ';'
 			|| cttb->current->special_array[cttb->j_env] == 3
 			|| (cttb->current->special_array[0] == 2
 				&& cttb->current->special_array[cttb->j_env] == 2))
@@ -134,6 +137,7 @@ t_command	*command_transmission_to_bsopia(
 	}
 	if (cttb.commands != 0)
 	{
+		//printf_command_list(cttb.commands);
 		bsopia_func(cttb.commands, 0, untils);
 		ft_lstclear_command(&cttb.commands);
 	}
