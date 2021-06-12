@@ -67,7 +67,7 @@ CC = gcc
 
 $(OBJ_DIR)%.o: %.c
 	@mkdir -p $(OBJ_DIR)
-	gcc ${CFLAGS} -c $< -o $@ 
+	gcc ${CFLAGS} -c $< -o $@
 
 $(NAME): $(OBJS)
 	@ar rc $(NAME) $(OBJS)
@@ -94,4 +94,4 @@ re: fclean all
 
 .PHONY: all clean fclean re bonus
 
-.SILENT: fclean clean all re $(NAME) $(OBJS) $(OBJS_B) $(OBJRID)
+.SILENT: fclean clean all re $(NAME) $(OBJS) $(OBJS_B) $(OBJRID) bonus

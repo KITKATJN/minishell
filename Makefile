@@ -52,9 +52,11 @@ $(OBJDIR)%.o: %.c Makefile
 	gcc -c $< -o $@
 clean:
 	rm -f $(OBJS)
+	@make -C $(LIBFTD) clean
 
 fclean: clean
 	rm -f $(NAME)
+	@make -C $(LIBFTD) fclean
 
 re: fclean all
 
