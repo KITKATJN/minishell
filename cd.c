@@ -21,21 +21,19 @@ static char	*find_home(t_untils *untils)
 	return (NULL);
 }
 
-static void	cd_home(t_command *list, t_untils *untils)
+static int	cd_other(t_untils *untils, t_command *list)
 {
-	char	*home;
-	char	*line;
-	int		i;
 	char	*pwd;
 	char	*tmp;
+	char	*line;
 
 	line = NULL;
-	home = find_home(untils);
-	if (!home)
+	untils->home = find_home(untils);
+	if (!untils->home)
 	{
 		printf("cd : HOME not set\n");
 		untils->status = 1;
-		return ;
+		return (1);
 	}
 	pwd = getcwd(line, 0);
 	tmp = pwd;
@@ -43,18 +41,30 @@ static void	cd_home(t_command *list, t_untils *untils)
 	ft_free(tmp);
 	export_add(untils->env, pwd, untils);
 	ft_free(pwd);
-	if (chdir(home) == -1)
+	return (0);
+}
+
+static void	cd_home(t_command *list, t_untils *untils)
+{
+	char	*line;
+	char	*pwd;
+	char	*tmp;
+
+	line = NULL;
+	if (cd_other(untils, list))
+		return ;
+	if (chdir(untils->home) == -1)
 	{
-		ft_free(home);
+		ft_free(untils->home);
 		printf("cd: %s\n", strerror(errno));
 		untils->status = 1;
 		return ;
 	}
-	ft_free(home);
+	ft_free(untils->home);
 	pwd = getcwd(line, 0);
-	home = pwd;
+	untils->home = pwd;
 	pwd = ft_strjoin_line("PWD=", pwd);
-	ft_free(home);
+	ft_free(untils->home);
 	export_add(untils->env, pwd, untils);
 	ft_free(pwd);
 }

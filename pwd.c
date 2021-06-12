@@ -1,9 +1,9 @@
 #include "minishell.h"
 
-void get_pwd()
+void	get_pwd(void)
 {
-	char *line;
-	char *pwd;
+	char	*line;
+	char	*pwd;
 
 	line = NULL;
 	pwd = getcwd(line, 0);

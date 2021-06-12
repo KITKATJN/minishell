@@ -34,6 +34,9 @@ typedef struct s_untils
 	char				*command_ex;
 	char				*path;
 	int					status;
+	char				**bin;
+	char				**arguments;
+	char				*home;
 }						t_untils;
 
 typedef struct s_history
