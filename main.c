@@ -93,6 +93,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 	char b[2];
 	t_history *tmp;
 	char *save;
+	char *temporary;
 
 	tmp = ft_lstnew(NULL);
 	ft_lstadd_back(history, tmp);
@@ -137,7 +138,9 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			save = ft_strjoin_line(tmp->content, line);
 			while (tmp->next)
 				tmp = tmp->next;
+			temporary = tmp->content;
 			tmp->content = ft_strdup_b(save);
+			ft_free(temporary);
 			ft_free(save);
 			while (tmp->back)
 			{
@@ -184,8 +187,10 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					tputs(tgetstr("ce", 0), 1, ft_putchar);
 					if (line)
 					{
+						temporary = tmp->content;
 						tmp->content = ft_strjoin_line(tmp->content, line);
-						free(line);
+						ft_free(line);
+						ft_free(temporary);
 						line = 0;
 					}
 					tmp = tmp->back;
@@ -201,8 +206,10 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 					tputs(tgetstr("ce", 0), 1, ft_putchar);
 					if (line)
 					{
+						temporary = tmp->content;
 						tmp->content = ft_strjoin_line(tmp->content, line);
-						free(line);
+						ft_free(line);
+						ft_free(temporary);
 						line = 0;
 					}
 					tmp = tmp->next;
