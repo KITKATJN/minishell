@@ -18,7 +18,8 @@ LIST 	=	backspace.c \
 			replacing_character_codes_in_single_quotes.c \
 			escaping_characters.c signal.c ft_free.c printf_list.c \
 			func_lst_untils.c ft_exit.c replace_dollar_que_into_code.c \
-			check_bin.c work_bin.c ft_exit_2.c\
+			check_bin.c work_bin.c ft_exit_2.c redirect.c \
+			ft_execute_export.c
 
 OBJDIR	=	objs/
 

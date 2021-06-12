@@ -5,7 +5,6 @@ static int	compare_to_equal(char *s1, char *s2)
 	int	i;
 	int	flag;
 
-	// s2 = ft_strjoin_line(s2, "=");
 	i = 0;
 	flag = 0;
 	while (s1[i] != '\0')
@@ -23,7 +22,7 @@ static int	compare_to_equal(char *s1, char *s2)
 	return (0);
 }
 
-static int	check_name1(char *str) //сделать проверку что бы начиналось только с букв или же с _(как в экспорте)
+static int	check_name1(char *str)
 {
 	int	i;
 
@@ -69,25 +68,28 @@ static char	**f_unset_line_2(char **cp_env, char *str, int i)
 	return (new_env);
 }
 
+static void	love_norma(char *str, t_untils *untils)
+{
+	printf("unset: %s not a valid identifier\n", str);
+	untils->status = 1;
+}
+
 char	**f_unset_line(char **cp_env, char *str, t_untils *untils)
 {
 	char	**new_env;
 	int		i;
 	int		flag;
-	int		k;
 
-	i = 0;
+	i = -1;
 	flag = 2;
-	k = 0;
 	if (!str)
 		return (cp_env); //если пустой unset подают то возвращаем сразу наш входящий массив
 	if (check_name1(str))
 	{
-		printf("unset: %s not a valid identifier\n", str);
-		untils->status = 1;
+		love_norma(str, untils);
 		return (cp_env);
 	}
-	while (cp_env[i] != NULL)
+	while (cp_env[++i] != NULL)
 	{
 		if (compare_to_equal(cp_env[i], str)) //если нашли ключ кладем туда значение 55, так как в переменных окружения нельзя что бы 1 символ был цифрой то наше значение будет уникальным и не будет пересекаться
 		{
@@ -95,7 +97,6 @@ char	**f_unset_line(char **cp_env, char *str, t_untils *untils)
 			cp_env[i] = ft_strdup("55");
 			flag = 1;
 		}
-		i++;
 	}
 	if (flag == 2) //если в нашем массиве не нашелся нужный ключ то удалять ничего не нужно, возвращаем текущий массив
 		return (cp_env);

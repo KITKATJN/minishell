@@ -1,5 +1,17 @@
 #include "minishell.h"
 
+static int	get_number_arg(t_command *com)
+{
+	int	i;
+
+	i = 0;
+	while (com->command && com->command[i] != '\0')
+		i++;
+	while (com->command && com->command[i] != '/')
+		i--;
+	return (i);
+}
+
 static char	**get_argument(t_command *com)
 {
 	int			i;
@@ -17,18 +29,12 @@ static char	**get_argument(t_command *com)
 	}
 	com = save;
 	argument = ft_calloc(i + 1, i + 1);
-	i = 0;
-	while (com->command && com->command[i] != '\0')
-		i++;
-	while (com->command && com->command[i] != '/')
-		i--;
 	argument[j] = ft_strdup_b(&com->command[i + 1]);
 	j++;
 	com = com->next;
 	while (com)
 	{
-		argument[j] = ft_strdup_b(com->command);
-		j++;
+		argument[j++] = ft_strdup_b(com->command);
 		com = com->next;
 	}
 	argument[j] = NULL;

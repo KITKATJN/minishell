@@ -180,5 +180,6 @@ void					check_name_exit_2(t_command *command, t_untils *untils,
 							int error);
 void					ft_exit2(t_command *command, t_untils *untils,
 							int error);
+void					execute_export(t_untils *untils, t_command *list);
 
 #endif
