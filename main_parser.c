@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_command		*redirect_check(t_command *com)
+t_command		*redirect_check(t_command *com, t_untils *untils)
 {
 	t_command	*start;
 
@@ -32,11 +32,15 @@ while (start != 0 && (start->command[0] == '>' || start->command[0] == '<'))
 	if (com->command[0] == '<' && com->command[1] == '\0')
 	{
 		start = com->next->next;
-		printf("dassdasdas\n");
 		if (start != 0)
 			start->redir_double_right = ft_strdup(com->next->command);
 		int gg = open(com->next->command, O_RDWR);
-		printf("gg = %d\n", gg);
+		if (gg == -1)
+		{
+			untils->status = 1;
+			printf("%s: no such file or directory\n", com->next->command);
+			return (0);
+		}
 		close(gg);
 		if (start == 0)
 			return (start);
@@ -161,7 +165,7 @@ void bsopia_func(t_command *com, int i, t_untils *untils)
 	start = com;
 	if (count_pipes == 0)
 	{
-		com = redirect_check(com);
+		com = redirect_check(com, untils);
 		if (com == 0)
 			return ;
 	//	printf_command_list(com);

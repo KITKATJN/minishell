@@ -5,7 +5,7 @@ int work_pipes(t_untils *untils, t_command *start)
 	t_command *save;
 	char *tmp;
 
-		start = redirect_check(start);
+		start = redirect_check(start, untils);
 		if (start == 0)
 			return (0);
 		save = start;
