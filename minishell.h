@@ -37,6 +37,9 @@ typedef struct s_untils
 	char				**bin;
 	char				**arguments;
 	char				*home;
+	int					prev_pipe_fds[2];
+	int					next_pipe_fds[2];
+	int					count_pros;
 }						t_untils;
 
 typedef struct s_history
@@ -102,6 +105,22 @@ typedef struct s_cttb
 	t_command			*commands;
 	t_parser			*current;
 }						t_cttb;
+
+typedef struct	s_pil
+{
+  t_parser		*current;
+  t_parser		*start;
+  t_command		*check;
+  char			*str;
+  char			u;
+}				t_pil;
+
+typedef struct	s_cse
+{
+  int	i;
+  int	_flag;
+  int	_flag_pipes;
+}		t_cse;
 
 int						ft_strlen_b(char *str);
 int						ft_putchar(int c);
@@ -176,7 +195,6 @@ char					*replace_dollar_que_into_code(char *str,
 							t_untils *untils);
 int						check_bin(char *str);
 void					work_bin(t_command *com, t_untils *untils);
-void					last(t_command *command, t_untils *untils, int error);
 void					check_name_exit(t_command *command, t_untils *untils,
 							int error);
 void					check_name_exit_2(t_command *command, t_untils *untils,
@@ -184,5 +202,12 @@ void					check_name_exit_2(t_command *command, t_untils *untils,
 void					ft_exit2(t_command *command, t_untils *untils,
 							int error);
 void					execute_export(t_untils *untils, t_command *list);
+void					connect_stdio_to_pipes(int prev_fds[], int next_fds[]);
+int						count_pipes(t_command *start);
+int						fork_without_pip(t_command *com, t_untils *untils);
+void					child_without_pip(t_command *start, t_untils *untils);
+void					children_pip(t_command *start, int count_pipes, t_untils *untils);
+t_command				*check_syntax_error(char *str1, t_untils *untils);
+int						last(t_command *command, t_untils *untils, int error);
 
 #endif

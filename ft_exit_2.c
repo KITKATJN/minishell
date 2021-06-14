@@ -1,9 +1,10 @@
 #include "minishell.h"
 
-void	last(t_command *command, t_untils *untils, int error)
+int	last(t_command *command, t_untils *untils, int error)
 {
 	printf("exit: too many arguments\n");
-	ft_exit2(command, untils, EXIT_FAILURE);
+	untils->status = 1;
+	return (1);
 }
 
 void	check_name_exit(t_command *command, t_untils *untils, int error)

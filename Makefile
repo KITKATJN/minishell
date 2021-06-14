@@ -19,7 +19,9 @@ LIST 	=	backspace.c \
 			escaping_characters.c signal.c ft_free.c printf_list.c \
 			func_lst_untils.c ft_exit.c replace_dollar_que_into_code.c \
 			check_bin.c work_bin.c ft_exit_2.c redirect.c \
-			ft_execute_export.c
+			ft_execute_export.c fork_without_pip.c \
+			child_without_pip.c children_pip.c \
+			check_syntax_error.c
 
 OBJDIR	=	objs/
 

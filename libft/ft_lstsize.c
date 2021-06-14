@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int		ft_lstsize1(t_list *lst)
+int	ft_lstsize1(t_list *lst)
 {
 	int	i;
 

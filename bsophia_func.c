@@ -30,7 +30,7 @@ static void	echo_2(t_command *list, t_untils *untils)
 	if (i == 0)
 		list = list->next;
 	list = list->next;
-	while (list) // && ft_strcmp(list->command, "|") && ft_strcmp(list->command, ";"))
+	while (list)
 	{
 		tmp = line;
 		line = ft_strjoin_line(line, list->command);
