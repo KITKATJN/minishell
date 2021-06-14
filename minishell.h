@@ -47,6 +47,13 @@ typedef struct s_history
 	struct s_history	*back;
 }						t_history;
 
+typedef struct s_cse
+{
+	int					i;
+	int					_flag;
+	int					_flag_pipes;
+}						t_cse;
+
 typedef struct s_helper_parser
 {
 	int					count_1;
@@ -86,6 +93,15 @@ typedef struct s_command
 	char				*redir_double_right;
 	char				*redir_left;
 }						t_command;
+
+typedef struct s_pil
+{
+	t_parser			*current;
+	t_parser			*start;
+	t_command			*check;
+	char				*str;
+	char				u;
+}						t_pil;
 
 typedef struct s_cttb
 {
@@ -146,6 +162,7 @@ t_command				*command_transmission_to_bsopia(
 t_parser				*assigning_code_to_elements(char *str);
 t_parser				*assigning_symbols_to_command(t_parser *start);
 t_parser				*remove_paired_quotes(t_parser	*start);
+t_command				*check_syntax_error(char *str1, t_untils *untils);
 t_parser				*replacing_character_codes_in_single_quotes(
 							t_parser *start);
 t_parser				*escaping_characters(t_parser *start);
