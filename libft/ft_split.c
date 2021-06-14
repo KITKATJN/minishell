@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-static int		count_sep(char const *ss, char c)
+static int	count_sep(char const *ss, char c)
 {
 	int			i;
 	int			j;
@@ -34,7 +34,7 @@ static int		count_sep(char const *ss, char c)
 	return (j);
 }
 
-static char		*word(char const *s_1, char c, int *i)
+static char	*word(char const *s_1, char c, int *i)
 {
 	char		*word_1;
 	int			b;
@@ -60,7 +60,7 @@ static char		*word(char const *s_1, char c, int *i)
 	return (word_1);
 }
 
-static char		**free_result(char **result, int j)
+static char	**free_result(char **result, int j)
 {
 	while (j)
 	{
@@ -71,7 +71,7 @@ static char		**free_result(char **result, int j)
 	return (NULL);
 }
 
-char			**ft_split(const char *s, char c)
+char	**ft_split(const char *s, char c)
 {
 	char		**result;
 	int			i;
@@ -80,7 +80,8 @@ char			**ft_split(const char *s, char c)
 	if (!s)
 		return (NULL);
 	i = count_sep(s, c);
-	if (!(result = (char**)malloc(sizeof(char*) * (i + 1))))
+	result = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!(result))
 		return (NULL);
 	i = 0;
 	j = 0;

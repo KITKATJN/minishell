@@ -12,23 +12,20 @@ static int	get_number_arg(t_command *com)
 	return (i);
 }
 
-static char	**get_argument(t_command *com)
+static char	**get_argument(t_command *com, int i, int j)
 {
-	int			i;
 	char		**argument;
 	t_command	*save;
-	int			j;
 
 	save = com;
-	i = 0;
-	j = 0;
 	while (com)
 	{
 		com = com->next;
 		i++;
 	}
 	com = save;
-	argument = ft_calloc(i + 1, i + 1);
+	argument = (char **)malloc(sizeof(char *) * (i + 1));
+	i = get_number_arg(com);
 	argument[j] = ft_strdup_b(&com->command[i + 1]);
 	j++;
 	com = com->next;
@@ -52,7 +49,7 @@ void	work_bin(t_command *com, t_untils *untils)
 	j = 0;
 	save = com;
 	argument = 0;
-	argument = get_argument(com);
+	argument = get_argument(com, 0, 0);
 	com = save;
 	execve(com->command, argument, NULL);
 	if (errno == 13)

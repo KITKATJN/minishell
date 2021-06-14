@@ -15,13 +15,13 @@
 static int	ft_isspace(int s)
 {
 	if ((s == ' ' || s == '\v' || s == '\t' || s == '\f'
-		|| s == '\n' || s == '\r') && s != '\0')
+			|| s == '\n' || s == '\r') && s != '\0')
 		return (1);
 	else
 		return (0);
 }
 
-int			ft_atoi(const char *s)
+int	ft_atoi(const char *s)
 {
 	int		i;
 	int		minus;

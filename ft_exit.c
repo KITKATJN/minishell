@@ -106,5 +106,6 @@ void	ft_exit(t_command *command, t_untils *untils)
 			ft_exit_4(command, untils, error);
 	}
 	check_name_exit_2(command, untils, error);
-	last(command, untils, error);
+	if (last(command, untils, error))
+		return ;
 }

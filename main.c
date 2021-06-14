@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-static int count_word(char **str)
+static int	count_word(char **str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] != NULL)
@@ -10,9 +10,9 @@ static int count_word(char **str)
 	return (i);
 }
 
-void print_env(char **cp_env)
+void	print_env(char **cp_env)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (cp_env[i] != NULL)
@@ -28,11 +28,11 @@ void print_env(char **cp_env)
 	}
 }
 
-char **sort_mass(char **str)
+char	**sort_mass(char **str)
 {
-	int i;
-	char *buf;
-	int k;
+	int		i;
+	char	*buf;
+	int		k;
 
 	k = count_word(str);
 	while (k - 1)
@@ -53,11 +53,11 @@ char **sort_mass(char **str)
 	return (str);
 }
 
-void print_export(char **cp_env)
+void	print_export(char **cp_env)// добавить в аргументы 0 0 вместо  i k 
 {
-	int i;
-	int k;
-	int flag;
+	int	i;
+	int	k;
+	int	flag;
 
 	i = 0;
 	k = 0;
@@ -111,24 +111,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 	{
 		if (g_sig_f == 1)
 			break ;
-		// if (g_sig_f == 1)
-		// {
-		// 	// free(line);
-		// 	// free(tmp->content);
-		// 	// tmp->content = NULL;
-		// 	// line = NULL;
-		// 	while (tmp->back)
-		// 		tmp = tmp->back;
-		// 	if (tmp->content)
-		// 		tmp->content = untils->first;
-		// 	while (tmp->next)
-		// 		tmp = tmp->next;
-		// 	write(1, "\n", 1);
-		// 	g_sig_f = 0;
-		// 	return (tmp->content);
-		// 	break ;
-		// }
-
 		ft_memset(buff, 0, 5);
 		l = read (0, buff, 1);
 
@@ -146,12 +128,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 			{
 				if (tmp->line)
 				{
-					// printf("1--------------\n");
-					// if (tmp->content != 0)
-					// {
-					// 	printf("hello %s\n", tmp->content); // здесь получаем ошибку связанную с двойным особождением памяти
-					//ft_free(tmp->content);
-					// }
 					ft_free(tmp->content);
 					tmp->content = ft_strdup_b(tmp->line);
 				}
@@ -166,7 +142,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 				tmp = tmp->back;
 			if (tmp->content)
 			{
-				//ft_free(tmp->content); // здесь мы получаем ошибку, что память была освобождена, когда пытаемся прочитать первый элемент истории несколько раз
 				ft_free(tmp->content);
 				tmp->content = ft_strdup_b(untils->first);
 			}
@@ -220,10 +195,7 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 		else if (buff[0] == '\4' && !(ft_strlen(line)) && !(ft_strlen(tmp->content)))
 		{
 			printf("exit\n");
-			// write(1, "exit\n", 5);
-			// write(1, "\n", 1);
 			ft_free(line);
-			//фришить все что есть(структуры и так далее);
 			exit(0);
 		}
 		if (!(strcmp(buff, "\177")))
@@ -259,7 +231,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 	if (g_sig_f == 1)
 	{
 		ft_memset(buff, 0, 5);
-		// buff[0] = '\n';
 		write(1, "\n", 1);
 		free(line);
 		line = 0;
@@ -272,7 +243,6 @@ char *reading_str(struct termios term, t_history **history, t_untils *untils)
 
 int main(int argc, char **argv, char **envp)
 {
-	// char *buff[2];
 	struct termios term;
 	struct termios term2;
 	char *line;
@@ -298,17 +268,11 @@ int main(int argc, char **argv, char **envp)
 	untils->env = copy_envp(envp, untils->env);
 	while (1)
 	{
-		// signal(SIGINT, signal_c);
-		// signal(SIGQUIT, SIG_IGN);
 		tcsetattr(0, TCSANOW, &term);
-		// g_sig_f = 0;
 		tputs("bash $> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
 		line = reading_str(term, &history, untils);
-		// if (!line)
-		// {
-			clear_history(&history);
-		// }
+		clear_history(&history);
 		untils->fd_in = 99;
 		untils->fd_out = 99;
 		tcsetattr(0, TCSANOW, &term2);

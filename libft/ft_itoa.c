@@ -36,7 +36,7 @@ static int	abss(int n)
 	return (n);
 }
 
-char		*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	char	*f;
 	int		i;

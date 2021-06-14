@@ -12,14 +12,14 @@
 
 #include "libft.h"
 
-static int		abss(int n)
+static int	abss(int n)
 {
 	if (n < 0)
 		return (n * -1);
 	return (n);
 }
 
-static int		count_intt(int n)
+static int	count_intt(int n)
 {
 	int			count;
 
@@ -36,7 +36,7 @@ static int		count_intt(int n)
 	return (count);
 }
 
-void			ft_putnbr_fd(int n, int fd)
+void	ft_putnbr_fd(int n, int fd)
 {
 	char		bb[13];
 	int			i;
