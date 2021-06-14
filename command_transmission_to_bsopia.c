@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+t_command	*send_command_to_bsopia(t_untils *untils, t_cttb *cttb)
+{
+	//printf("lo***********************************************************************\n");
+	//printf_command_list(cttb->commands);
+	bsopia_func(cttb->commands, 0, untils);
+	ft_lstclear_command(&cttb->commands);
+	return 0;
+}
+
 static	int	command_transmission_to_bsopia3(t_cttb *cttb, t_untils *untils)
 {
 	cttb->tmp = cttb->end_command;
@@ -14,13 +23,7 @@ static	int	command_transmission_to_bsopia3(t_cttb *cttb, t_untils *untils)
 	}
 	if (cttb->current->special_array[0] == 9)
 	{
-		printf_command_list(cttb->commands);
-		
-		bsopia_func(cttb->commands, 2, untils);
-		ft_lstclear_command(&cttb->commands);
-		if (cttb->current->next == 0)
-			return (0);
-		//cttb->current = cttb->current->next;
+		send_command_to_bsopia(untils, cttb);
 	}
 	if (cttb->current->symbol[0] != ';')
 		ft_lstadd_back_parser(&cttb->commands,
@@ -115,6 +118,7 @@ static	void	command_transmission_to_bsopia2(t_cttb *cttb, t_untils *untils)
 	}
 }
 
+
 t_command	*command_transmission_to_bsopia(
 				t_parser *list_of_command, t_untils *untils)
 {
@@ -137,10 +141,9 @@ t_command	*command_transmission_to_bsopia(
 	}
 	if (cttb.commands != 0)
 	{
-		//printf_command_list(cttb.commands);
 		bsopia_func(cttb.commands, 0, untils);
 		ft_lstclear_command(&cttb.commands);
 	}
 	ft_lstclear_parser2(&list_of_command);
-	return (cttb.commands);
+	return (0);
 }

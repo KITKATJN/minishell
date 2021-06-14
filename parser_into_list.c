@@ -215,6 +215,6 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 	}
 	if (current->symbol[0] == ';')
 		delete_current_parser2(current);
-	printf_list(list_of_command);
+	//printf_list(list_of_command);
 	return (command_transmission_to_bsopia(list_of_command, untils));
 }
