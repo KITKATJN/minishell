@@ -75,6 +75,19 @@ static t_parser	*helper_function1(t_parser *start,
 {
 	if (str[help->i] == '\\')
 		ft_lstadd_back_parser2(&start, ft_lstnew_parser2(help->c, 3, 0));
+	else if ((help->i + 2) < ft_strlen(str) && ((str[help->i] == '\"'  &&  str[help->i + 2] == '\"') || (str[help->i] == '\''  &&  str[help->i + 2] == '\'')) && str[help->i + 1] != '\"' && str[help->i + 1] != '\'' && str[help->i + 1] != ' ')
+	{
+		help->c[0] = str[help->i + 1];
+		if (str[help->i + 1] == '$')
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(help->c, 5, 0));
+		else if (str[help->i + 1] == '\\')
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(help->c, 3, 0));
+		else if (str[help->i + 1] == '?')
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(help->c, 4, 0));
+		else
+			ft_lstadd_back_parser2(&start, ft_lstnew_parser2(help->c, 7, 0));
+		help->i += 2;
+	}
 	else if (str[help->i] == '\"')
 	{
 		help->count_1 += 1;
