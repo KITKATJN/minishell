@@ -40,6 +40,8 @@ typedef struct s_untils
 	int					prev_pipe_fds[2];
 	int					next_pipe_fds[2];
 	int					count_pros;
+	char				*line;
+	int					flag_n;
 }						t_untils;
 
 typedef struct s_history
@@ -68,10 +70,17 @@ typedef struct s_rdqic
 	char				*tmp;
 }						t_rdqic;
 
+typedef struct s_read_str
+{
+	char				*line;
+	char				*save;
+	char				*temporary;
+}						t_read_str;
+
 typedef struct s_parser
 {
 	char				*symbol;
-	int					special;//1-' 2-" 3-\ 4-? 5-$ (-1)-незначащий пробел 0-экранированный символ 7-обычный символ
+	int					special;
 	struct s_parser		*next;
 	struct s_parser		*back;
 	int					*special_array;
@@ -106,21 +115,32 @@ typedef struct s_cttb
 	t_parser			*current;
 }						t_cttb;
 
-typedef struct	s_pil
+typedef struct s_pil
 {
-  t_parser		*current;
-  t_parser		*start;
-  t_command		*check;
-  char			*str;
-  char			u;
+	t_parser		*current;
+	t_parser		*start;
+	t_command		*check;
+	char			*str;
+	char			u;
 }				t_pil;
 
-typedef struct	s_cse
+typedef struct s_cse
 {
-  int	i;
-  int	_flag;
-  int	_flag_pipes;
+	int	i;
+	int	_flag;
+	int	_flag_pipes;
 }		t_cse;
+
+typedef struct s_astc
+{
+	t_parser	*new_start;
+	t_parser	*current;
+	t_parser	*list_of_command;
+	int			*special_array;
+	int			j;
+	int			i;
+	char		*str;
+}		t_astc;
 
 int						ft_strlen_b(char *str);
 int						ft_putchar(int c);
@@ -140,7 +160,6 @@ char					**export_add(char **cp_env,
 							char *str, t_untils *untils);
 char					**f_unset_line(char **cp_env,
 							char *str, t_untils *untils);
-t_command				*check_double_semicolon(char *argv);
 t_command				*ft_lstnew_parser(void *command, void *flag);
 void					ft_lstadd_back_parser(t_command **lst, t_command *new);
 void					delete_tcommand(t_command *command);
@@ -151,7 +170,7 @@ void					main_parser(char *str, t_untils *untils);
 void					bsophia_function(t_command *list, t_untils *untils);
 int						ft_lstsize_2(t_command *lst);
 void					print_env(char **cp_env);
-void					print_export(char **cp_env);
+void					print_export(char **cp_env, int i, int k);
 int						check_name(char *str);
 int						ft_strcmp(char *str, char *str1);
 void					ft_free(void *p);
@@ -206,8 +225,42 @@ void					connect_stdio_to_pipes(int prev_fds[], int next_fds[]);
 int						count_pipes(t_command *start);
 int						fork_without_pip(t_command *com, t_untils *untils);
 void					child_without_pip(t_command *start, t_untils *untils);
-void					children_pip(t_command *start, int count_pipes, t_untils *untils);
+void					children_pip(t_command *start, int count_pipes,
+							t_untils *untils);
 t_command				*check_syntax_error(char *str1, t_untils *untils);
 int						last(t_command *command, t_untils *untils, int error);
+t_history				*slash_e(t_history *tmp, t_untils *untils,
+							t_read_str *rd);
+t_history				*up(t_untils *untils, t_history *tmp,
+							t_read_str *rd);
+t_history				*down(t_untils *untils, t_history *tmp,
+							t_read_str *rd);
+t_history				*step_tmp(t_history *tmp);
+void					write_sym(t_read_str *rd, char buff);
+char					*while_1(t_untils *untils, t_history *tmp,
+							t_read_str *rd);
+void					print_env(char **cp_env);
+char					**sort_mass(char **str);
+t_history				*while_step(t_history *tmp, t_untils *untils,
+							t_read_str *rd);
+char					*slash_n(t_history *tmp, t_untils *untils,
+							t_read_str *rd);
+void					ctr_d(t_read_str *rd);
+void					backspace_22(t_untils *untils, t_history *tmp,
+							t_read_str *rd);
+t_command				*left_redirect1(t_command *com, t_command *start,
+							int gg);
+t_command				*left_redirect2(t_command *com, t_command *start,
+							int gg, t_untils *untils);
+t_command				*right_redirect1(t_command *com,
+							t_command *start, int gg);
+t_command				*right_double_redirect1(t_command *com,
+							t_command *start, int gg);
+t_command				*right_double_redirect_22(t_command *com,
+							t_command *start, int gg);
+t_command				*redirect_check_2(t_command *start, t_command *com,
+							t_untils *untils, int gg);
+int						ccmd(t_cttb *cttb);
+t_command				*send_command_to_bsopia(t_untils *untils, t_cttb *cttb);
 
 #endif

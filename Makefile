@@ -8,7 +8,7 @@ LIST 	=	backspace.c \
 			export.c ft_lstadd_back.c ft_lstnew.c \
 			ft_lstsize.c ft_strdup.c ft_strjoin_line.c \
 			main.c pwd.c unset.c untils_func.c \
-			func_lst_tcommand.c check_double_semicolon.c \
+			func_lst_tcommand.c \
 			delete_tcommand.c ft_check_command.c \
 			ft_perror.c main_parser.c assigning_symbols_to_command.c \
 			parse_add_semicolon_to_end.c func_lst_parser.c \
@@ -21,7 +21,10 @@ LIST 	=	backspace.c \
 			check_bin.c work_bin.c ft_exit_2.c redirect.c \
 			ft_execute_export.c fork_without_pip.c \
 			child_without_pip.c children_pip.c \
-			check_syntax_error.c
+			check_syntax_error.c history_2.c \
+			printable_export.c history_func.c \
+			main_parser_2.c redirect_check_2.c \
+
 
 OBJDIR	=	objs/
 
