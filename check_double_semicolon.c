@@ -1,50 +1,54 @@
 #include "minishell.h"
 
-t_command *check_double_semicolon(char *argv)
+static	void	check_double_semicolon4(char *argv, t_cse *cse)
 {
-	int i = 0;
+	cse->i++;
+	while (argv[cse->i] == ' ')
+		cse->i++;
+}
+
+static	void	check_double_semicolon3(char *argv, t_cse *cse)
+{
+	cse->i++;
+	while (argv[cse->i] != '\"')
+		cse->i++;
+	cse->i++;
+}
+
+static	void	check_double_semicolon2(char *argv, t_cse *cse)
+{
+	cse->i++;
+	while (argv[cse->i] != '\'' && cse->i < ft_strlen(argv) - 1)
+		cse->i++;
+	cse->i++;
+}
+
+t_command	*check_double_semicolon(char *argv)
+{
+	t_cse	cse;
 
 	if (!argv)
 		return (0);
-	while (i < ft_strlen(argv) - 1)
+	cse.i = -1;
+	while (++cse.i < ft_strlen(argv) - 1)
 	{
-		//printf("!!!!!!!!!!!!!!!!!%s\n", argv);
-		if (argv[i] == '\'')
+		if (argv[cse.i] == '\'')
 		{
-			i++;
-			while(argv[i] != '\'' && i < ft_strlen(argv) - 1)
-			{
-			//	printf("9------------------------%d\n",i);
-				i++;
-			}
-			i++;
+			check_double_semicolon2(argv, &cse);
 			continue ;
 		}
-		if (argv[i] == '\"')
+		if (argv[cse.i] == '\"')
 		{
-			//printf("i!!!**%d\n", i);
-			i++;
-			while(argv[i] != '\"')
-			{
-				//printf("argvi = %c\n", argv[i]);
-				i++;
-			}
-			i++;
-			//printf("i!!!%d\n", i);
+			check_double_semicolon3(argv, &cse);
 			continue ;
 		}
-		if (argv[i] == ';' && i < ft_strlen(argv) - 1)
+		if (argv[cse.i] == ';' && cse.i < ft_strlen(argv) - 1)
 		{
-			//printf("1argv = %c i = %d\n", argv[i], i);
-			i++;
-			while (argv[i] == ' ')
-				i++;
-			//printf("2argv = %c i = %d\n", argv[i], i);
-			if (argv[i] == ';')
-				return (ft_lstnew_parser("error with double semicolon", "error"));
+			check_double_semicolon4(argv, &cse);
+			if (argv[cse.i] == ';')
+				return (ft_lstnew_parser("error with double semcicolon", "error"));
 			continue ;
 		}
-		i++;
 	}
 	return (0);
 }
