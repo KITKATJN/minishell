@@ -13,12 +13,12 @@ t_parser *remove_paired_quotes(t_parser	*start)
 	{
 		num_quotes = 0;
 		if (current->symbol[0] == '\'' && current->next->symbol[0] == '\''
-			&& current->back != 0 && current->back->special != 3)//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
+			&& current->back != 0 && current->back->special != 3)
 		{
 			tmp3 = current;
 			while (tmp3)
 			{
-				if(tmp3->symbol[0] == '\"') //здесь и ниже я удаляю кавычки стоящие ввместе, но не удаляю ковычки стоящие вместе в других ковычках
+				if(tmp3->symbol[0] == '\"')
 					num_quotes++;
 				tmp3 = tmp3->back;
 			}
@@ -31,7 +31,7 @@ t_parser *remove_paired_quotes(t_parser	*start)
 				current = tmp2;
 			}
 		}
-		if (current->symbol[0] == '\"' && current->next->symbol[0] == '\"' && current->back != 0 && current->back->special != 3)//удаляю все парные ковычки. baby я хулиган как  Simpson Bart
+		if (current->symbol[0] == '\"' && current->next->symbol[0] == '\"' && current->back != 0 && current->back->special != 3)
 		{
 			tmp3 = current;
 			while (tmp3)
@@ -40,7 +40,7 @@ t_parser *remove_paired_quotes(t_parser	*start)
 					num_quotes++;
 				tmp3 = tmp3->back;
 			}
-			if (num_quotes % 2 == 0)
+			if (num_quotes % 2 == 0)// && num_quotes != 0)
 			{
 				tmp = current->next;
 				tmp2 = current->back;
