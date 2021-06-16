@@ -1,57 +1,63 @@
 #include "minishell.h"
 
+static void	remove_paired_quotes3_3(t_rpq *rpq)
+{
+	if (rpq->current->symbol[0] == '\"' && rpq->current->next->symbol[0]
+		== '\"' && rpq->current->back != 0 && rpq->current->back->special != 3)
+	{
+		rpq->tmp3 = rpq->current;
+		while (rpq->tmp3)
+		{
+			if (rpq->tmp3->symbol[0] == '\'')
+				rpq->num_quotes++;
+			rpq->tmp3 = rpq->tmp3->back;
+		}
+		if (rpq->num_quotes % 2 == 0)
+		{
+			rpq->tmp = rpq->current->next;
+			rpq->tmp2 = rpq->current->back;
+			delete_current_parser2(rpq->current);
+			delete_current_parser2(rpq->tmp);
+			rpq->current = rpq->tmp2;
+		}
+	}
+}
+
+static void	remove_paired_quotes2_2(t_rpq *rpq)
+{
+	rpq->num_quotes = 0;
+	if (rpq->current->symbol[0] == '\'' && rpq->current->next->symbol[0] == '\''
+		&& rpq->current->back != 0 && rpq->current->back->special != 3)
+	{
+		rpq->tmp3 = rpq->current;
+		while (rpq->tmp3)
+		{
+			if (rpq->tmp3->symbol[0] == '\"')
+				rpq->num_quotes++;
+			rpq->tmp3 = rpq->tmp3->back;
+		}
+		if (rpq->num_quotes % 2 == 0)
+		{
+			rpq->tmp = rpq->current->next;
+			rpq->tmp2 = rpq->current->back;
+			delete_current_parser2(rpq->current);
+			delete_current_parser2(rpq->tmp);
+			rpq->current = rpq->tmp2;
+		}
+	}
+}
+
 t_parser	*remove_paired_quotes(t_parser	*start)
 {
-	t_parser	*tmp;
-	t_parser	*tmp2;
-	t_parser	*tmp3;
-	t_parser	*current;
-	int			num_quotes;
+	t_rpq	rpq;
 
-	current = start;
-	while (current->next)
+	rpq.current = start;
+	while (rpq.current->next)
 	{
-		num_quotes = 0;
-		if (current->symbol[0] == '\'' && current->next->symbol[0] == '\''
-			&& current->back != 0 && current->back->special != 3)
-		{
-			tmp3 = current;
-			while (tmp3)
-			{
-				if (tmp3->symbol[0] == '\"')
-					num_quotes++;
-				tmp3 = tmp3->back;
-			}
-			if (num_quotes % 2 == 0)
-			{
-				tmp = current->next;
-				tmp2 = current->back;
-				delete_current_parser2(current);
-				delete_current_parser2(tmp);
-				current = tmp2;
-			}
-		}
-		if (current->symbol[0] == '\"' && current->next->symbol[0]
-			== '\"' && current->back != 0 && current->back->special != 3)
-		{
-			tmp3 = current;
-			while (tmp3)
-			{
-				if (tmp3->symbol[0] == '\'')
-					num_quotes++;
-				tmp3 = tmp3->back;
-			}
-			if (num_quotes % 2 == 0)
-			{
-				tmp = current->next;
-				tmp2 = current->back;
-				delete_current_parser2(current);
-				delete_current_parser2(tmp);
-				current = tmp2;
-			}
-		}
-		current = current->next;
-		if (current == 0)
+		remove_paired_quotes2_2(&rpq);
+		remove_paired_quotes3_3(&rpq);
+		rpq.current = rpq.current->next;
+		if (rpq.current == 0)
 			break ;
 	}
 	return (start);

@@ -142,6 +142,15 @@ typedef struct s_astc
 	char		*str;
 }		t_astc;
 
+typedef struct s_rpq
+{
+	t_parser	*tmp;
+	t_parser	*tmp2;
+	t_parser	*tmp3;
+	t_parser	*current;
+	int			num_quotes;
+}		t_rpq;
+
 int						ft_strlen_b(char *str);
 int						ft_putchar(int c);
 char					*ft_strjoin_b(char *s1, char *s2);
