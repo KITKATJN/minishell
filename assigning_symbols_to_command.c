@@ -1,5 +1,34 @@
 #include "minishell.h"
 
+int	check_quotes_start(char *str1)
+{
+	int	i;
+	int	flag;
+
+	flag = 1;
+	i = 0;
+	while (i < ft_strlen(str1))
+	{
+		if (str1[i] != ' ' && str1[i] != '\'' && str1[i] != '\"')
+			flag = 0;
+		else if (str1[i] == ';')
+			flag = 1;
+		i++;
+	}
+	return (flag);
+}
+
+int	parser_into_list2_2(t_parser *current)
+{
+	if (current->next && (current->next->symbol[0] == '>'
+			|| current->next->symbol[0] == '<'
+			|| current->next->symbol[0] == ' '
+			|| current->next->symbol[0] == ';'
+			|| current->next->symbol[0] == '|'))
+		return (1);
+	return (0);
+}
+
 static void	assigning_symbols_to_command2(t_parser *start)
 {
 	t_parser	*temporary;
@@ -46,7 +75,7 @@ static void	assigning_symbols_to_command3(t_astc *astc)
 
 t_parser	*assigning_symbols_to_command(t_parser *start)
 {
-	t_astc astc;
+	t_astc	astc;
 
 	astc.new_start = start;
 	astc.i = 0;

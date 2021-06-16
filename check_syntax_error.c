@@ -94,24 +94,6 @@ static t_command	*check_syntax_error2(char *str1,
 	return (0);
 }
 
-int	check_quotes_start(char *str1)
-{
-	int i;
-	int flag;
-
-	flag = 1;
-	i = 0;
-	while (i < ft_strlen(str1))
-	{
-		if (str1[i] != ' ' && str1[i] != '\'' && str1[i] != '\"')
-			flag = 0;
-		else if (str1[i] == ';')
-			flag = 1;
-		i++;
-	}
-	return (flag);
-}
-
 t_command	*check_syntax_error(char *str1, t_untils *untils)
 {
 	t_command	*check;

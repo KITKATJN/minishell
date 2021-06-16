@@ -38,14 +38,8 @@ static t_command	*parser_into_list2(t_parser *start, t_untils *untils)
 	while (current)
 	{
 		if (current->symbol[0] == '>' || current->symbol[0] == '<')
-		{
-			if (current->next && (current->next->symbol[0] == '>'
-					|| current->next->symbol[0] == '<'
-					|| current->next->symbol[0] == ' '
-					|| current->next->symbol[0] == ';'
-					|| current->next->symbol[0] == '|'))
+			if (parser_into_list2_2(current) == 1)
 				return (ft_lstnew_parser("error near `>' or '<' or '>>'", 0));
-		}
 		current = current->next;
 	}
 	if (list_of_command->symbol[0] == '\0')

@@ -174,6 +174,8 @@ void					print_export(char **cp_env, int i, int k);
 int						check_name(char *str);
 int						ft_strcmp(char *str, char *str1);
 void					ft_free(void *p);
+int						check_quotes_start(char *str1);
+int						parser_into_list2_2(t_parser *current);
 void					delete_current_untils(t_untils *current);
 t_untils				*init_untils(t_untils *untils);
 t_command				*parser_into_list(char *str, t_untils *untils);
