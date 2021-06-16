@@ -59,9 +59,10 @@ static t_command	*parser_into_list2(t_parser *start, t_untils *untils)
 static void	parser_into_list3_33(t_parser *start, t_parser *current)
 {
 	current = start;
+	printf_list(start);
 	while (current)
 	{
-		if (current->symbol[0] == '\"' && current->back != 0
+		if (current->special == 2 && current->back != 0
 			&& current->back->symbol[0] != '\\')
 		{
 			current = current->next;
@@ -79,13 +80,14 @@ static void	parser_into_list3_33(t_parser *start, t_parser *current)
 			break ;
 		current = current->next;
 	}
+	printf_list(start);
 }
 
 static t_command	*parser_into_list3(t_parser *start,
 	t_parser *current, t_command	*check, t_untils *untils)
 {
-	parser_into_list3_33(start, current);
 	start = replacing_character_codes_in_single_quotes(start);
+	parser_into_list3_33(start, current);
 	start = escaping_characters(start);
 	check = check_quotes(start, untils);
 	if (check != 0)
@@ -98,7 +100,7 @@ t_command	*parser_into_list(char *str1, t_untils *untils)
 {
 	t_pil	pil;
 
-	if (str1 == 0 || str1[0] == '\0' || str1[0] == '\n')
+	if (str1 == 0 || str1[0] == '\0' || str1[0] == '\n' || check_spaces(str1))
 		return (0);
 	pil.check = check_syntax_error(str1, untils);
 	if (pil.check != 0)

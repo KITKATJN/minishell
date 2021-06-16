@@ -151,6 +151,7 @@ typedef struct s_rpq
 	int			num_quotes;
 }		t_rpq;
 
+int						check_spaces(char *str1);
 int						ft_strlen_b(char *str);
 int						ft_putchar(int c);
 char					*ft_strjoin_b(char *s1, char *s2);

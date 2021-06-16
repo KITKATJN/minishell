@@ -35,7 +35,7 @@ static t_parser	*rrr3(t_parser *current)
 			current = current->next;
 		}
 	}
-	if (current->symbol[0] == '\'' && current->special != 0
+	if (current != 0 && current->symbol[0] == '\'' && current->special != 0
 		&& current->back == 0)
 	{
 		current = current->next;
