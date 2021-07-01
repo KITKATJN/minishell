@@ -17,7 +17,7 @@ t_history	*while_step(t_history *tmp, t_untils *untils, t_read_str *rd)
 {
 	while (tmp->back)
 	{
-		if (tmp->line)// && (int)tmp->line[0] != 1)
+		if (tmp->line)
 		{
 			ft_free(tmp->content);
 			tmp->content = ft_strdup_b(tmp->line);
@@ -44,7 +44,8 @@ char	*slash_n(t_history *tmp, t_untils *untils, t_read_str *rd)
 	while (tmp->next)
 		tmp = tmp->next;
 	temporary = tmp->content;
-	tmp->content = ft_strdup_b(save);
+	if (save && save[0] != 0)
+		tmp->content = ft_strdup_b(save);
 	ft_free(temporary);
 	ft_free(save);
 	tmp = while_step(tmp, untils, rd);
@@ -56,10 +57,5 @@ char	*slash_n(t_history *tmp, t_untils *untils, t_read_str *rd)
 	while (tmp->next)
 		tmp = tmp->next;
 	ft_free(rd->line);
-	// if (tmp->content[0] == '\0'){
-	// char *t = ft_strdup_b(tmp->content);
-	// ft_free(tmp->content);
-	// return (t);
-	// }
 	return (ft_strdup_b(tmp->content));
 }

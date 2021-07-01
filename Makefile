@@ -16,7 +16,7 @@ LIST 	=	backspace.c \
 			check_buildin.c work_pipes.c my_getenv.c \
 			assigning_code_to_elements.c remove_paired_quotes.c \
 			replacing_character_codes_in_single_quotes.c \
-			escaping_characters.c signal.c ft_free.c printf_list.c \
+			escaping_characters.c signal.c ft_free.c \
 			func_lst_untils.c ft_exit.c replace_dollar_que_into_code.c \
 			check_bin.c work_bin.c ft_exit_2.c redirect.c \
 			ft_execute_export.c fork_without_pip.c \
@@ -51,7 +51,7 @@ lib:
 $(NAME): $(OBJS)
 		@make -C $(LIBFTD)
 		@make -C $(LIBFTD) bonus
-		$(CC) -ltermcap -O3 $(OBJS) $(LIBS) -o $(NAME) -lncurses -fsanitize=address
+		$(CC) -ltermcap -O3 $(OBJS) $(LIBS) -o $(NAME) -lncurses #-fsanitize=address
 
 $(OBJDIR)%.o: %.c Makefile
 	mkdir -p $(OBJDIR)
@@ -67,4 +67,4 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re bonus
-.SILENT: fclean clean all $(NAME) $(OBJS) $(OBJDIR)
+.SILENT: fclean clean all

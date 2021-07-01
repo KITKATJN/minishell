@@ -63,6 +63,8 @@ void	test222(t_untils *untils, struct termios *term, struct termios *term2,
 	line = 0;
 	while (1)
 	{
+		signal(SIGINT, signal_c);
+		signal(SIGQUIT, SIG_IGN);
 		tcsetattr(0, TCSANOW, term);
 		tputs("bash $> ", 1, ft_putchar);
 		tputs(save_cursor, 1, ft_putchar);
@@ -96,8 +98,6 @@ int	main(int argc, char **argv, char **envp)
 	term.c_lflag &= ~(ICANON);
 	term.c_cc[VMIN] = 0;
 	term.c_cc[VTIME] = 1;
-	signal(SIGINT, signal_c);
-	signal(SIGQUIT, SIG_IGN);
 	tgetent(0, term_name);
 	untils->env = copy_envp(envp, untils->env);
 	test222(untils, &term, &term2, history);

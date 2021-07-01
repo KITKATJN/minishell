@@ -219,8 +219,6 @@ int						work_pipes(t_untils *untils, t_command *start);
 char					*my_get_env(char *str, char **env);
 void					signal_c(int sig_num);
 void					signal_slash(int sig_num);
-void					printf_command_list(t_command *current);
-void					printf_list(t_parser *current);
 void					ft_exit(t_command *command, t_untils *untils);
 char					*replace_dollar_que_into_code(char *str,
 							t_untils *untils);
@@ -235,7 +233,7 @@ void					ft_exit2(t_command *command, t_untils *untils,
 void					execute_export(t_untils *untils, t_command *list);
 void					connect_stdio_to_pipes(int prev_fds[], int next_fds[]);
 int						count_pipes(t_command *start);
-int						fork_without_pip(t_command *com, t_untils *untils);
+t_command				*fork_without_pip(t_command *com, t_untils *untils);
 void					child_without_pip(t_command *start, t_untils *untils);
 void					children_pip(t_command *start, int count_pipes,
 							t_untils *untils);

@@ -59,7 +59,6 @@ static t_command	*parser_into_list2(t_parser *start, t_untils *untils)
 static void	parser_into_list3_33(t_parser *start, t_parser *current)
 {
 	current = start;
-	printf_list(start);
 	while (current)
 	{
 		if (current->special == 2 && current->back != 0
@@ -80,7 +79,6 @@ static void	parser_into_list3_33(t_parser *start, t_parser *current)
 			break ;
 		current = current->next;
 	}
-	printf_list(start);
 }
 
 static t_command	*parser_into_list3(t_parser *start,

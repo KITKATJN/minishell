@@ -68,7 +68,9 @@ void	bsopia_func(t_command *com, int i, t_untils *untils)
 	start = com;
 	if (count_pipes == 0)
 	{
-		if (fork_without_pip(com, untils))
+		com = fork_without_pip(com, untils);
+		start = com;
+		if (com == 0)
 			return ;
 		if (check_buildin(start->command))
 			child_without_pip(start, untils);

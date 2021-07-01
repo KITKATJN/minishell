@@ -14,17 +14,15 @@ t_command	*redirect_check_2(t_command *start, t_command *com,
 		if (com->command[0] == '>' && com->command[1] == '\0')
 		{
 			start = com->next->next;
+			if (start != 0)
+				start->redir_right = ft_strdup(com->next->command);
 			gg = open(com->next->command, O_CREAT | O_WRONLY | O_TRUNC, 0777);
 			close (gg);
 			if (start == 0)
 				return (start);
 		}
 		if (com->command[0] == '<' && com->command[1] == '\0')
-		{
 			start = left_redirect2(com, start, 0, untils);
-			if (start == 0)
-				return (start);
-		}
 		com = start;
 	}
 	return (com);
